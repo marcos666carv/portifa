@@ -211,6 +211,7 @@ a{color:var(--accent)}
 .homecfg input,.homecfg select{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:14px;color:var(--fg);outline:none}
 .homecfg input:focus,.homecfg select:focus{border-color:var(--accent)}
 .cfgtoggles{display:flex;gap:20px;flex-wrap:wrap}
+.cfghint{font-size:12px;color:var(--muted);line-height:1.5;margin-top:12px}
 .chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--fg);cursor:pointer}
 .chk input{width:16px;height:16px;accent-color:var(--accent)}
 .hoverpick .hoverlabel{font-size:12px;color:var(--muted);margin-bottom:8px}
@@ -295,17 +296,11 @@ a{color:var(--accent)}
       <div class="cfgrow"><label>Categoria / subtítulo
         <input id="cfgMeta" placeholder="Ex.: Product design · Fintech growth" /></label></div>
       <div id="projOnly">
-        <div class="cfgrow two">
-          <label>Link<input id="cfgHref" placeholder="solvefy.html ou https://..." /></label>
-          <label>Destino<select id="cfgTarget">
-            <option value="internal">Mesma aba (transição)</option>
-            <option value="external">Nova aba</option>
-          </select></label>
-        </div>
-        <div class="cfgtoggles" style="margin-top:14px">
+        <div class="cfgtoggles">
           <label class="chk"><input type="checkbox" id="cfgVisible" /> Mostrar na home</label>
           <label class="chk"><input type="checkbox" id="cfgSecondary" /> Estilo secundário (arte)</label>
         </div>
+        <p class="cfghint">Ao clicar na home, este projeto abre a página de case interna (nunca vai para o Behance).</p>
       </div>
       <div class="hoverpick">
         <div class="hoverlabel">Imagem do hover <span style="opacity:.7">— o que aparece ao passar o mouse</span></div>
@@ -646,8 +641,6 @@ titleField.addEventListener('input', () => { const p = current(); if (p){ p.titl
 
 /* ---- home appearance config ---- */
 const cfgMeta = document.getElementById('cfgMeta');
-const cfgHref = document.getElementById('cfgHref');
-const cfgTarget = document.getElementById('cfgTarget');
 const cfgVisible = document.getElementById('cfgVisible');
 const cfgSecondary = document.getElementById('cfgSecondary');
 const hoverThumbs = document.getElementById('hoverThumbs');
@@ -655,15 +648,11 @@ const hoverThumbs = document.getElementById('hoverThumbs');
 function renderHomeCfg(){
   const p = current(); if (!p) return;
   cfgMeta.value = p.meta || '';
-  cfgHref.value = p.href || '';
-  cfgTarget.value = p.target || 'internal';
   cfgVisible.checked = p.visible !== false;
   cfgSecondary.checked = !!p.secondary;
   renderHoverThumbs();
 }
 cfgMeta.addEventListener('input', () => { const p = current(); if (p){ p.meta = cfgMeta.value; save(); } });
-cfgHref.addEventListener('input', () => { const p = current(); if (p){ p.href = cfgHref.value; save(); } });
-cfgTarget.addEventListener('change', () => { const p = current(); if (p){ p.target = cfgTarget.value; save(); } });
 cfgVisible.addEventListener('change', () => { const p = current(); if (p){ p.visible = cfgVisible.checked; save(); } });
 cfgSecondary.addEventListener('change', () => { const p = current(); if (p){ p.secondary = cfgSecondary.checked; save(); } });
 

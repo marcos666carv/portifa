@@ -24,13 +24,9 @@ function hydrateWorkFromCMS(){
   visible.forEach(p => {
     const a = document.createElement('a');
     a.className = 'row rv' + (p.secondary ? ' sec' : '');
-    let href = (p.href || '').trim();
-    const external = p.target === 'external' || /^https?:/i.test(href);
-    // internal project with no custom link -> open the CMS-built case page
-    if (!external && !href) href = 'projeto.html?id=' + encodeURIComponent(p.id);
-    a.href = href || '#';
-    if (external){ a.target = '_blank'; a.rel = 'noopener'; }
-    else if (href && !href.startsWith('#')){ a.setAttribute('data-transition', ''); }
+    // every project opens its own internal case page — never Behance / external
+    a.href = 'projeto.html?id=' + encodeURIComponent(p.id);
+    a.setAttribute('data-transition', '');
     a.dataset.thumb = p.id;
     a.innerHTML = `<span class="t">${escapeHtml(p.title || 'Untitled')} <span class="arrow">↗</span></span><span class="m">${escapeHtml(p.meta || '')}</span>`;
     if (p.hoverImage) a._hoverImage = p.hoverImage;
