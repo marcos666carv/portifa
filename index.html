@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Marcos Carvalho — Product Design Lead &amp; AI native Designer</title>
+<meta name="description" content="Marcos Carvalho, Product Design Lead and AI native Designer. Founder of CEROL. Fourteen years turning complex systems into products people use." />
+<meta property="og:title" content="Marcos Carvalho — Product Design Lead & AI native Designer" />
+<meta property="og:description" content="Fourteen years turning complex systems into products people use. Now designing and building with AI." />
+<link rel="icon" href="assets/cerol/void.svg" />
+<link rel="preload" as="font" href="fonts/Pacaembu-Regular.otf" type="font/otf" crossorigin>
+<link rel="preload" as="font" href="fonts/Pacaembu-Bold.otf" type="font/otf" crossorigin>
+<link rel="preload" as="font" href="fonts/dTJakob_Rg.otf" type="font/otf" crossorigin>
+<link rel="stylesheet" href="css/main.css?v=24" />
+</head>
+<body>
+
+  <!-- ============ LOADER ============ -->
+  <div id="loader">
+    <div class="pct">0</div>
+    <div class="wordmark">MARCOS CARVALHO</div>
+  </div>
+  <div id="loader-wipe"></div>
+
+  <!-- ============ FIXED 3D + GRAIN ============ -->
+  <canvas id="gl"></canvas>
+  <div id="grain"></div>
+
+  <!-- ============ HERO INTRO MONTAGE (Huge introFastImages) ============ -->
+  <div id="hero-montage" aria-hidden="true">
+    <figure><img src="assets/photos/study.png" alt=""></figure>
+    <figure><img src="assets/photos/hands.png" alt=""></figure>
+    <figure class="sym"><img src="assets/cerol/sun.svg" alt=""></figure>
+    <figure class="sym"><img src="assets/cerol/urchin.svg" alt=""></figure>
+    <figure class="sym"><img src="assets/cerol/scribble.svg" alt=""></figure>
+    <figure class="sym"><img src="assets/cerol/creature.svg" alt=""></figure>
+    <figure class="sym"><img src="assets/cerol/void.svg" alt=""></figure>
+  </div>
+
+  <!-- ============ NAV ============ -->
+  <nav class="nav" id="nav">
+    <div class="brand">Marcos Carvalho</div>
+  </nav>
+
+  <!-- ============ CONTENT ============ -->
+  <div class="content">
+
+    <!-- S1 · HERO -->
+    <section class="hero">
+      <div class="btm">
+        <div class="lead">Experience specialist · AI native Designer</div>
+        <div class="side">
+          <span>Brazil · Remote worldwide</span>
+        </div>
+      </div>
+      <div class="scroll-cue" aria-hidden="true">↓</div>
+    </section>
+
+    <!-- S2 · MANIFESTO -->
+    <section class="manifesto solid" id="manifesto" data-theme="light">
+      <div class="max">
+        <p data-split>I design products and build the systems they live in.</p>
+        <p data-split>For 14 years I have turned complex systems into products people use.</p>
+        <p data-split>I led design and growth, lifted NPS, stabilized churn, shipped a 20 year rebrand. Now I design and build with AI. Not around it. With it.</p>
+      </div>
+    </section>
+
+    <!-- S3 · WHAT I DO — section is transparent so the 3D tunnel shows through;
+         only the left panel (.whatido .max) has a background -->
+    <section class="whatido" data-theme="light">
+      <div class="max">
+        <div class="lbl rv">What I do</div>
+        <div class="caps">
+          <div class="cap rv"><h3>AI native</h3><div><p>I design and build with AI, not just prototype around it. I shipped AI driven design workflows while the company launched Agents, its AI orchestration product.</p></div></div>
+          <div class="cap rv"><h3>Product design</h3><div><p>End to end product for desktop and mobile: research, information architecture, systems and high fidelity delivery. I reorganized a four product portfolio and lifted NPS.</p></div></div>
+          <div class="cap rv"><h3>Craft &amp; leadership</h3><div><p>Craft is the delivery, not the decoration. Product Design Lead three times over, and Founder and Design Director of my own studio, CEROL. I seed teams and cultures, not just screens.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERSTICE A · sun -->
+    <div class="inter" data-inter="0"></div>
+
+    <!-- INTERSTICE B · urchin · the cases (Featured Solvefy + Selected work merged into one chapter) -->
+    <div class="inter" data-inter="1"></div>
+
+    <!-- S4 · SELECTED WORK (inverted) — Solvefy leads the list as the featured case -->
+    <section class="invert pad" id="work" data-theme="dark">
+      <div class="max">
+        <div class="lbl rv">Selected work</div>
+        <div class="proj">
+          <a class="row rv" href="solvefy.html" data-transition data-thumb="solvefy" data-cat="Featured case"><span class="t">Solvefy <span class="arrow">↗</span></span><span class="m">Featured case · Product design, AI, growth</span></a>
+          <a class="row rv" href="https://www.behance.net/marcos_____carvalho" target="_blank" rel="noopener" data-thumb="remessa" data-cat="Fintech growth"><span class="t">Remessa Online <span class="arrow">↗</span></span><span class="m">Product Design Lead · Fintech growth</span></a>
+          <a class="row rv" href="https://www.behance.net/marcos_____carvalho" target="_blank" rel="noopener" data-thumb="leads2b" data-cat="SaaS B2B"><span class="t">Leads2b <span class="arrow">↗</span></span><span class="m">Product Design Lead · Churn stabilized</span></a>
+          <a class="row rv" href="https://www.behance.net/gallery/136071709/Customer-Care-Panel-Nissan" target="_blank" rel="noopener" data-thumb="nissan" data-cat="Product · Data"><span class="t">Customer Care Panel · Nissan <span class="arrow">↗</span></span><span class="m">Product · Data</span></a>
+          <a class="row rv" href="https://www.behance.net/gallery/209221077/dlocal-CONNECT" target="_blank" rel="noopener" data-thumb="dlocal" data-cat="Global event"><span class="t">dlocal CONNECT <span class="arrow">↗</span></span><span class="m">Global event · Brand</span></a>
+          <a class="row rv" href="https://www.behance.net/gallery/118534117/Evil-Apples-UXUI-Game-Design-Art-Direction" target="_blank" rel="noopener" data-thumb="evilapples" data-cat="Game UX"><span class="t">Evil Apples <span class="arrow">↗</span></span><span class="m">Game UX · Art direction · NY</span></a>
+          <a class="row rv" href="https://www.behance.net/gallery/135764741/Huge-Worldwide-Intranet" target="_blank" rel="noopener" data-thumb="huge" data-cat="UX · Brooklyn"><span class="t">Huge · Worldwide Intranet <span class="arrow">↗</span></span><span class="m">UX · Brooklyn</span></a>
+          <a class="row sec rv" href="https://www.behance.net/gallery/250632349/lerdo-pink-neon" target="_blank" rel="noopener" data-thumb="lerdo" data-cat="Founder"><span class="t">Lerdo <span class="arrow">↗</span></span><span class="m">Founder · Award, ADG Brazil</span></a>
+          <a class="row sec rv" href="https://www.behance.net/gallery/120517563/Mononoke-Progresso-(album-cover-and-music-video)" target="_blank" rel="noopener" data-thumb="mononoke" data-cat="Album cover"><span class="t">Mononoke · Progresso <span class="arrow">↗</span></span><span class="m">Album cover · Music video</span></a>
+          <a class="row sec rv" href="https://www.behance.net/gallery/135486111/Tristes-Tropicos-Cover-and-Art" target="_blank" rel="noopener" data-thumb="tristes" data-cat="Cover and art"><span class="t">Tristes Trópicos <span class="arrow">↗</span></span><span class="m">Cover and art</span></a>
+          <a class="row sec rv" href="https://www.behance.net/marcos_____carvalho" target="_blank" rel="noopener" data-thumb="void" data-cat="Behance"><span class="t">More on Behance <span class="arrow">↗</span></span><span class="m">Covers · Posters · Apparel</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- S7 · CRAFT statement (background image removed) -->
+    <section class="craft" id="craft" data-theme="light">
+      <div class="txt"><h2 class="rv-line"><span>The same hands that ship product build brands and album covers.</span></h2></div>
+    </section>
+
+    <!-- S8 · ABOUT -->
+    <section class="about solid pad" data-theme="light">
+      <div class="max grid">
+        <p class="rv" data-split><b>The punk and DIY scene made me a designer years before I understood what design was.</b> Self taught musician since 13. Moved by everything new. Fourteen years later I run CEROL, my own design company, and still build worlds end to end, from the pixel to the P&amp;L.</p>
+        <div class="portrait rv"><img src="assets/photos/study.png" alt=""></div>
+      </div>
+    </section>
+
+    <!-- S9 · CONTACT -->
+    <footer class="contact solid pad" data-theme="dark">
+      <div class="max">
+        <div class="cta rv-line"><span>Let's build<br>something. <a href="mailto:marcos@cerol.co" data-magnetic>marcos@cerol.co</a></span></div>
+        <div class="meta">
+          <span>©. Marcos Carvalho — 2026</span>
+          <span>Product Design Lead · AI native</span>
+          <span><a href="http://linkedin.com/in/marcospc">LinkedIn</a> · <a href="https://www.behance.net/marcos_____carvalho">Behance</a></span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ============ FLOATING UI ============ -->
+  <div id="thumb"></div>
+  <div id="cursor"><div class="ring"></div><div class="dot"></div></div>
+  <div id="page-transition"></div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script type="module" src="js/scene.js?v=24"></script>
+<script type="module" src="js/main.js?v=24"></script>
+</body>
+</html>

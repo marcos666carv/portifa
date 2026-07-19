@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Solvefy — Marcos Carvalho</title>
+<meta name="description" content="Solvefy case study: a communications company reborn as a technology ecosystem. Rebrand, product, AI and team, told by Marcos Carvalho." />
+<link rel="icon" href="assets/cerol/void.svg" />
+<link rel="preload" as="font" href="fonts/dTJakob_Th.otf" type="font/otf" crossorigin>
+<link rel="preload" as="font" href="fonts/dTJakob_Rg.otf" type="font/otf" crossorigin>
+<link rel="preload" as="font" href="fonts/dTJakob_Bd.otf" type="font/otf" crossorigin>
+<link rel="stylesheet" href="css/main.css?v=2" />
+<style>
+  /* page-specific additions for the Solvefy case */
+  .case-hero{min-height:80vh;display:flex;flex-direction:column;justify-content:flex-end;padding:140px 32px 10vh}
+  .case-hero .kick{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--gray);margin-bottom:20px}
+  .case-hero h1{font-weight:700;font-size:clamp(60px,16vw,260px);line-height:.82;letter-spacing:-.03em;padding-bottom:.08em}
+  .case-hero .ctx{font-weight:200;font-size:clamp(16px,1.8vw,22px);max-width:46ch;color:#d6d5cf;margin-top:20px}
+
+  .chnav{position:fixed;top:50%;right:28px;transform:translateY(-50%);z-index:40;
+    display:flex;flex-direction:column;gap:22px;mix-blend-mode:difference}
+  .chnav a{font-size:11px;letter-spacing:.1em;color:var(--gray);display:flex;align-items:center;gap:10px;transition:color .3s ease}
+  .chnav a::before{content:"";width:16px;height:1px;background:currentColor;transition:width .3s ease}
+  .chnav a.active{color:var(--wht)}
+  .chnav a.active::before{width:28px;background:var(--wht)}
+  @media (max-width:900px){ .chnav{display:none} }
+
+  .chapter{min-height:100vh;padding:16vh 32px;display:flex;align-items:center;position:relative;overflow:hidden}
+  .chapter .roman{
+    position:absolute;top:6vh;left:32px;font-weight:200;font-size:clamp(120px,26vw,420px);
+    color:#141414;line-height:1;letter-spacing:-.02em;user-select:none;z-index:0;
+  }
+  .chapter .inner{position:relative;z-index:1;max-width:760px}
+  .chapter .no{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--gray);margin-bottom:18px}
+  .chapter h2{font-weight:700;font-size:clamp(34px,5.4vw,86px);line-height:.98;letter-spacing:-.02em;margin-bottom:28px}
+  .chapter p{font-weight:200;font-size:clamp(17px,1.9vw,24px);line-height:1.45;max-width:56ch}
+  .chapter .w{color:var(--dim)}
+
+  .plate{
+    margin-top:56px;aspect-ratio:16/9;max-width:640px;border:1px solid rgba(245,244,240,.22);
+    display:flex;flex-direction:column;justify-content:flex-end;gap:10px;
+    background:#101010;padding:32px;position:relative;
+  }
+  .plate img{position:absolute;top:28px;right:28px;width:88px;height:88px;opacity:.9;filter:invert(1)}
+  .plate .ptext{font-weight:700;font-size:clamp(24px,2.6vw,34px);text-transform:lowercase;letter-spacing:-.01em}
+  .plate .pcat{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray)}
+
+  .nextfoot{padding:14vh 32px 10vh;text-align:center;border-top:1px solid var(--line)}
+  .nextfoot .lbl{justify-content:center}
+  .nextfoot a{font-weight:700;font-size:clamp(32px,6vw,84px);letter-spacing:-.02em}
+  .nextfoot a:hover{color:var(--gray)}
+</style>
+</head>
+<body>
+
+  <div id="loader" style="display:none"></div>
+  <div id="loader-wipe" style="display:none"></div>
+
+  <canvas id="gl"></canvas>
+  <div id="grain"></div>
+
+  <nav class="nav" id="nav">
+    <a class="brand" href="index.html" data-transition>©. Marcos Carvalho</a>
+    <div class="right">Product Design Lead · AI native</div>
+  </nav>
+
+  <div class="chnav" id="chnav">
+    <a href="#ch1" data-ch="1">I. Rebrand</a>
+    <a href="#ch2" data-ch="2">II. Product</a>
+    <a href="#ch3" data-ch="3">III. AI</a>
+    <a href="#ch4" data-ch="4">IV. Team</a>
+  </div>
+
+  <div class="content">
+
+    <section class="case-hero pad">
+      <div class="kick rv">Featured case · Staff Product Designer / Product Design Lead · 2024 to 2026</div>
+      <h1 class="rv-line"><span>Solvefy</span></h1>
+      <p class="ctx rv">A communications company two decades in the making, reborn as a technology ecosystem. I owned design and growth through the change.</p>
+    </section>
+
+    <section class="chapter solid pad" id="ch1">
+      <div class="roman">I</div>
+      <div class="inner">
+        <div class="no rv">Chapter I</div>
+        <h2 class="rv-line"><span>The rebrand</span></h2>
+        <p data-split>Solvefy came from Ativos Capital, a company built over 20 years. I coordinated the rebrand that turned it into a technology ecosystem, with brand, communication tracks and social strategy across every sub brand, plus two live events.</p>
+        <div class="plate rv">
+          <img src="assets/cerol/wordmark.svg" alt="">
+          <div class="ptext">ativos capital to solvefy</div>
+          <div class="pcat">Rebrand · 20 years to one ecosystem</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter solid pad" id="ch2">
+      <div class="roman">II</div>
+      <div class="inner">
+        <div class="no rv">Chapter II</div>
+        <h2 class="rv-line"><span>The product</span></h2>
+        <p data-split>I reorganized how the product portfolio was structured across four products. NPS climbed, and navigation and campaign dispatch got noticeably smoother for every team using it.</p>
+        <div class="plate rv">
+          <img src="assets/cerol/sun.svg" alt="">
+          <div class="ptext">4 products, 1 portfolio</div>
+          <div class="pcat">Product · NPS up</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter solid pad" id="ch3">
+      <div class="roman">III</div>
+      <div class="inner">
+        <div class="no rv">Chapter III</div>
+        <h2 class="rv-line"><span>The AI</span></h2>
+        <p data-split>I shipped AI driven design workflows while the company launched Agents, its AI orchestration product. Design that ships with AI, not around it.</p>
+        <div class="plate rv">
+          <img src="assets/cerol/scribble.svg" alt="">
+          <div class="ptext">agents</div>
+          <div class="pcat">AI orchestration product</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter solid pad" id="ch4">
+      <div class="roman">IV</div>
+      <div class="inner">
+        <div class="no rv">Chapter IV</div>
+        <h2 class="rv-line"><span>The team</span></h2>
+        <p data-split>I led a team of 7. We seeded a Winning by Design culture and stronger knowledge sharing, so design and growth pulled toward the same business outcomes.</p>
+        <div class="plate rv">
+          <img src="assets/cerol/creature.svg" alt="">
+          <div class="ptext">team of 7</div>
+          <div class="pcat">Culture · Winning by Design</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="nextfoot solid pad">
+      <div class="lbl rv" style="justify-content:center">Next</div>
+      <a class="rv" href="index.html#work" data-transition>Selected work ↓</a>
+    </footer>
+
+  </div>
+
+  <div id="thumb"></div>
+  <div id="cursor"><div class="ring"></div><div class="dot"></div></div>
+  <div id="page-transition"></div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script type="module" src="js/scene-solvefy.js?v=2"></script>
+<script type="module" src="js/main.js?v=2"></script>
+<script>
+  /* chapter nav active state + smooth anchor scroll via Lenis */
+  window.addEventListener('load', () => {
+    const links = document.querySelectorAll('.chnav a');
+    const sections = ['ch1','ch2','ch3','ch4'].map(id => document.getElementById(id));
+    function sync(){
+      const mid = innerHeight * 0.5;
+      let active = 0;
+      sections.forEach((s,i) => { if (s.getBoundingClientRect().top < mid) active = i; });
+      links.forEach((l,i) => l.classList.toggle('active', i === active));
+    }
+    document.addEventListener('scroll', sync, { passive:true });
+    sync();
+    links.forEach((l,i) => l.addEventListener('click', e => {
+      e.preventDefault();
+      const target = sections[i];
+      if (window.__lenis) window.__lenis.scrollTo(target, { duration: 1.2 });
+      else target.scrollIntoView({ behavior:'smooth' });
+    }));
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Case — Marcos Carvalho</title>
+<style>
+@font-face{font-family:"Pacaembu";src:url("fonts/Pacaembu-Regular.otf") format("opentype");font-weight:400;font-display:swap}
+@font-face{font-family:"Pacaembu";src:url("fonts/Pacaembu-Medium.otf") format("opentype");font-weight:500;font-display:swap}
+@font-face{font-family:"Pacaembu";src:url("fonts/Pacaembu-Bold.otf") format("opentype");font-weight:700;font-display:swap}
+@font-face{font-family:"Pacaembu";src:url("fonts/Pacaembu-Black.otf") format("opentype");font-weight:900;font-display:swap}
+
+:root{ --bg:#f5f4f0; --fg:#050505; --muted:#6a6a66; --line:rgba(5,5,5,.14); --maxw:1280px; }
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:"Pacaembu",system-ui,sans-serif;background:var(--bg);color:var(--fg);
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.5}
+a{color:inherit}
+img{max-width:100%;display:block}
+::selection{background:var(--fg);color:var(--bg)}
+
+/* grain */
+#grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(20px,5vw,64px)}
+
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:center;
+  padding:22px clamp(20px,5vw,64px);font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;
+  mix-blend-mode:difference;color:#f5f4f0}
+.nav a{text-decoration:none}
+.nav .back{display:inline-flex;align-items:center;gap:8px}
+.nav .back svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* hero */
+.hero{padding:26vh 0 8vh}
+.hero .eyebrow{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);
+  font-weight:500;margin-bottom:26px}
+.hero h1{font-weight:700;font-size:clamp(52px,11vw,168px);line-height:.94;letter-spacing:-.03em}
+.hero .lead{font-weight:400;font-size:clamp(20px,2.6vw,34px);line-height:1.28;max-width:24ch;margin-top:34px}
+
+/* hero figure */
+.herofig{margin:2vh 0 0}
+.herofig img{width:100%;height:min(72vh,760px);object-fit:cover}
+
+/* generic block flow */
+.blocks{max-width:960px;margin:0 auto;padding:9vh 0}
+.blocks.wide{max-width:var(--maxw)}
+.b-text{font-weight:400;font-size:clamp(18px,1.7vw,23px);line-height:1.55;margin:0 auto 1.4em;max-width:64ch}
+.b-text:last-child{margin-bottom:0}
+.b-fig{margin:6vh 0}
+.b-fig img{width:100%}
+.b-fig figcaption{font-size:13px;letter-spacing:.02em;color:var(--muted);margin-top:12px;text-align:center}
+.b-link{display:inline-flex;align-items:center;gap:10px;margin:6px 14px 6px 0;padding:14px 24px;
+  border:1px solid var(--fg);border-radius:100px;font-size:14px;letter-spacing:.04em;text-transform:uppercase;
+  text-decoration:none;transition:background .25s,color .25s}
+.b-link:hover{background:var(--fg);color:var(--bg)}
+.linkrow{max-width:64ch;margin:2.4em auto 0;display:flex;flex-wrap:wrap}
+
+/* chapters (subprojects) */
+.chapters{border-top:1px solid var(--line);margin-top:4vh}
+.chapter{border-bottom:1px solid var(--line);padding:11vh 0}
+.chapter .chhead{display:grid;grid-template-columns:minmax(120px,1fr) 3fr;gap:clamp(20px,5vw,80px);align-items:start}
+.chapter .chnum{font-weight:200;font-size:clamp(60px,9vw,150px);line-height:.8;color:var(--fg);opacity:.16}
+.chapter h2{font-weight:700;font-size:clamp(30px,5vw,68px);line-height:1.02;letter-spacing:-.02em;align-self:end}
+.chapter .chblocks{margin-top:5vh}
+
+/* footer */
+.foot{border-top:1px solid var(--line);padding:9vh 0 12vh;text-align:center}
+.foot .home{display:inline-flex;align-items:center;gap:12px;font-weight:700;
+  font-size:clamp(28px,5vw,64px);letter-spacing:-.02em;text-decoration:none}
+.foot .home .arrow{transition:transform .3s}
+.foot .home:hover .arrow{transform:translateX(6px)}
+.foot .meta{margin-top:40px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* not found */
+.notfound{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:24px}
+.notfound h1{font-weight:700;font-size:clamp(28px,5vw,48px)}
+.notfound a{color:var(--muted)}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.16,.84,.36,1),transform .9s cubic-bezier(.16,.84,.36,1)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{transition:none}html{scroll-behavior:auto}}
+
+@media (max-width:720px){
+  .chapter .chhead{grid-template-columns:1fr;gap:10px}
+  .chapter h2{align-self:auto}
+}
+</style>
+</head>
+<body>
+<div id="grain"></div>
+
+<nav class="nav">
+  <a href="index.html" data-back>Marcos Carvalho</a>
+  <a href="index.html#work" class="back" data-back><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg> Work</a>
+</nav>
+
+<main id="app"></main>
+
+<script>
+'use strict';
+
+/* ---------- read project from the CMS (shared localStorage) ---------- */
+const params = new URLSearchParams(location.search);
+const id = params.get('id');
+let data = null;
+try { data = JSON.parse(localStorage.getItem('projects-crm-v1')); } catch(e){}
+const project = data && Array.isArray(data.projects) ? data.projects.find(p => p.id === id) : null;
+
+const app = document.getElementById('app');
+const esc = s => (s || '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+if (!project){
+  app.innerHTML = `<div class="notfound">
+    <h1>Case não encontrado</h1>
+    <p style="color:var(--muted);max-width:46ch">Este projeto não existe no CMS neste navegador, ou o link está sem id.
+    Abra o CMS, edite o projeto e use o link da home.</p>
+    <a href="index.html">← Voltar para a home</a>
+  </div>`;
+  document.title = 'Case não encontrado — Marcos Carvalho';
+} else {
+  render(project);
+}
+
+/* ---------- render one content block into a container ---------- */
+function renderBlock(b){
+  if (b.type === 'text' && b.text){
+    const frag = document.createDocumentFragment();
+    // split paragraphs on blank lines
+    b.text.split(/\n{2,}/).forEach(par => {
+      if (!par.trim()) return;
+      const p = document.createElement('p');
+      p.className = 'b-text rv';
+      p.textContent = par.trim();
+      frag.appendChild(p);
+    });
+    return frag;
+  }
+  if (b.type === 'image' && b.src){
+    const fig = document.createElement('figure');
+    fig.className = 'b-fig rv';
+    fig.innerHTML = `<img src="${b.src}" alt="${esc(b.caption)}">` +
+      (b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : '');
+    return fig;
+  }
+  if (b.type === 'link' && b.url){
+    // group consecutive links visually via a row; here return a single link,
+    // the caller wraps loose links in .linkrow
+    const a = document.createElement('a');
+    a.className = 'b-link';
+    a.href = b.url; a.target = '_blank'; a.rel = 'noopener';
+    a.textContent = (b.label || b.url);
+    return a;
+  }
+  return document.createDocumentFragment();
+}
+
+function renderBlocksInto(container, blocks){
+  let linkRow = null;
+  (blocks || []).forEach(b => {
+    if (b.type === 'link' && b.url){
+      if (!linkRow){ linkRow = document.createElement('div'); linkRow.className = 'linkrow rv'; container.appendChild(linkRow); }
+      linkRow.appendChild(renderBlock(b));
+    } else {
+      linkRow = null;
+      container.appendChild(renderBlock(b));
+    }
+  });
+}
+
+/* ---------- render the whole case ---------- */
+function render(p){
+  document.title = (p.title || 'Case') + ' — Marcos Carvalho';
+  const heroImg = p.hoverImage || (p.blocks.find(b => b.type === 'image' && b.src) || {}).src;
+  const frag = document.createDocumentFragment();
+
+  // hero
+  const hero = document.createElement('header');
+  hero.className = 'hero';
+  hero.innerHTML = `<div class="wrap">
+    ${p.meta ? `<div class="eyebrow rv">${esc(p.meta)}</div>` : ''}
+    <h1 class="rv">${esc(p.title || 'Untitled')}</h1>
+  </div>`;
+  frag.appendChild(hero);
+
+  // hero figure
+  if (heroImg){
+    const hf = document.createElement('figure');
+    hf.className = 'herofig rv';
+    hf.innerHTML = `<img src="${heroImg}" alt="">`;
+    frag.appendChild(hf);
+  }
+
+  // overview blocks (project-level content)
+  if (p.blocks && p.blocks.length){
+    const ov = document.createElement('section');
+    ov.className = 'blocks wrap';
+    renderBlocksInto(ov, p.blocks);
+    frag.appendChild(ov);
+  }
+
+  // chapters (subprojects)
+  const subs = (p.subprojects || []).filter(s => s);
+  if (subs.length){
+    const chs = document.createElement('div');
+    chs.className = 'chapters';
+    subs.forEach((s, i) => {
+      const sec = document.createElement('section');
+      sec.className = 'chapter';
+      const inner = document.createElement('div');
+      inner.className = 'wrap';
+      inner.innerHTML = `<div class="chhead">
+        <div class="chnum rv">${String(i + 1).padStart(2, '0')}</div>
+        <h2 class="rv">${esc(s.title || 'Untitled')}</h2>
+      </div>`;
+      const blk = document.createElement('div');
+      blk.className = 'chblocks';
+      renderBlocksInto(blk, s.blocks);
+      inner.appendChild(blk);
+      sec.appendChild(inner);
+      chs.appendChild(sec);
+    });
+    frag.appendChild(chs);
+  }
+
+  // footer
+  const foot = document.createElement('footer');
+  foot.className = 'foot';
+  foot.innerHTML = `<div class="wrap">
+    <a class="home" href="index.html#work" data-back>Back to work <span class="arrow">→</span></a>
+    <div class="meta">Marcos Carvalho — Experience specialist · AI native Designer</div>
+  </div>`;
+  frag.appendChild(foot);
+
+  app.appendChild(frag);
+  setupReveals();
+}
+
+/* ---------- scroll reveals ---------- */
+function setupReveals(){
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const items = document.querySelectorAll('.rv');
+  if (reduce || !('IntersectionObserver' in window)){ items.forEach(el => el.classList.add('in')); return; }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { rootMargin: '0px 0px -12% 0px' });
+  items.forEach(el => io.observe(el));
+}
+</script>
+</body>
+</html>

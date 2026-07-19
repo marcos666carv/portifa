@@ -1,0 +1,8 @@
+# personal job-application materials — kept out of the public portfolio repo
+cv.html
+cv-*.html
+carta.html
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db

@@ -1,0 +1,888 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CMS de cases — Marcos Carvalho</title>
+<style>
+@font-face{font-family:"Pacaembu";src:url("fonts/Pacaembu-Regular.otf") format("opentype");font-weight:400;font-display:swap}
+@font-face{font-family:"Pacaembu";src:url("fonts/Pacaembu-Medium.otf") format("opentype");font-weight:500;font-display:swap}
+@font-face{font-family:"Pacaembu";src:url("fonts/Pacaembu-Bold.otf") format("opentype");font-weight:700;font-display:swap}
+
+:root{
+  --bg:#0d0d0f; --panel:#17171a; --panel-2:#1f1f23; --line:#2c2c31;
+  --fg:#f4f3ef; --muted:#9a9aa2; --accent:#5b8cff; --danger:#ff5c6c; --ok:#48ff65;
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:"Pacaembu",system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--fg);-webkit-font-smoothing:antialiased;
+  font-size:15px;line-height:1.45;
+}
+button,input,textarea{font-family:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+a{color:var(--accent)}
+::selection{background:var(--fg);color:var(--bg)}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:16px;
+  padding:18px 28px;background:rgba(13,13,15,.85);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.topbar h1{font-weight:700;font-size:19px;letter-spacing:-.01em}
+.topbar .count{color:var(--muted);font-size:13px}
+.spacer{flex:1}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:10px;
+  background:var(--panel-2);border:1px solid var(--line);font-size:13px;font-weight:500;
+  transition:background .15s,border-color .15s,transform .05s;
+}
+.btn:hover{background:#26262b;border-color:#3a3a41}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#0a1024}
+.btn.primary:hover{background:#7aa2ff}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--danger)}
+.btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- board ---------- */
+.board{
+  max-width:1200px;margin:0 auto;padding:28px;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;
+}
+.card{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;display:flex;flex-direction:column;position:relative;
+  transition:border-color .15s,box-shadow .15s,opacity .15s;
+}
+.card:hover{border-color:#3d3d44;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+.card.dragging{opacity:.4}
+.card.drag-over{border-color:var(--accent)}
+.card .cover{
+  aspect-ratio:16/10;background:var(--panel-2);display:flex;align-items:center;justify-content:center;
+  overflow:hidden;border-bottom:1px solid var(--line);
+}
+.card .cover img{width:100%;height:100%;object-fit:cover;display:block}
+.card .cover .ph{color:#43434b;font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+.card .body{padding:15px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.card .title{font-weight:700;font-size:17px;letter-spacing:-.01em;word-break:break-word}
+.card .excerpt{color:var(--muted);font-size:13px;line-height:1.4;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card .meta{margin-top:auto;display:flex;align-items:center;gap:12px;color:var(--muted);
+  font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding-top:6px}
+.card .meta .dot{width:3px;height:3px;border-radius:50%;background:currentColor;opacity:.5}
+.card .actions{display:flex;gap:6px;padding:0 12px 12px}
+.card .actions .btn{flex:1;justify-content:center;padding:8px}
+.card .handle{
+  position:absolute;top:10px;left:10px;z-index:2;width:28px;height:28px;border-radius:8px;
+  background:rgba(13,13,15,.6);display:flex;align-items:center;justify-content:center;
+  color:var(--muted);cursor:grab;opacity:0;transition:opacity .15s;backdrop-filter:blur(4px);
+}
+.card:hover .handle{opacity:1}
+.card .handle:active{cursor:grabbing}
+
+/* new-project tile */
+.add-tile{
+  border:1.5px dashed var(--line);border-radius:var(--radius);min-height:200px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  color:var(--muted);background:transparent;transition:border-color .15s,color .15s,background .15s;
+}
+.add-tile:hover{border-color:var(--accent);color:var(--fg);background:rgba(91,140,255,.05)}
+.add-tile svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round}
+
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:80px 20px}
+.empty h2{font-weight:700;font-size:22px;color:var(--fg);margin-bottom:8px}
+
+/* ---------- editor drawer ---------- */
+.overlay{
+  position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.overlay.open{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;z-index:50;width:min(680px,100%);
+  background:var(--bg);border-left:1px solid var(--line);
+  transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;
+}
+.drawer.open{transform:translateX(0)}
+.drawer .dhead{
+  display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid var(--line);
+}
+.drawer .dhead .titlefield{
+  flex:1;background:transparent;border:none;font-size:22px;font-weight:700;letter-spacing:-.01em;
+  padding:6px 0;outline:none;
+}
+.drawer .dhead .titlefield::placeholder{color:#43434b}
+.drawer .dbody{flex:1;overflow-y:auto;padding:20px 22px 40px}
+.drawer .dfoot{
+  display:flex;gap:10px;padding:14px 22px;border-top:1px solid var(--line);align-items:center;
+}
+.saved{color:var(--muted);font-size:12px;display:flex;align-items:center;gap:6px}
+.saved .dot{width:6px;height:6px;border-radius:50%;background:var(--ok)}
+
+/* blocks */
+.blocks{display:flex;flex-direction:column;gap:12px}
+.block{
+  background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;
+  transition:border-color .15s,opacity .15s;
+}
+.block.dragging{opacity:.4}
+.block.drag-over{border-color:var(--accent)}
+.block .bhead{
+  display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--panel-2);
+  border-bottom:1px solid var(--line);
+}
+.block .bhead .btype{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.block .bhead .bhandle{cursor:grab;color:#54545c;display:flex;padding:2px}
+.block .bhead .bhandle:active{cursor:grabbing}
+.block .bhead .bhandle svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.block .bhead .del{margin-left:auto;color:var(--muted);font-size:12px;padding:4px 8px;border-radius:6px}
+.block .bhead .del:hover{color:var(--danger);background:rgba(255,92,108,.1)}
+.block .bcontent{padding:12px}
+.block textarea{
+  width:100%;background:transparent;border:none;resize:vertical;min-height:70px;
+  font-size:15px;line-height:1.5;outline:none;
+}
+.block .linkrow{display:flex;flex-direction:column;gap:8px}
+.block .linkrow input{
+  width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;
+  padding:9px 11px;font-size:14px;outline:none;
+}
+.block .linkrow input:focus{border-color:var(--accent)}
+.block .linkrow .preview{font-size:12px;color:var(--muted);word-break:break-all}
+.block .imgwrap{position:relative;border-radius:8px;overflow:hidden;background:var(--panel-2)}
+.block .imgwrap img{width:100%;max-height:340px;object-fit:contain;display:block}
+.block .imgwrap.empty{
+  aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;color:var(--muted);cursor:pointer;border:1.5px dashed var(--line);
+}
+.block .imgwrap.empty:hover{border-color:var(--accent);color:var(--fg)}
+.block .imgwrap.empty svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.6}
+.block .imgwrap .replace{
+  position:absolute;top:8px;right:8px;padding:6px 10px;font-size:12px;border-radius:8px;
+  background:rgba(13,13,15,.7);border:1px solid var(--line);opacity:0;transition:opacity .15s;
+}
+.block .imgwrap:hover .replace{opacity:1}
+.block .caption{
+  width:100%;background:transparent;border:none;border-top:1px solid var(--line);
+  padding:9px 12px;font-size:13px;color:var(--muted);outline:none;
+}
+
+.addblocks{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.addblocks .btn{flex:1;justify-content:center;min-width:120px}
+
+.blocks-empty{text-align:center;color:var(--muted);padding:36px 20px;
+  border:1.5px dashed var(--line);border-radius:12px;font-size:14px}
+
+/* toast */
+.toast{
+  position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);z-index:80;
+  background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:11px 18px;
+  font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;
+  box-shadow:0 10px 40px rgba(0,0,0,.5);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.hidden{display:none!important}
+
+/* ---------- lock screen ---------- */
+.lock{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px}
+.lockbox{width:min(380px,100%);text-align:center;display:flex;flex-direction:column;gap:14px}
+.lockbox .lockicon{width:44px;height:44px;margin:0 auto 4px;color:var(--muted)}
+.lockbox .lockicon svg{width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:1.6}
+.lockbox h2{font-weight:700;font-size:22px;letter-spacing:-.01em}
+.lockbox .muted{color:var(--muted);font-size:13px;line-height:1.5}
+.lockbox input{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 14px;font-size:15px;text-align:center;outline:none}
+.lockbox input:focus{border-color:var(--accent)}
+.lockbox .btn{justify-content:center;padding:12px}
+.lockerr{color:var(--danger);font-size:13px;min-height:18px}
+.linky{color:var(--muted);font-size:12px;text-decoration:underline;background:none;border:none}
+.linky:hover{color:var(--fg)}
+
+/* ---------- home config in editor ---------- */
+.sectlabel{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;margin:22px 0 12px}
+.homecfg{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:14px}
+.cfgrow label,.cfgrow.two label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted);letter-spacing:.02em}
+.cfgrow.two{display:grid;grid-template-columns:1fr 200px;gap:12px}
+.homecfg input,.homecfg select{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:14px;color:var(--fg);outline:none}
+.homecfg input:focus,.homecfg select:focus{border-color:var(--accent)}
+.cfgtoggles{display:flex;gap:20px;flex-wrap:wrap}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--fg);cursor:pointer}
+.chk input{width:16px;height:16px;accent-color:var(--accent)}
+.hoverpick .hoverlabel{font-size:12px;color:var(--muted);margin-bottom:8px}
+.hoverthumbs{display:flex;gap:8px;flex-wrap:wrap}
+.hthumb{width:74px;height:52px;border-radius:8px;border:2px solid var(--line);overflow:hidden;background:var(--panel-2);
+  display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);padding:0;position:relative}
+.hthumb img{width:100%;height:100%;object-fit:cover}
+.hthumb.sel{border-color:var(--accent)}
+.hthumb.up,.hthumb.none{border-style:dashed;flex-direction:column}
+.hthumb:hover{border-color:#3d3d44}
+.hthumb.sel:hover{border-color:var(--accent)}
+.card.hiddenproj{opacity:.5}
+.card .badge{position:absolute;top:10px;right:10px;z-index:2;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  background:rgba(13,13,15,.7);border:1px solid var(--line);border-radius:6px;padding:3px 7px;color:var(--muted);backdrop-filter:blur(4px)}
+
+/* ---------- subprojects ---------- */
+.dhead .backbtn{display:flex;align-items:center;justify-content:center;padding:8px}
+.dhead .backbtn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
+.subs{display:flex;flex-direction:column;gap:8px}
+.subitem{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);
+  border-radius:10px;padding:10px 12px;transition:border-color .15s,opacity .15s}
+.subitem.dragging{opacity:.4}
+.subitem.drag-over{border-color:var(--accent)}
+.subitem .shandle{cursor:grab;color:#54545c;display:flex}
+.subitem .shandle:active{cursor:grabbing}
+.subitem .shandle svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2}
+.subitem .stitle{font-weight:500;flex:1;word-break:break-word}
+.subitem .scount{color:var(--muted);font-size:12px;white-space:nowrap}
+.btn.xs{padding:6px 11px;font-size:12px}
+.subs-empty{color:var(--muted);font-size:13px;border:1.5px dashed var(--line);border-radius:10px;padding:16px;text-align:center;line-height:1.5}
+</style>
+</head>
+<body>
+
+<div class="lock" id="lock">
+  <div class="lockbox">
+    <div class="lockicon"><svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+    <h2 id="lockTitle">Área protegida</h2>
+    <p class="muted" id="lockMsg">Digite a senha para acessar o CMS.</p>
+    <input type="password" id="lockInput" placeholder="Senha" autocomplete="current-password" />
+    <button class="btn primary" id="lockBtn">Entrar</button>
+    <div class="lockerr" id="lockErr"></div>
+    <button class="linky" id="lockReset">Esqueci a senha / redefinir</button>
+  </div>
+</div>
+
+<div class="topbar">
+  <h1>Cases</h1>
+  <span class="count" id="count"></span>
+  <div class="spacer"></div>
+  <button class="btn ghost" id="importBtn" title="Importar JSON">
+    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+    Importar
+  </button>
+  <button class="btn ghost" id="exportBtn" title="Exportar JSON">
+    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5-5 5 5"/><path d="M12 15V3"/></svg>
+    Exportar
+  </button>
+  <button class="btn primary" id="newBtn">
+    <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+    Novo projeto
+  </button>
+</div>
+
+<div class="board" id="board"></div>
+
+<!-- editor -->
+<div class="overlay" id="overlay"></div>
+<div class="drawer" id="drawer" aria-hidden="true">
+  <div class="dhead">
+    <button class="btn ghost backbtn hidden" id="backBtn" title="Voltar ao projeto">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <input class="titlefield" id="titleField" placeholder="Nome do projeto" />
+    <button class="btn ghost" id="closeBtn" title="Fechar (Esc)">
+      <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="dbody">
+    <div class="sectlabel">Aparência na home</div>
+    <div class="homecfg">
+      <div class="cfgrow"><label>Categoria / subtítulo
+        <input id="cfgMeta" placeholder="Ex.: Product design · Fintech growth" /></label></div>
+      <div id="projOnly">
+        <div class="cfgrow two">
+          <label>Link<input id="cfgHref" placeholder="solvefy.html ou https://..." /></label>
+          <label>Destino<select id="cfgTarget">
+            <option value="internal">Mesma aba (transição)</option>
+            <option value="external">Nova aba</option>
+          </select></label>
+        </div>
+        <div class="cfgtoggles" style="margin-top:14px">
+          <label class="chk"><input type="checkbox" id="cfgVisible" /> Mostrar na home</label>
+          <label class="chk"><input type="checkbox" id="cfgSecondary" /> Estilo secundário (arte)</label>
+        </div>
+      </div>
+      <div class="hoverpick">
+        <div class="hoverlabel">Imagem do hover <span style="opacity:.7">— o que aparece ao passar o mouse</span></div>
+        <div class="hoverthumbs" id="hoverThumbs"></div>
+      </div>
+    </div>
+
+    <div id="subSection">
+      <div class="sectlabel">Subprojetos</div>
+      <div class="subs" id="subs"></div>
+      <button class="btn" id="addSubBtn" style="margin-top:10px;width:100%;justify-content:center">
+        <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2"><path d="M12 5v14M5 12h14"/></svg>
+        Novo subprojeto
+      </button>
+    </div>
+
+    <div class="sectlabel" id="contentLabel">Conteúdo</div>
+    <div class="blocks" id="blocks"></div>
+    <div class="addblocks">
+      <button class="btn" data-add="text"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg> Texto</button>
+      <button class="btn" data-add="image"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg> Imagem</button>
+      <button class="btn" data-add="link"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg> Link</button>
+    </div>
+  </div>
+  <div class="dfoot">
+    <span class="saved"><span class="dot"></span> Salvo automaticamente</span>
+    <div class="spacer"></div>
+    <button class="btn danger" id="deleteBtn">Excluir projeto</button>
+    <button class="btn primary" id="doneBtn">Concluído</button>
+  </div>
+</div>
+
+<input type="file" id="filePicker" accept="image/*" class="hidden" />
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+/* ============ storage ============ */
+const KEY = 'projects-crm-v1';
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+let state = load();
+function load(){
+  try { const raw = localStorage.getItem(KEY); if (raw) return JSON.parse(raw); }
+  catch(e){ console.warn('load failed', e); }
+  return { projects: [] };
+}
+let saveTimer;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); }
+    catch(e){ toast('Não foi possível salvar (armazenamento cheio?). Exporte um backup.'); }
+  }, 200);
+}
+
+/* ============ image downscale (keep localStorage small) ============ */
+function fileToScaledDataURL(file, maxDim = 1400, quality = 0.85){
+  return new Promise((resolve, reject) => {
+    const fr = new FileReader();
+    fr.onerror = reject;
+    fr.onload = () => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        let { width:w, height:h } = img;
+        if (Math.max(w, h) > maxDim){
+          const s = maxDim / Math.max(w, h);
+          w = Math.round(w * s); h = Math.round(h * s);
+        }
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        const type = /png/i.test(file.type) ? 'image/png' : 'image/jpeg';
+        resolve(c.toDataURL(type, quality));
+      };
+      img.src = fr.result;
+    };
+    fr.readAsDataURL(file);
+  });
+}
+
+/* ============ password gate (light client-side deterrent, NOT real security:
+   the data lives in localStorage and is readable via devtools) ============ */
+async function sha(s){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return [...new Uint8Array(buf)].map(x => x.toString(16).padStart(2,'0')).join('');
+}
+function initGate(){
+  const lock = document.getElementById('lock');
+  if (sessionStorage.getItem('crm-unlocked') === '1'){ lock.remove(); return; }
+  const hash = localStorage.getItem('crm-pass-hash');
+  const title = document.getElementById('lockTitle'), msg = document.getElementById('lockMsg');
+  const input = document.getElementById('lockInput'), btn = document.getElementById('lockBtn'), err = document.getElementById('lockErr');
+  const creating = !hash;
+  if (creating){
+    title.textContent = 'Criar senha';
+    msg.textContent = 'Defina uma senha para proteger o CMS neste navegador.';
+    input.placeholder = 'Nova senha'; input.autocomplete = 'new-password'; btn.textContent = 'Criar senha';
+  }
+  async function submit(){
+    const v = input.value.trim();
+    if (!v){ err.textContent = 'Digite uma senha.'; return; }
+    if (creating){ localStorage.setItem('crm-pass-hash', await sha(v)); unlock(); }
+    else if (await sha(v) === hash){ unlock(); }
+    else { err.textContent = 'Senha incorreta.'; input.select(); }
+  }
+  function unlock(){ sessionStorage.setItem('crm-unlocked','1'); lock.remove(); }
+  btn.addEventListener('click', submit);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+  document.getElementById('lockReset').addEventListener('click', () => {
+    if (confirm('Redefinir remove a senha atual (os projetos continuam salvos). Continuar?')){
+      localStorage.removeItem('crm-pass-hash'); location.reload();
+    }
+  });
+  setTimeout(() => input.focus(), 50);
+}
+initGate();
+
+/* ============ seed with the current home projects (first run only) ============ */
+const SEED = [
+  { title:'Solvefy', meta:'Featured case · Product design, AI, growth', href:'solvefy.html', target:'internal' },
+  { title:'Remessa Online', meta:'Product Design Lead · Fintech growth', href:'https://www.behance.net/marcos_____carvalho', target:'external' },
+  { title:'Leads2b', meta:'Product Design Lead · Churn stabilized', href:'https://www.behance.net/marcos_____carvalho', target:'external' },
+  { title:'Customer Care Panel · Nissan', meta:'Product · Data', href:'https://www.behance.net/gallery/136071709/Customer-Care-Panel-Nissan', target:'external' },
+  { title:'dlocal CONNECT', meta:'Global event · Brand', href:'https://www.behance.net/gallery/209221077/dlocal-CONNECT', target:'external' },
+  { title:'Evil Apples', meta:'Game UX · Art direction · NY', href:'https://www.behance.net/gallery/118534117/Evil-Apples-UXUI-Game-Design-Art-Direction', target:'external' },
+  { title:'Huge · Worldwide Intranet', meta:'UX · Brooklyn', href:'https://www.behance.net/gallery/135764741/Huge-Worldwide-Intranet', target:'external' },
+  { title:'Lerdo', meta:'Founder · Award, ADG Brazil', href:'https://www.behance.net/gallery/250632349/lerdo-pink-neon', target:'external', secondary:true },
+  { title:'Mononoke · Progresso', meta:'Album cover · Music video', href:'https://www.behance.net/gallery/120517563/Mononoke-Progresso-(album-cover-and-music-video)', target:'external', secondary:true },
+  { title:'Tristes Trópicos', meta:'Cover and art', href:'https://www.behance.net/gallery/135486111/Tristes-Tropicos-Cover-and-Art', target:'external', secondary:true },
+  { title:'More on Behance', meta:'Covers · Posters · Apparel', href:'https://www.behance.net/marcos_____carvalho', target:'external', secondary:true },
+];
+function seedIfEmpty(){
+  if (localStorage.getItem('crm-seeded')) return;
+  localStorage.setItem('crm-seeded','1');
+  if (state.projects.length) return;
+  state.projects = SEED.map(s => ({
+    id: uid(), title: s.title, meta: s.meta, href: s.href, target: s.target,
+    secondary: !!s.secondary, visible: true, hoverImage: '', blocks: [], subprojects: []
+  }));
+  save();
+}
+seedIfEmpty();
+/* migrate older records so every project has the subproject/blocks arrays */
+state.projects.forEach(p => {
+  if (!Array.isArray(p.blocks)) p.blocks = [];
+  if (!Array.isArray(p.subprojects)) p.subprojects = [];
+  p.subprojects.forEach(s => { if (!Array.isArray(s.blocks)) s.blocks = []; });
+});
+
+/* ============ board render ============ */
+const board = document.getElementById('board');
+const countEl = document.getElementById('count');
+
+function firstImage(p){ const b = p.blocks.find(b => b.type === 'image' && b.src); return b ? b.src : null; }
+function firstText(p){ const b = p.blocks.find(b => b.type === 'text' && b.text); return b ? b.text : ''; }
+function coverOf(p){ return p.hoverImage || firstImage(p); }
+
+function renderBoard(){
+  countEl.textContent = state.projects.length
+    ? state.projects.length + (state.projects.length === 1 ? ' projeto' : ' projetos') : '';
+  board.innerHTML = '';
+
+  if (!state.projects.length){
+    board.innerHTML = `<div class="empty"><h2>Nenhum projeto ainda</h2>
+      <p>Crie seu primeiro projeto para começar.</p></div>`;
+  }
+
+  state.projects.forEach((p, i) => {
+    const cover = coverOf(p);
+    const card = document.createElement('div');
+    card.className = 'card' + (p.visible === false ? ' hiddenproj' : '');
+    card.draggable = true;
+    card.dataset.id = p.id;
+    card.innerHTML = `
+      <div class="handle" title="Arraste para reordenar">
+        <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2"><circle cx="9" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="18" r="1"/></svg>
+      </div>
+      ${p.visible === false ? '<span class="badge">Oculto</span>' : ''}
+      <div class="cover">${cover ? `<img src="${cover}" alt="">` : `<span class="ph">Sem imagem</span>`}</div>
+      <div class="body">
+        <div class="title"></div>
+        <div class="excerpt"></div>
+        <div class="meta">
+          <span class="metacat"></span>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn edit">Editar</button>
+      </div>`;
+    card.querySelector('.title').textContent = p.title || 'Sem título';
+    card.querySelector('.excerpt').textContent = p.meta || firstText(p);
+    const nsub = (p.subprojects && p.subprojects.length) || 0;
+    card.querySelector('.metacat').textContent =
+      (p.secondary ? 'Secundário' : 'Projeto') + ' · ' + p.blocks.length + (p.blocks.length === 1 ? ' bloco' : ' blocos')
+      + (nsub ? ' · ' + nsub + (nsub === 1 ? ' sub' : ' subs') : '');
+    card.querySelector('.edit').addEventListener('click', () => openEditor(p.id));
+    card.querySelector('.cover').addEventListener('click', () => openEditor(p.id));
+    attachDrag(card, 'project');
+    board.appendChild(card);
+  });
+
+  // add tile
+  const add = document.createElement('button');
+  add.className = 'add-tile';
+  add.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>Novo projeto</span>`;
+  add.addEventListener('click', newProject);
+  board.appendChild(add);
+}
+
+/* ============ drag & drop reorder (generic) ============ */
+let dragEl = null, dragKind = null;
+function attachDrag(el, kind){
+  el.addEventListener('dragstart', e => {
+    dragEl = el; dragKind = kind; el.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    try { e.dataTransfer.setData('text/plain', el.dataset.id); } catch(_){}
+  });
+  el.addEventListener('dragend', () => {
+    el.classList.remove('dragging');
+    document.querySelectorAll('.drag-over').forEach(n => n.classList.remove('drag-over'));
+    dragEl = null; dragKind = null;
+  });
+  el.addEventListener('dragover', e => {
+    if (!dragEl || dragKind !== kind || dragEl === el) return;
+    e.preventDefault(); el.classList.add('drag-over');
+  });
+  el.addEventListener('dragleave', () => el.classList.remove('drag-over'));
+  el.addEventListener('drop', e => {
+    if (!dragEl || dragKind !== kind || dragEl === el) return;
+    e.preventDefault(); el.classList.remove('drag-over');
+    if (kind === 'project') reorder(state.projects, dragEl.dataset.id, el.dataset.id, renderBoard);
+    else if (kind === 'sub') reorder(currentProject().subprojects, dragEl.dataset.id, el.dataset.id, renderSubs);
+    else reorder(current().blocks, dragEl.dataset.id, el.dataset.id, renderBlocks);
+  });
+}
+function reorder(arr, fromId, toId, after){
+  const from = arr.findIndex(x => x.id === fromId);
+  const to = arr.findIndex(x => x.id === toId);
+  if (from < 0 || to < 0) return;
+  const [moved] = arr.splice(from, 1);
+  arr.splice(to, 0, moved);
+  save(); after();
+}
+
+/* ============ CRUD ============ */
+function newProject(){
+  const p = { id: uid(), title: '', blocks: [], subprojects: [] };
+  state.projects.push(p); save(); renderBoard(); openEditor(p.id);
+}
+let editingId = null;      // project id
+let editingSubId = null;   // subproject id, or null when editing the project itself
+function currentProject(){ return state.projects.find(p => p.id === editingId); }
+function current(){
+  const p = currentProject(); if (!p) return null;
+  if (editingSubId){ p.subprojects = p.subprojects || []; return p.subprojects.find(s => s.id === editingSubId) || p; }
+  return p;
+}
+
+/* ============ editor ============ */
+const overlay = document.getElementById('overlay');
+const drawer = document.getElementById('drawer');
+const titleField = document.getElementById('titleField');
+const blocksEl = document.getElementById('blocks');
+const backBtn = document.getElementById('backBtn');
+
+function renderEditorChrome(){
+  const isSub = !!editingSubId;
+  backBtn.classList.toggle('hidden', !isSub);
+  document.getElementById('projOnly').classList.toggle('hidden', isSub);
+  document.getElementById('subSection').classList.toggle('hidden', isSub);
+  document.getElementById('deleteBtn').textContent = isSub ? 'Excluir subprojeto' : 'Excluir projeto';
+  document.getElementById('contentLabel').textContent = isSub ? 'Conteúdo do subprojeto' : 'Conteúdo';
+  titleField.placeholder = isSub ? 'Nome do subprojeto' : 'Nome do projeto';
+}
+
+function openEditor(id, subId = null){
+  editingId = id; editingSubId = subId;
+  const node = current(); if (!node) return;
+  renderEditorChrome();
+  titleField.value = node.title || '';
+  renderHomeCfg();
+  renderSubs();
+  renderBlocks();
+  overlay.classList.add('open');
+  drawer.classList.add('open');
+  drawer.setAttribute('aria-hidden', 'false');
+  drawer.querySelector('.dbody').scrollTop = 0;
+  setTimeout(() => titleField.focus(), 260);
+}
+function closeEditor(){
+  overlay.classList.remove('open');
+  drawer.classList.remove('open');
+  drawer.setAttribute('aria-hidden', 'true');
+  editingId = null; editingSubId = null;
+  renderBoard();
+}
+backBtn.addEventListener('click', () => { if (editingId) openEditor(editingId); });
+
+/* ---- subprojects ---- */
+function renderSubs(){
+  const p = currentProject(); if (!p) return;
+  p.subprojects = p.subprojects || [];
+  const wrap = document.getElementById('subs'); wrap.innerHTML = '';
+  if (!p.subprojects.length){
+    wrap.innerHTML = `<div class="subs-empty">Nenhum subprojeto ainda.<br>Ideal para casos com capítulos, como Solvefy (Rebrand, Product, AI, Team).</div>`;
+    return;
+  }
+  p.subprojects.forEach(s => {
+    const el = document.createElement('div');
+    el.className = 'subitem'; el.dataset.id = s.id; el.draggable = true;
+    el.innerHTML = `
+      <span class="shandle" title="Arraste para reordenar"><svg viewBox="0 0 24 24"><circle cx="9" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="18" r="1"/></svg></span>
+      <span class="stitle"></span>
+      <span class="scount">${(s.blocks?.length || 0)} ${(s.blocks?.length === 1) ? 'bloco' : 'blocos'}</span>
+      <button class="btn xs sedit">Editar</button>
+      <button class="btn xs ghost sdel" title="Excluir">✕</button>`;
+    el.querySelector('.stitle').textContent = s.title || 'Sem título';
+    el.querySelector('.sedit').addEventListener('click', () => openEditor(editingId, s.id));
+    el.querySelector('.sdel').addEventListener('click', () => {
+      if (confirm(`Excluir subprojeto "${s.title || 'sem título'}"?`)){
+        p.subprojects = p.subprojects.filter(x => x.id !== s.id); save(); renderSubs();
+      }
+    });
+    attachDrag(el, 'sub');
+    wrap.appendChild(el);
+  });
+}
+document.getElementById('addSubBtn').addEventListener('click', () => {
+  const p = currentProject(); if (!p) return;
+  p.subprojects = p.subprojects || [];
+  const s = { id: uid(), title: '', meta: '', hoverImage: '', blocks: [] };
+  p.subprojects.push(s); save(); openEditor(editingId, s.id);
+});
+titleField.addEventListener('input', () => { const p = current(); if (p){ p.title = titleField.value; save(); } });
+
+/* ---- home appearance config ---- */
+const cfgMeta = document.getElementById('cfgMeta');
+const cfgHref = document.getElementById('cfgHref');
+const cfgTarget = document.getElementById('cfgTarget');
+const cfgVisible = document.getElementById('cfgVisible');
+const cfgSecondary = document.getElementById('cfgSecondary');
+const hoverThumbs = document.getElementById('hoverThumbs');
+
+function renderHomeCfg(){
+  const p = current(); if (!p) return;
+  cfgMeta.value = p.meta || '';
+  cfgHref.value = p.href || '';
+  cfgTarget.value = p.target || 'internal';
+  cfgVisible.checked = p.visible !== false;
+  cfgSecondary.checked = !!p.secondary;
+  renderHoverThumbs();
+}
+cfgMeta.addEventListener('input', () => { const p = current(); if (p){ p.meta = cfgMeta.value; save(); } });
+cfgHref.addEventListener('input', () => { const p = current(); if (p){ p.href = cfgHref.value; save(); } });
+cfgTarget.addEventListener('change', () => { const p = current(); if (p){ p.target = cfgTarget.value; save(); } });
+cfgVisible.addEventListener('change', () => { const p = current(); if (p){ p.visible = cfgVisible.checked; save(); } });
+cfgSecondary.addEventListener('change', () => { const p = current(); if (p){ p.secondary = cfgSecondary.checked; save(); } });
+
+function renderHoverThumbs(){
+  const p = current(); if (!p) return;
+  hoverThumbs.innerHTML = '';
+  const imgs = p.blocks.filter(b => b.type === 'image' && b.src).map(b => b.src);
+  if (p.hoverImage && !imgs.includes(p.hoverImage)) imgs.unshift(p.hoverImage); // standalone upload
+
+  const none = document.createElement('button');
+  none.className = 'hthumb none' + (!p.hoverImage ? ' sel' : '');
+  none.textContent = 'Nenhuma';
+  none.addEventListener('click', () => { p.hoverImage = ''; save(); renderHoverThumbs(); renderBoard(); });
+  hoverThumbs.appendChild(none);
+
+  imgs.forEach(src => {
+    const t = document.createElement('button');
+    t.className = 'hthumb' + (p.hoverImage === src ? ' sel' : '');
+    t.innerHTML = `<img src="${src}" alt="">`;
+    t.addEventListener('click', () => { p.hoverImage = src; save(); renderHoverThumbs(); renderBoard(); });
+    hoverThumbs.appendChild(t);
+  });
+
+  const up = document.createElement('button');
+  up.className = 'hthumb up'; up.textContent = '+ Enviar';
+  up.addEventListener('click', () => pickHover());
+  hoverThumbs.appendChild(up);
+}
+let pickingHover = false;
+function pickHover(){ pickingHover = true; filePicker.value = ''; filePicker.click(); }
+
+function renderBlocks(){
+  const p = current(); if (!p) return;
+  blocksEl.innerHTML = '';
+  if (!p.blocks.length){
+    blocksEl.innerHTML = `<div class="blocks-empty">Nenhum conteúdo ainda. Adicione texto, imagem ou link abaixo.</div>`;
+    return;
+  }
+  p.blocks.forEach(b => blocksEl.appendChild(renderBlock(b)));
+}
+
+function renderBlock(b){
+  const el = document.createElement('div');
+  el.className = 'block';
+  el.dataset.id = b.id;
+  const labels = { text:'Texto', image:'Imagem', link:'Link' };
+
+  const head = document.createElement('div');
+  head.className = 'bhead';
+  head.innerHTML = `
+    <span class="bhandle" draggable="true" title="Arraste para reordenar">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="18" r="1"/></svg>
+    </span>
+    <span class="btype">${labels[b.type]}</span>
+    <button class="del">Remover</button>`;
+  head.querySelector('.del').addEventListener('click', () => {
+    const p = current(); p.blocks = p.blocks.filter(x => x.id !== b.id); save(); renderBlocks();
+  });
+  el.appendChild(head);
+
+  const body = document.createElement('div');
+  body.className = 'bcontent';
+
+  if (b.type === 'text'){
+    const ta = document.createElement('textarea');
+    ta.value = b.text || '';
+    ta.placeholder = 'Escreva aqui...';
+    ta.addEventListener('input', () => { b.text = ta.value; save(); });
+    body.appendChild(ta);
+  }
+
+  if (b.type === 'link'){
+    const row = document.createElement('div');
+    row.className = 'linkrow';
+    const url = document.createElement('input');
+    url.type = 'url'; url.placeholder = 'https://...'; url.value = b.url || '';
+    const label = document.createElement('input');
+    label.type = 'text'; label.placeholder = 'Texto do link (opcional)'; label.value = b.label || '';
+    const prev = document.createElement('div');
+    prev.className = 'preview';
+    const upd = () => {
+      b.url = url.value; b.label = label.value; save();
+      prev.innerHTML = b.url ? `→ <a href="${b.url}" target="_blank" rel="noopener">${b.label || b.url}</a>` : '';
+    };
+    url.addEventListener('input', upd); label.addEventListener('input', upd);
+    row.append(url, label, prev); body.appendChild(row); upd();
+  }
+
+  if (b.type === 'image'){
+    const wrap = document.createElement('div');
+    if (b.src){
+      wrap.className = 'imgwrap';
+      wrap.innerHTML = `<img src="${b.src}" alt=""><button class="replace">Trocar</button>`;
+      wrap.querySelector('.replace').addEventListener('click', () => pickImage(b));
+      const cap = document.createElement('input');
+      cap.className = 'caption'; cap.placeholder = 'Legenda (opcional)'; cap.value = b.caption || '';
+      cap.addEventListener('input', () => { b.caption = cap.value; save(); });
+      body.append(wrap, cap);
+    } else {
+      wrap.className = 'imgwrap empty';
+      wrap.innerHTML = `<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>Clique para enviar uma imagem</span>`;
+      wrap.addEventListener('click', () => pickImage(b));
+      body.appendChild(wrap);
+    }
+  }
+
+  el.appendChild(body);
+
+  // block drag via the handle only
+  const handle = head.querySelector('.bhandle');
+  handle.addEventListener('dragstart', e => {
+    dragEl = el; dragKind = 'block'; el.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  handle.addEventListener('dragend', () => {
+    el.classList.remove('dragging');
+    document.querySelectorAll('.block.drag-over').forEach(n => n.classList.remove('drag-over'));
+    dragEl = null; dragKind = null;
+  });
+  el.addEventListener('dragover', e => {
+    if (!dragEl || dragKind !== 'block' || dragEl === el) return;
+    e.preventDefault(); el.classList.add('drag-over');
+  });
+  el.addEventListener('dragleave', () => el.classList.remove('drag-over'));
+  el.addEventListener('drop', e => {
+    if (!dragEl || dragKind !== 'block' || dragEl === el) return;
+    e.preventDefault(); el.classList.remove('drag-over');
+    reorder(current().blocks, dragEl.dataset.id, el.dataset.id, renderBlocks);
+  });
+
+  return el;
+}
+
+/* add blocks */
+document.querySelectorAll('[data-add]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const p = current(); if (!p) return;
+    const type = btn.dataset.add;
+    const b = { id: uid(), type };
+    if (type === 'text') b.text = '';
+    if (type === 'link'){ b.url = ''; b.label = ''; }
+    if (type === 'image'){ b.src = ''; b.caption = ''; }
+    p.blocks.push(b); save(); renderBlocks();
+    if (type === 'image') pickImage(b);
+    blocksEl.lastElementChild?.scrollIntoView({ behavior:'smooth', block:'center' });
+  });
+});
+
+/* image picking */
+const filePicker = document.getElementById('filePicker');
+let pickingBlock = null;
+function pickImage(b){ pickingBlock = b; filePicker.value = ''; filePicker.click(); }
+filePicker.addEventListener('change', async () => {
+  const file = filePicker.files[0];
+  if (!file || (!pickingBlock && !pickingHover)) return;
+  try {
+    toast('Processando imagem...');
+    const dataURL = await fileToScaledDataURL(file);
+    if (pickingHover){
+      current().hoverImage = dataURL; save(); renderHoverThumbs(); renderBoard(); toast('Imagem do hover definida');
+    } else {
+      pickingBlock.src = dataURL; save(); renderBlocks(); renderHoverThumbs(); toast('Imagem adicionada');
+    }
+  } catch(e){ toast('Falha ao carregar a imagem'); }
+  pickingBlock = null; pickingHover = false;
+});
+
+/* ============ export / import ============ */
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type:'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'projects-crm-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click(); URL.revokeObjectURL(a.href);
+  toast('Backup exportado');
+});
+const importInput = Object.assign(document.createElement('input'), { type:'file', accept:'application/json' });
+document.getElementById('importBtn').addEventListener('click', () => { importInput.value = ''; importInput.click(); });
+importInput.addEventListener('change', () => {
+  const file = importInput.files[0]; if (!file) return;
+  const fr = new FileReader();
+  fr.onload = () => {
+    try {
+      const data = JSON.parse(fr.result);
+      if (!data || !Array.isArray(data.projects)) throw new Error('formato inválido');
+      if (state.projects.length && !confirm('Importar vai SUBSTITUIR os projetos atuais. Continuar?')) return;
+      state = data; save(); renderBoard(); toast('Projetos importados');
+    } catch(e){ toast('Arquivo inválido'); }
+  };
+  fr.readAsText(file);
+});
+
+/* ============ misc wiring ============ */
+document.getElementById('newBtn').addEventListener('click', newProject);
+document.getElementById('closeBtn').addEventListener('click', closeEditor);
+document.getElementById('doneBtn').addEventListener('click', closeEditor);
+overlay.addEventListener('click', closeEditor);
+document.getElementById('deleteBtn').addEventListener('click', () => {
+  if (editingSubId){
+    const p = currentProject(); const s = current();
+    if (!confirm(`Excluir subprojeto "${s.title || 'sem título'}"?`)) return;
+    p.subprojects = p.subprojects.filter(x => x.id !== editingSubId); save();
+    openEditor(editingId); // back to the parent project
+    return;
+  }
+  const p = current(); if (!p) return;
+  if (!confirm(`Excluir "${p.title || 'projeto sem título'}"? Isso não pode ser desfeito.`)) return;
+  state.projects = state.projects.filter(x => x.id !== p.id); save(); closeEditor();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && drawer.classList.contains('open')) closeEditor(); });
+
+let toastTimer;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+renderBoard();
+</script>
+</body>
+</html>
