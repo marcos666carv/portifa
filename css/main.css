@@ -267,7 +267,13 @@ section{position:relative}
   overflow:hidden;background:#111;
 }
 #thumb.on{opacity:1}
-#thumb img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05)}
+/* two stacked layers crossfade between hover images: visibly "running" like
+   a gif, and full colour (no grayscale filter) */
+#thumb .tlayer{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:0;transition:opacity .5s ease;
+}
+#thumb .tlayer.show{opacity:1}
 #thumb .fallback{
   width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;
   padding:22px;background:#111;position:relative;

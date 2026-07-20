@@ -265,39 +265,49 @@ if (craft) {
 (function () {
   const thumb = document.getElementById('thumb');
   if (!thumb) return;
-  let tx = 0, ty = 0, cx = 0, cy = 0, active = false, cycle = null;
-  const stopCycle = () => { if (cycle){ clearInterval(cycle); cycle = null; } };
+  let tx = 0, ty = 0, cx = 0, cy = 0, cycleTimer = null;
+  const stopCycle = () => { if (cycleTimer){ clearInterval(cycleTimer); cycleTimer = null; } };
 
   document.querySelectorAll('.row[data-thumb]').forEach(row => {
     row.addEventListener('pointerenter', e => {
       if (cx === 0 && cy === 0) { cx = e.clientX; cy = e.clientY; }
       tx = e.clientX; ty = e.clientY;
+      stopCycle();
+
       const slug = row.dataset.thumb;
       const cat = row.dataset.cat || '';
       const name = row.querySelector('.t').textContent.replace('↗', '').trim();
       const imgs = (row._hoverImages && row._hoverImages.length) ? row._hoverImages : [`assets/work/${slug}.jpg`];
-      thumb.innerHTML = '';
-      const img = new Image();
-      img.onload = () => { if (!img.parentNode){ thumb.innerHTML = ''; thumb.appendChild(img); } };
-      img.onerror = () => {
+
+      // two stacked <img> layers crossfade between frames — visibly alive,
+      // unlike swapping a single element's src which can look frozen
+      thumb.innerHTML = '<img class="tlayer a" alt=""><img class="tlayer b" alt="">';
+      const a = thumb.querySelector('.a'), b = thumb.querySelector('.b');
+      a.alt = name; b.alt = name;
+      a.onerror = () => {
         thumb.innerHTML = `<div class="fallback">
           <img class="fmark" src="assets/cerol/void.svg" alt="">
           <div class="fname">${name}</div>
           <div class="fcat">${cat}</div>
         </div>`;
       };
-      img.alt = name;
-      img.src = imgs[0];
-      active = true;
+      a.src = imgs[0];
+      a.classList.add('show');
       thumb.classList.add('on');
-      // 2+ hover images -> cycle them like a gif while hovering
-      stopCycle();
+
       if (imgs.length > 1){
-        let i = 0;
-        cycle = setInterval(() => { i = (i + 1) % imgs.length; img.src = imgs[i]; }, 650);
+        let i = 0, onA = true;
+        cycleTimer = setInterval(() => {
+          i = (i + 1) % imgs.length;
+          const show = onA ? b : a, hide = onA ? a : b;
+          show.src = imgs[i];
+          show.classList.add('show');
+          hide.classList.remove('show');
+          onA = !onA;
+        }, 700);
       }
     });
-    row.addEventListener('pointerleave', () => { active = false; thumb.classList.remove('on'); stopCycle(); });
+    row.addEventListener('pointerleave', () => { thumb.classList.remove('on'); stopCycle(); });
     row.addEventListener('pointermove', e => { tx = e.clientX; ty = e.clientY; });
   });
 
