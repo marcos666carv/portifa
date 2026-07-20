@@ -42,10 +42,22 @@
     background:#101010;padding:32px;position:relative;
   }
   .plate img{position:absolute;top:28px;right:28px;width:88px;height:88px;opacity:.9;filter:invert(1)}
-  .plate .ptext{font-weight:700;font-size:clamp(24px,2.6vw,34px);text-transform:lowercase;letter-spacing:-.01em}
-  .plate .pcat{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray)}
+  /* the plate card is always dark regardless of page theme, so its text
+     uses fixed colours (not --fg, which flips to near black in light mode
+     and vanishes against this card's #101010 background) */
+  .plate .ptext{font-weight:700;font-size:clamp(24px,2.6vw,34px);text-transform:lowercase;letter-spacing:-.01em;color:#f5f4f0}
+  .plate .pcat{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#8d8d88}
 
-  .nextfoot{padding:14vh 32px 10vh;text-align:center;border-top:1px solid var(--line)}
+  /* process beats: the steps behind the lead paragraph, kept small and
+     quiet on purpose so the giant reveal text stays the loud thing.
+     Theme aware (the page morphs light/dark), never hardcode wht/blk here. */
+  .beats{margin-top:36px;max-width:56ch;border-top:1px solid var(--line-th)}
+  .beats div{padding:16px 0;border-bottom:1px solid var(--line-th);display:flex;gap:20px;align-items:baseline}
+  .beats .bno{font-size:11px;letter-spacing:.1em;color:var(--gray-th);flex:0 0 20px}
+  .beats .btxt{font-weight:200;font-size:clamp(14px,1.3vw,17px);line-height:1.4;color:var(--gray-th)}
+  .beats .btxt b{font-weight:600;color:var(--fg)}
+
+  .nextfoot{padding:14vh 32px 10vh;text-align:center;border-top:1px solid var(--line-th)}
   .nextfoot .lbl{justify-content:center}
   .nextfoot a{font-weight:700;font-size:clamp(32px,6vw,84px);letter-spacing:-.02em}
   .nextfoot a:hover{color:var(--gray)}
@@ -84,11 +96,17 @@
       <div class="inner">
         <div class="no rv">Chapter I</div>
         <h2 class="rv-line"><span>The rebrand</span></h2>
-        <p data-split>Solvefy came from Ativos Capital, a company built over 20 years. I coordinated the rebrand that turned it into a technology ecosystem, with brand, communication tracks and social strategy across every sub brand, plus two live events.</p>
+        <p data-split>Solvefy came from Ativos Capital, a company built over 20 years. I coordinated the rebrand that took 5 disconnected brands with inconsistent messaging and turned them into one integrated business ecosystem.</p>
+        <div class="beats rv">
+          <div><span class="bno">01</span><span class="btxt"><b>Research first.</b> Stakeholder interviews and market analysis grounded the rebrand, and we defined the metrics we would track to prove it worked.</span></div>
+          <div><span class="bno">02</span><span class="btxt"><b>One ecosystem.</b> Brand, communication tracks and social strategy unified across every sub brand, plus two live events.</span></div>
+          <div><span class="bno">03</span><span class="btxt"><b>A system, not just a logo.</b> A design system shipped alongside the brand, orchestrating every product and touchpoint under one language.</span></div>
+          <div><span class="bno">04</span><span class="btxt"><b>Built for sales too.</b> Sales playbooks and events gave the commercial team a clear path to sell the new ecosystem.</span></div>
+        </div>
         <div class="plate rv">
           <img src="assets/cerol/wordmark.svg" alt="">
-          <div class="ptext">ativos capital to solvefy</div>
-          <div class="pcat">Rebrand · 20 years to one ecosystem</div>
+          <div class="ptext">5 brands to 1 ecosystem</div>
+          <div class="pcat">Rebrand · research, brand, design system, sales</div>
         </div>
       </div>
     </section>

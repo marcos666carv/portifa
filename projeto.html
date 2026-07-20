@@ -127,6 +127,37 @@ const project = data && Array.isArray(data.projects) ? data.projects.find(p => p
 const app = document.getElementById('app');
 const esc = s => (s || '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
+/* ---------- read-only access to the CMS's IndexedDB video store ----------
+   Videos live there instead of in the localStorage JSON (see cms.html for
+   why: a real short clip is easily 10-50MB, past what a single localStorage
+   entry can hold across a whole browser). */
+const MEDIA_DB = 'cms-media-v1', MEDIA_STORE = 'blobs';
+function openMediaDB(){
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(MEDIA_DB, 1);
+    req.onupgradeneeded = () => { req.result.createObjectStore(MEDIA_STORE); };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function getMediaBlob(id){
+  const db = await openMediaDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(MEDIA_STORE, 'readonly');
+    const req = tx.objectStore(MEDIA_STORE).get(id);
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror = () => reject(req.error);
+  });
+}
+function hydrateVideoBlocks(root){
+  root.querySelectorAll('video[data-media-id]').forEach(async v => {
+    try {
+      const blob = await getMediaBlob(v.dataset.mediaId);
+      if (blob) v.src = URL.createObjectURL(blob);
+    } catch(e){ /* leave it empty rather than break the page */ }
+  });
+}
+
 /* YouTube link detection (same logic as cms.html) — watch/short/embed/youtu.be */
 function youtubeId(url){
   if (!url) return null;
@@ -176,12 +207,14 @@ function renderBlock(b){
       (b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : '');
     return fig;
   }
-  if (b.type === 'video' && b.src){
+  if (b.type === 'video' && (b.mediaId || b.src)){
     // uploaded short clip: plays itself, muted+loop so autoplay is allowed
-    // by every browser (including mobile), no user interaction needed
+    // by every browser (including mobile), no user interaction needed.
+    // mediaId videos load async from IndexedDB via hydrateVideoBlocks();
+    // b.src is only for legacy blocks saved before that migration.
     const fig = document.createElement('figure');
     fig.className = 'b-fig b-video-native rv';
-    fig.innerHTML = `<video src="${b.src}" autoplay muted loop playsinline controls></video>` +
+    fig.innerHTML = `<video autoplay muted loop playsinline controls${b.mediaId ? ` data-media-id="${b.mediaId}"` : ''}${b.src ? ` src="${b.src}"` : ''}></video>` +
       (b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : '');
     return fig;
   }
@@ -306,6 +339,7 @@ function render(p){
   frag.appendChild(foot);
 
   app.appendChild(frag);
+  hydrateVideoBlocks(app);
   setupReveals();
 }
 
