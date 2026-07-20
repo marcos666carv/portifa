@@ -154,6 +154,9 @@ a{color:var(--accent)}
 }
 .block .linkrow input:focus{border-color:var(--accent)}
 .block .linkrow .preview{font-size:12px;color:var(--muted);word-break:break-all}
+.ytprev{display:flex;align-items:center;gap:10px}
+.ytprev img{width:80px;height:45px;object-fit:cover;border-radius:6px;flex:none}
+.ytprev span{font-size:12px;color:var(--muted)}
 .block .imgwrap{position:relative;border-radius:8px;overflow:hidden;background:var(--panel-2)}
 .block .imgwrap img{width:100%;max-height:340px;object-fit:contain;display:block}
 .block .imgwrap.empty{
@@ -360,9 +363,38 @@ function save(){
   }, 200);
 }
 
+/* ============ YouTube link detection (shared logic, also in projeto.html) ============ */
+function youtubeId(url){
+  if (!url) return null;
+  try {
+    const u = new URL(url, location.href);
+    const host = u.hostname.replace(/^www\./, '').replace(/^m\./, '');
+    if (host === 'youtu.be') return u.pathname.slice(1).split('/')[0] || null;
+    if (host === 'youtube.com' || host === 'music.youtube.com'){
+      if (u.pathname === '/watch') return u.searchParams.get('v');
+      let m = u.pathname.match(/^\/embed\/([^/?]+)/); if (m) return m[1];
+      m = u.pathname.match(/^\/shorts\/([^/?]+)/); if (m) return m[1];
+    }
+  } catch(e){}
+  return null;
+}
+
 /* ============ image downscale (keep localStorage small) ============ */
+function isGif(file){ return file.type === 'image/gif' || /\.gif$/i.test(file.name || ''); }
+
 function fileToScaledDataURL(file, maxDim = 1400, quality = 0.85){
   return new Promise((resolve, reject) => {
+    /* GIFs can't go through the canvas resize below: drawImage only grabs
+       the first frame, so redrawing would silently flatten the animation
+       into a still. Keep the original bytes instead. */
+    if (isGif(file)){
+      if (file.size > 3 * 1024 * 1024) toast('GIF grande (mais de 3MB): pode não caber no armazenamento local.');
+      const fr = new FileReader();
+      fr.onerror = reject;
+      fr.onload = () => resolve(fr.result);
+      fr.readAsDataURL(file);
+      return;
+    }
     const fr = new FileReader();
     fr.onerror = reject;
     fr.onload = () => {
@@ -751,7 +783,15 @@ function renderBlock(b){
     prev.className = 'preview';
     const upd = () => {
       b.url = url.value; b.label = label.value; save();
-      prev.innerHTML = b.url ? `→ <a href="${b.url}" target="_blank" rel="noopener">${b.label || b.url}</a>` : '';
+      const yid = youtubeId(b.url);
+      if (yid){
+        prev.innerHTML = `<div class="ytprev">
+          <img src="https://img.youtube.com/vi/${yid}/mqdefault.jpg" alt="">
+          <span>▶ Vídeo do YouTube — vai aparecer incorporado no case</span>
+        </div>`;
+      } else {
+        prev.innerHTML = b.url ? `→ <a href="${b.url}" target="_blank" rel="noopener">${b.label || b.url}</a>` : '';
+      }
     };
     url.addEventListener('input', upd); label.addEventListener('input', upd);
     row.append(url, label, prev); body.appendChild(row); upd();
