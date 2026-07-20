@@ -54,6 +54,7 @@ img{max-width:100%;display:block}
 .b-fig figcaption{font-size:13px;letter-spacing:.02em;color:var(--muted);margin-top:12px;text-align:center}
 .b-video .vwrap{position:relative;width:100%;padding-top:56.25%;background:#000}
 .b-video .vwrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.b-video-native video{width:100%;max-height:80vh;background:#000;display:block}
 .b-link{display:inline-flex;align-items:center;gap:10px;margin:6px 14px 6px 0;padding:14px 24px;
   border:1px solid var(--fg);border-radius:100px;font-size:14px;letter-spacing:.04em;text-transform:uppercase;
   text-decoration:none;transition:background .25s,color .25s}
@@ -172,6 +173,15 @@ function renderBlock(b){
     const fig = document.createElement('figure');
     fig.className = 'b-fig rv';
     fig.innerHTML = `<img src="${b.src}" alt="${esc(b.caption)}">` +
+      (b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : '');
+    return fig;
+  }
+  if (b.type === 'video' && b.src){
+    // uploaded short clip: plays itself, muted+loop so autoplay is allowed
+    // by every browser (including mobile), no user interaction needed
+    const fig = document.createElement('figure');
+    fig.className = 'b-fig b-video-native rv';
+    fig.innerHTML = `<video src="${b.src}" autoplay muted loop playsinline controls></video>` +
       (b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : '');
     return fig;
   }
