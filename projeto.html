@@ -66,6 +66,17 @@ img{max-width:100%;display:block}
 .chapter h2{font-weight:700;font-size:clamp(30px,5vw,68px);line-height:1.02;letter-spacing:-.02em;align-self:end}
 .chapter .chblocks{margin-top:5vh}
 
+/* all projects list */
+.morework{padding:10vh 0 4vh;border-top:1px solid var(--line)}
+.mw-label{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.mw-row{display:flex;justify-content:space-between;align-items:baseline;gap:24px;
+  padding:22px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;
+  transition:padding-left .3s cubic-bezier(.22,.61,.36,1)}
+.mw-row:hover{padding-left:20px}
+.mw-t{font-weight:500;font-size:clamp(20px,3vw,40px);letter-spacing:-.01em}
+.mw-m{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:right;white-space:nowrap}
+@media (max-width:600px){.mw-row{flex-direction:column;gap:6px}.mw-m{text-align:left}}
+
 /* footer */
 .foot{border-top:1px solid var(--line);padding:9vh 0 12vh;text-align:center}
 .foot .home{display:inline-flex;align-items:center;gap:12px;font-weight:700;
@@ -174,7 +185,7 @@ function renderBlocksInto(container, blocks){
 /* ---------- render the whole case ---------- */
 function render(p){
   document.title = (p.title || 'Case') + ' — Marcos Carvalho';
-  const heroImg = p.hoverImage || (p.blocks.find(b => b.type === 'image' && b.src) || {}).src;
+  const heroImg = (p.hoverImages && p.hoverImages[0]) || p.hoverImage || (p.blocks.find(b => b.type === 'image' && b.src) || {}).src;
   const frag = document.createDocumentFragment();
 
   // hero
@@ -224,6 +235,25 @@ function render(p){
       chs.appendChild(sec);
     });
     frag.appendChild(chs);
+  }
+
+  // all other projects (index at the end of the case)
+  const others = (data.projects || []).filter(x => x.visible !== false && x.id !== p.id);
+  if (others.length){
+    const mw = document.createElement('section');
+    mw.className = 'morework wrap';
+    mw.innerHTML = `<div class="mw-label rv">All projects</div>`;
+    const list = document.createElement('div');
+    list.className = 'mw-list';
+    others.forEach(o => {
+      const a = document.createElement('a');
+      a.className = 'mw-row rv';
+      a.href = 'projeto.html?id=' + encodeURIComponent(o.id);
+      a.innerHTML = `<span class="mw-t">${esc(o.title || 'Untitled')}</span><span class="mw-m">${esc(o.meta || '')}</span>`;
+      list.appendChild(a);
+    });
+    mw.appendChild(list);
+    frag.appendChild(mw);
   }
 
   // footer

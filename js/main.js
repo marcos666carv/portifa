@@ -29,7 +29,8 @@ function hydrateWorkFromCMS(){
     a.setAttribute('data-transition', '');
     a.dataset.thumb = p.id;
     a.innerHTML = `<span class="t">${escapeHtml(p.title || 'Untitled')} <span class="arrow">↗</span></span><span class="m">${escapeHtml(p.meta || '')}</span>`;
-    if (p.hoverImage) a._hoverImage = p.hoverImage;
+    const hi = Array.isArray(p.hoverImages) ? p.hoverImages : (p.hoverImage ? [p.hoverImage] : []);
+    if (hi.length) a._hoverImages = hi;
     proj.appendChild(a);
   });
 }
@@ -264,7 +265,8 @@ if (craft) {
 (function () {
   const thumb = document.getElementById('thumb');
   if (!thumb) return;
-  let tx = 0, ty = 0, cx = 0, cy = 0, active = false;
+  let tx = 0, ty = 0, cx = 0, cy = 0, active = false, cycle = null;
+  const stopCycle = () => { if (cycle){ clearInterval(cycle); cycle = null; } };
 
   document.querySelectorAll('.row[data-thumb]').forEach(row => {
     row.addEventListener('pointerenter', e => {
@@ -273,9 +275,10 @@ if (craft) {
       const slug = row.dataset.thumb;
       const cat = row.dataset.cat || '';
       const name = row.querySelector('.t').textContent.replace('↗', '').trim();
+      const imgs = (row._hoverImages && row._hoverImages.length) ? row._hoverImages : [`assets/work/${slug}.jpg`];
       thumb.innerHTML = '';
       const img = new Image();
-      img.onload = () => { thumb.innerHTML = ''; thumb.appendChild(img); };
+      img.onload = () => { if (!img.parentNode){ thumb.innerHTML = ''; thumb.appendChild(img); } };
       img.onerror = () => {
         thumb.innerHTML = `<div class="fallback">
           <img class="fmark" src="assets/cerol/void.svg" alt="">
@@ -283,12 +286,18 @@ if (craft) {
           <div class="fcat">${cat}</div>
         </div>`;
       };
-      img.src = row._hoverImage || `assets/work/${slug}.jpg`;
       img.alt = name;
+      img.src = imgs[0];
       active = true;
       thumb.classList.add('on');
+      // 2+ hover images -> cycle them like a gif while hovering
+      stopCycle();
+      if (imgs.length > 1){
+        let i = 0;
+        cycle = setInterval(() => { i = (i + 1) % imgs.length; img.src = imgs[i]; }, 650);
+      }
     });
-    row.addEventListener('pointerleave', () => { active = false; thumb.classList.remove('on'); });
+    row.addEventListener('pointerleave', () => { active = false; thumb.classList.remove('on'); stopCycle(); });
     row.addEventListener('pointermove', e => { tx = e.clientX; ty = e.clientY; });
   });
 

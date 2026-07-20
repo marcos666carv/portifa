@@ -221,6 +221,8 @@ a{color:var(--accent)}
 .hthumb img{width:100%;height:100%;object-fit:cover}
 .hthumb.sel{border-color:var(--accent)}
 .hthumb.up,.hthumb.none{border-style:dashed;flex-direction:column}
+.hthumb .ord{position:absolute;top:3px;left:3px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;
+  background:var(--accent);color:#0a1024;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:1}
 .hthumb:hover{border-color:#3d3d44}
 .hthumb.sel:hover{border-color:var(--accent)}
 .card.hiddenproj{opacity:.5}
@@ -303,7 +305,7 @@ a{color:var(--accent)}
         <p class="cfghint">Ao clicar na home, este projeto abre a página de case interna (nunca vai para o Behance).</p>
       </div>
       <div class="hoverpick">
-        <div class="hoverlabel">Imagem do hover <span style="opacity:.7">— o que aparece ao passar o mouse</span></div>
+        <div class="hoverlabel">Imagens do hover <span style="opacity:.7">— escolha uma ou várias; com 2+ elas rodam como um gif no hover</span></div>
         <div class="hoverthumbs" id="hoverThumbs"></div>
       </div>
     </div>
@@ -447,10 +449,15 @@ function seedIfEmpty(){
 }
 seedIfEmpty();
 /* migrate older records so every project has the subproject/blocks arrays */
+function migrateHover(o){
+  if (!Array.isArray(o.hoverImages)) o.hoverImages = o.hoverImage ? [o.hoverImage] : [];
+  delete o.hoverImage;
+}
 state.projects.forEach(p => {
   if (!Array.isArray(p.blocks)) p.blocks = [];
   if (!Array.isArray(p.subprojects)) p.subprojects = [];
-  p.subprojects.forEach(s => { if (!Array.isArray(s.blocks)) s.blocks = []; });
+  migrateHover(p);
+  p.subprojects.forEach(s => { if (!Array.isArray(s.blocks)) s.blocks = []; migrateHover(s); });
 });
 
 /* ============ board render ============ */
@@ -459,7 +466,7 @@ const countEl = document.getElementById('count');
 
 function firstImage(p){ const b = p.blocks.find(b => b.type === 'image' && b.src); return b ? b.src : null; }
 function firstText(p){ const b = p.blocks.find(b => b.type === 'text' && b.text); return b ? b.text : ''; }
-function coverOf(p){ return p.hoverImage || firstImage(p); }
+function coverOf(p){ return (p.hoverImages && p.hoverImages[0]) || p.hoverImage || firstImage(p); }
 
 function renderBoard(){
   countEl.textContent = state.projects.length
@@ -658,21 +665,30 @@ cfgSecondary.addEventListener('change', () => { const p = current(); if (p){ p.s
 
 function renderHoverThumbs(){
   const p = current(); if (!p) return;
+  migrateHover(p);
   hoverThumbs.innerHTML = '';
-  const imgs = p.blocks.filter(b => b.type === 'image' && b.src).map(b => b.src);
-  if (p.hoverImage && !imgs.includes(p.hoverImage)) imgs.unshift(p.hoverImage); // standalone upload
+  const blockImgs = p.blocks.filter(b => b.type === 'image' && b.src).map(b => b.src);
+  const candidates = [...blockImgs];
+  // standalone uploaded hover images not present as content blocks
+  p.hoverImages.forEach(src => { if (!candidates.includes(src)) candidates.unshift(src); });
 
   const none = document.createElement('button');
-  none.className = 'hthumb none' + (!p.hoverImage ? ' sel' : '');
+  none.className = 'hthumb none' + (!p.hoverImages.length ? ' sel' : '');
   none.textContent = 'Nenhuma';
-  none.addEventListener('click', () => { p.hoverImage = ''; save(); renderHoverThumbs(); renderBoard(); });
+  none.addEventListener('click', () => { p.hoverImages = []; save(); renderHoverThumbs(); renderBoard(); });
   hoverThumbs.appendChild(none);
 
-  imgs.forEach(src => {
+  candidates.forEach(src => {
+    const idx = p.hoverImages.indexOf(src);
     const t = document.createElement('button');
-    t.className = 'hthumb' + (p.hoverImage === src ? ' sel' : '');
-    t.innerHTML = `<img src="${src}" alt="">`;
-    t.addEventListener('click', () => { p.hoverImage = src; save(); renderHoverThumbs(); renderBoard(); });
+    t.className = 'hthumb' + (idx >= 0 ? ' sel' : '');
+    // clicking toggles this image in/out of the cycling set; number shows order
+    t.innerHTML = `<img src="${src}" alt="">` + (idx >= 0 ? `<span class="ord">${idx + 1}</span>` : '');
+    t.addEventListener('click', () => {
+      const i = p.hoverImages.indexOf(src);
+      if (i >= 0) p.hoverImages.splice(i, 1); else p.hoverImages.push(src);
+      save(); renderHoverThumbs(); renderBoard();
+    });
     hoverThumbs.appendChild(t);
   });
 
@@ -682,7 +698,7 @@ function renderHoverThumbs(){
   hoverThumbs.appendChild(up);
 }
 let pickingHover = false;
-function pickHover(){ pickingHover = true; filePicker.value = ''; filePicker.click(); }
+function pickHover(){ pickingHover = true; filePicker.multiple = true; filePicker.value = ''; filePicker.click(); }
 
 function renderBlocks(){
   const p = current(); if (!p) return;
@@ -791,33 +807,44 @@ document.querySelectorAll('[data-add]').forEach(btn => {
   btn.addEventListener('click', () => {
     const p = current(); if (!p) return;
     const type = btn.dataset.add;
+    if (type === 'image'){ pickNewImages(); return; }   // multi upload -> one block each
     const b = { id: uid(), type };
     if (type === 'text') b.text = '';
     if (type === 'link'){ b.url = ''; b.label = ''; }
-    if (type === 'image'){ b.src = ''; b.caption = ''; }
     p.blocks.push(b); save(); renderBlocks();
-    if (type === 'image') pickImage(b);
     blocksEl.lastElementChild?.scrollIntoView({ behavior:'smooth', block:'center' });
   });
 });
 
-/* image picking */
+/* image picking — one shared picker, three modes */
 const filePicker = document.getElementById('filePicker');
-let pickingBlock = null;
-function pickImage(b){ pickingBlock = b; filePicker.value = ''; filePicker.click(); }
+let pickingBlock = null;      // replace a single existing image block
+let pickingNew = false;       // add new image content blocks (multiple)
+function pickImage(b){ pickingBlock = b; filePicker.multiple = false; filePicker.value = ''; filePicker.click(); }
+function pickNewImages(){ pickingNew = true; filePicker.multiple = true; filePicker.value = ''; filePicker.click(); }
+
 filePicker.addEventListener('change', async () => {
-  const file = filePicker.files[0];
-  if (!file || (!pickingBlock && !pickingHover)) return;
+  const files = [...filePicker.files];
+  if (!files.length || (!pickingBlock && !pickingHover && !pickingNew)) return;
   try {
-    toast('Processando imagem...');
-    const dataURL = await fileToScaledDataURL(file);
-    if (pickingHover){
-      current().hoverImage = dataURL; save(); renderHoverThumbs(); renderBoard(); toast('Imagem do hover definida');
-    } else {
-      pickingBlock.src = dataURL; save(); renderBlocks(); renderHoverThumbs(); toast('Imagem adicionada');
+    toast(files.length > 1 ? 'Processando imagens...' : 'Processando imagem...');
+    if (pickingNew){
+      const p = current();
+      for (const f of files){ p.blocks.push({ id: uid(), type: 'image', src: await fileToScaledDataURL(f), caption: '' }); }
+      save(); renderBlocks(); renderHoverThumbs();
+      toast(files.length + (files.length === 1 ? ' imagem adicionada' : ' imagens adicionadas'));
+      blocksEl.lastElementChild?.scrollIntoView({ behavior:'smooth', block:'center' });
+    } else if (pickingHover){
+      const p = current(); migrateHover(p);
+      for (const f of files){ p.hoverImages.push(await fileToScaledDataURL(f)); }
+      save(); renderHoverThumbs(); renderBoard();
+      toast(files.length + (files.length === 1 ? ' imagem no hover' : ' imagens no hover'));
+    } else if (pickingBlock){
+      pickingBlock.src = await fileToScaledDataURL(files[0]); save(); renderBlocks(); renderHoverThumbs();
+      toast('Imagem trocada');
     }
-  } catch(e){ toast('Falha ao carregar a imagem'); }
-  pickingBlock = null; pickingHover = false;
+  } catch(e){ toast('Falha ao carregar imagem'); }
+  pickingBlock = null; pickingHover = false; pickingNew = false;
 });
 
 /* ============ export / import ============ */
