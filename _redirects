@@ -1,0 +1,5 @@
+# Solvefy is now a CMS-editable case (projeto.html?id=solvefy).
+# Keep the clean /solvefy URL pointing at it. The old bespoke page is still
+# reachable at /solvefy.html as a backup. 200! forces the rewrite to win over
+# the existing solvefy.html file while keeping the URL clean.
+/solvefy   /projeto.html?id=solvefy   200!

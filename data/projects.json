@@ -1,8 +1,91 @@
 {
   "version": 1,
   "generatedFrom": "behance",
-  "count": 12,
+  "count": 13,
   "projects": [
+    {
+      "id": "solvefy",
+      "title": "Solvefy",
+      "meta": "Featured case · Product design, AI, growth",
+      "eyebrow": "Featured case · Staff Product Designer / Product Design Lead · 2024–2026",
+      "summary": "A communications company two decades in the making, reborn as a technology ecosystem. I owned design and growth through the change.",
+      "secondary": false,
+      "visible": true,
+      "source": "internal",
+      "featured": true,
+      "behanceUrl": "",
+      "tools": [],
+      "cover": null,
+      "hoverImages": [],
+      "firstImage": null,
+      "blocks": [],
+      "subprojects": [
+        {
+          "id": "solv-1",
+          "title": "The rebrand",
+          "meta": "",
+          "hoverImages": [],
+          "blocks": [
+            {
+              "type": "text",
+              "text": "Solvefy came from Ativos Capital, a company built over 20 years. I coordinated the rebrand that took 5 disconnected brands with inconsistent messaging and turned them into one integrated business ecosystem."
+            },
+            {
+              "type": "text",
+              "text": "Research first. Stakeholder interviews and market analysis grounded the rebrand, and we defined the metrics we would track to prove it worked.\n\nOne ecosystem. Brand, communication tracks and social strategy unified across every sub brand, plus two live events.\n\nA system, not just a logo. A design system shipped alongside the brand, orchestrating every product and touchpoint under one language.\n\nBuilt for sales too. Sales playbooks and events gave the commercial team a clear path to sell the new ecosystem."
+            }
+          ]
+        },
+        {
+          "id": "solv-2",
+          "title": "The product",
+          "meta": "",
+          "hoverImages": [],
+          "blocks": [
+            {
+              "type": "text",
+              "text": "I reorganized how the product portfolio was structured across four products. NPS climbed, and navigation and campaign dispatch got noticeably smoother for every team using it."
+            },
+            {
+              "type": "text",
+              "text": "Four products, one direction. Disparo Pro, Brasilfone, EasyCDP and Solvefy Cloud, working close to tech and operations.\n\nEnd to end craft. Information architecture, wireframes, high fidelity prototypes and responsive systems built to scale, not one offs.\n\nNPS climbed. Navigation and campaign dispatch got noticeably smoother for every team using the products daily."
+            }
+          ]
+        },
+        {
+          "id": "solv-3",
+          "title": "The AI",
+          "meta": "",
+          "hoverImages": [],
+          "blocks": [
+            {
+              "type": "text",
+              "text": "I shipped AI driven design workflows while the company launched Agents, its AI orchestration product. Design that ships with AI, not around it."
+            },
+            {
+              "type": "text",
+              "text": "AI in the process. Design workflows built and shipped on AI, run through Claude Code, MCPs and custom agents, shortening delivery cycles for the whole team.\n\nAI in the product too. While I worked on this, Solvefy launched Agents, its own AI orchestration product for customers.\n\nNot on the slide. The distinction that matters: AI as something I build with daily, not a line in a deck."
+            }
+          ]
+        },
+        {
+          "id": "solv-4",
+          "title": "The team",
+          "meta": "",
+          "hoverImages": [],
+          "blocks": [
+            {
+              "type": "text",
+              "text": "I led a team of 7. We seeded a Winning by Design culture and stronger knowledge sharing, so design and growth pulled toward the same business outcomes."
+            },
+            {
+              "type": "text",
+              "text": "Design and growth, aligned. A team of 7, pulling toward the same business outcomes instead of two separate agendas.\n\nWinning by Design. Seeded as the team's operating culture, not a one off workshop.\n\nKnowledge that travels. Stronger knowledge sharing so the team's work compounded instead of restarting every time."
+            }
+          ]
+        }
+      ]
+    },
     {
       "id": "136071709",
       "title": "Customer Care Panel · Nissan",

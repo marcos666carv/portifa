@@ -268,6 +268,10 @@ a{color:var(--accent)}
   <h1>Cases</h1>
   <span class="count" id="count"></span>
   <div class="spacer"></div>
+  <button class="btn ghost" id="pullBtn" title="Recarregar os cases publicados (data/projects.json)">
+    <svg viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+    Puxar do site
+  </button>
   <button class="btn ghost" id="importBtn" title="Importar JSON">
     <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
     Importar
@@ -501,42 +505,35 @@ function initGate(){
 }
 initGate();
 
-/* ============ seed with the current home projects (first run only) ============ */
-const SEED = [
-  { title:'Solvefy', meta:'Featured case · Product design, AI, growth', href:'solvefy.html', target:'internal' },
-  { title:'Remessa Online', meta:'Product Design Lead · Fintech growth', href:'https://www.behance.net/marcos_____carvalho', target:'external' },
-  { title:'Leads2b', meta:'Product Design Lead · Churn stabilized', href:'https://www.behance.net/marcos_____carvalho', target:'external' },
-  { title:'Customer Care Panel · Nissan', meta:'Product · Data', href:'https://www.behance.net/gallery/136071709/Customer-Care-Panel-Nissan', target:'external' },
-  { title:'dlocal CONNECT', meta:'Global event · Brand', href:'https://www.behance.net/gallery/209221077/dlocal-CONNECT', target:'external' },
-  { title:'Evil Apples', meta:'Game UX · Art direction · NY', href:'https://www.behance.net/gallery/118534117/Evil-Apples-UXUI-Game-Design-Art-Direction', target:'external' },
-  { title:'Huge · Worldwide Intranet', meta:'UX · Brooklyn', href:'https://www.behance.net/gallery/135764741/Huge-Worldwide-Intranet', target:'external' },
-  { title:'Lerdo', meta:'Founder · Award, ADG Brazil', href:'https://www.behance.net/gallery/250632349/lerdo-pink-neon', target:'external', secondary:true },
-  { title:'Mononoke · Progresso', meta:'Album cover · Music video', href:'https://www.behance.net/gallery/120517563/Mononoke-Progresso-(album-cover-and-music-video)', target:'external', secondary:true },
-  { title:'Tristes Trópicos', meta:'Cover and art', href:'https://www.behance.net/gallery/135486111/Tristes-Tropicos-Cover-and-Art', target:'external', secondary:true },
-  { title:'More on Behance', meta:'Covers · Posters · Apparel', href:'https://www.behance.net/marcos_____carvalho', target:'external', secondary:true },
-];
-function seedIfEmpty(){
-  if (localStorage.getItem('crm-seeded')) return;
-  localStorage.setItem('crm-seeded','1');
-  if (state.projects.length) return;
-  state.projects = SEED.map(s => ({
-    id: uid(), title: s.title, meta: s.meta, href: s.href, target: s.target,
-    secondary: !!s.secondary, visible: true, hoverImage: '', blocks: [], subprojects: []
-  }));
-  save();
+/* ============ data source ============
+   The published site's data/projects.json is the source of truth (it feeds
+   the live case pages). On a fresh browser we seed the CMS straight from it,
+   so what you edit here mirrors what's live. Use "Puxar do site" to re-pull it
+   any time (e.g. after new content was deployed). Editing is local until you
+   Export the JSON and it gets deployed as data/projects.json. */
+async function pullFromSite(){
+  const r = await fetch('data/projects.json', { cache: 'no-cache' });
+  if (!r.ok) throw new Error('projects.json ' + r.status);
+  const d = await r.json();
+  if (!d || !Array.isArray(d.projects)) throw new Error('formato inválido');
+  return d;
 }
-seedIfEmpty();
-/* migrate older records so every project has the subproject/blocks arrays */
+async function seedFromSiteIfEmpty(){
+  if (state.projects.length) return;
+  try { state = await pullFromSite(); save(); } catch (e) { console.warn('seed from site failed', e); }
+}
 function migrateHover(o){
   if (!Array.isArray(o.hoverImages)) o.hoverImages = o.hoverImage ? [o.hoverImage] : [];
   delete o.hoverImage;
 }
-state.projects.forEach(p => {
-  if (!Array.isArray(p.blocks)) p.blocks = [];
-  if (!Array.isArray(p.subprojects)) p.subprojects = [];
-  migrateHover(p);
-  p.subprojects.forEach(s => { if (!Array.isArray(s.blocks)) s.blocks = []; migrateHover(s); });
-});
+function migrateAll(){
+  state.projects.forEach(p => {
+    if (!Array.isArray(p.blocks)) p.blocks = [];
+    if (!Array.isArray(p.subprojects)) p.subprojects = [];
+    migrateHover(p);
+    p.subprojects.forEach(s => { if (!Array.isArray(s.blocks)) s.blocks = []; migrateHover(s); });
+  });
+}
 
 /* ============ board render ============ */
 const board = document.getElementById('board');
@@ -1060,7 +1057,21 @@ function toast(msg){
   clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-renderBoard();
+/* pull the live published cases into the CMS (overwrites local edits) */
+document.getElementById('pullBtn').addEventListener('click', async () => {
+  if (state.projects.length && !confirm('Puxar os cases publicados do site vai SUBSTITUIR o que está aqui neste navegador. Continuar?')) return;
+  try {
+    state = await pullFromSite(); migrateAll(); save(); renderBoard();
+    toast('Cases do site carregados');
+  } catch (e) { toast('Falha ao puxar do site (' + (e.message || e) + ')'); }
+});
+
+/* init: seed from the live site on a fresh browser, then render */
+(async function init(){
+  await seedFromSiteIfEmpty();
+  migrateAll();
+  renderBoard();
+})();
 </script>
 </body>
 </html>

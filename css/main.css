@@ -331,6 +331,48 @@ section{position:relative}
   clip-path:inset(100% 0 0 0);
 }
 
+/* ---- craft wall (loose Pinterest-style masonry) ---- */
+.craftwall{padding-top:clamp(36px,6vh,80px);padding-bottom:clamp(70px,13vh,150px)}
+.craftwall .lbl{margin-bottom:32px}
+.wall{column-count:2;column-gap:12px}
+@media (min-width:640px){.wall{column-count:3}}
+@media (min-width:1000px){.wall{column-count:4}}
+@media (min-width:1500px){.wall{column-count:5}}
+.tile{
+  display:block;width:100%;margin:0 0 12px;padding:0;border:0;background:#e7e6e1;
+  break-inside:avoid;cursor:pointer;overflow:hidden;position:relative;line-height:0;
+}
+.tile img{width:100%;height:auto;display:block;
+  transition:transform .6s cubic-bezier(.16,.84,.36,1)}
+.tile::after{content:"";position:absolute;inset:0;background:var(--blk);opacity:0;transition:opacity .3s}
+.tile:hover img{transform:scale(1.045)}
+.tile:hover::after{opacity:.05}
+
+/* ---- lightbox (tap a tile to open it big) ---- */
+#lightbox{
+  position:fixed;inset:0;z-index:400;display:none;
+  align-items:center;justify-content:center;
+  background:rgba(5,5,5,.95);backdrop-filter:blur(6px);
+}
+#lightbox.open{display:flex}
+.lb-stage{margin:0;display:flex;flex-direction:column;align-items:center;gap:16px}
+#lb-img{max-width:92vw;max-height:82vh;width:auto;height:auto;object-fit:contain;
+  box-shadow:0 40px 100px rgba(0,0,0,.55);cursor:pointer}
+#lb-cap{color:var(--wht);font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.65}
+.lb-close,.lb-nav{
+  position:fixed;background:none;border:0;color:var(--wht);cursor:pointer;
+  z-index:401;opacity:.7;transition:opacity .2s ease, transform .2s ease;
+  line-height:1;padding:12px;font-weight:300;
+}
+.lb-close:hover,.lb-nav:hover{opacity:1}
+.lb-close{top:16px;right:22px;font-size:24px}
+.lb-nav{top:50%;transform:translateY(-50%);font-size:56px}
+.lb-prev{left:10px}.lb-next{right:10px}
+.lb-prev:hover{transform:translateY(-50%) translateX(-3px)}
+.lb-next:hover{transform:translateY(-50%) translateX(3px)}
+@media (max-width:600px){.lb-nav{font-size:40px}#lb-img{max-height:74vh}}
+@media (prefers-reduced-motion:reduce){.tile img{transition:none}.tile:hover img{transform:none}#lightbox{backdrop-filter:none}}
+
 /* ---- responsive ---- */
 @media (max-width:900px){
   .cap{grid-template-columns:1fr;gap:10px}

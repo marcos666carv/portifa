@@ -227,7 +227,7 @@ if (craft) {
   if (!cursor || matchMedia('(hover: none)').matches) return;
   let cx = innerWidth / 2, cy = innerHeight / 2, tx = cx, ty = cy;
   addEventListener('pointermove', e => { tx = e.clientX; ty = e.clientY; });
-  document.querySelectorAll('a, .row, [data-magnetic]').forEach(el => {
+  document.querySelectorAll('a, .row, .tile, [data-magnetic]').forEach(el => {
     el.addEventListener('pointerenter', () => cursor.classList.add('big'));
     el.addEventListener('pointerleave', () => cursor.classList.remove('big'));
   });
@@ -336,4 +336,60 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
     overlay.style.clipPath = 'inset(0 0 0 0)';
     gsap.to(overlay, { clipPath: 'inset(100% 0 0 0)', duration: 0.7, delay: 0.05, ease: 'expo.inOut' });
   }
+})();
+
+/* ============ CRAFT WALL LIGHTBOX ============
+   Tap a masonry tile to open it big; arrows / swipe / keys to move through the
+   whole wall, click the backdrop or ✕ or Esc to close. Locks Lenis while open. */
+(function () {
+  const lb = document.getElementById('lightbox');
+  const wall = document.getElementById('wall');
+  if (!lb || !wall) return;
+  const img = document.getElementById('lb-img');
+  const cap = document.getElementById('lb-cap');
+  const tiles = [...wall.querySelectorAll('.tile')];
+  if (!tiles.length) return;
+  let idx = -1;
+
+  const show = (i) => {
+    idx = (i + tiles.length) % tiles.length;
+    const t = tiles[idx];
+    img.src = t.dataset.full;
+    img.alt = t.dataset.title || '';
+    cap.textContent = t.dataset.title || '';
+  };
+  const open = (i) => {
+    show(i);
+    lb.classList.add('open');
+    lb.setAttribute('aria-hidden', 'false');
+    if (window.__lenis) window.__lenis.stop();
+    document.documentElement.style.overflow = 'hidden';
+  };
+  const close = () => {
+    lb.classList.remove('open');
+    lb.setAttribute('aria-hidden', 'true');
+    if (window.__lenis) window.__lenis.start();
+    document.documentElement.style.overflow = '';
+    img.src = '';
+  };
+
+  tiles.forEach((t, i) => t.addEventListener('click', () => open(i)));
+  lb.querySelector('.lb-close').addEventListener('click', (e) => { e.stopPropagation(); close(); });
+  lb.querySelector('.lb-prev').addEventListener('click', (e) => { e.stopPropagation(); show(idx - 1); });
+  lb.querySelector('.lb-next').addEventListener('click', (e) => { e.stopPropagation(); show(idx + 1); });
+  img.addEventListener('click', (e) => { e.stopPropagation(); show(idx + 1); });   // click image = next
+  lb.addEventListener('click', close);                                             // backdrop = close
+  addEventListener('keydown', (e) => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowLeft') show(idx - 1);
+    else if (e.key === 'ArrowRight') show(idx + 1);
+  });
+  // touch swipe
+  let sx = 0;
+  lb.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - sx;
+    if (Math.abs(dx) > 45) show(idx + (dx < 0 ? 1 : -1));
+  }, { passive: true });
 })();
