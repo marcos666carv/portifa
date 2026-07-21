@@ -1,0 +1,2210 @@
+{
+  "version": 1,
+  "generatedFrom": "behance",
+  "count": 12,
+  "projects": [
+    {
+      "id": "136071709",
+      "title": "Customer Care Panel · Nissan",
+      "meta": "Product · Data",
+      "eyebrow": "Customer care panel · Nissan · 2022",
+      "summary": "A customer care panel for Nissan — product design and UI/UX for an internal digital tool.",
+      "secondary": false,
+      "visible": true,
+      "source": "behance",
+      "behanceUrl": "https://www.behance.net/gallery/136071709/Customer-Care-Panel-Nissan",
+      "tools": [
+        "Adobe XD",
+        "Adobe Photoshop"
+      ],
+      "cover": "assets/work/136071709/cover.webp",
+      "hoverImages": [
+        "assets/work/136071709/cover.webp"
+      ],
+      "firstImage": "assets/work/136071709/01.webp",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "assets/work/136071709/01.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 733
+        },
+        {
+          "type": "image",
+          "src": "assets/work/136071709/02.webp",
+          "caption": "",
+          "alt": "",
+          "w": 266,
+          "h": 133
+        },
+        {
+          "type": "image",
+          "src": "assets/work/136071709/03.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 883
+        },
+        {
+          "type": "image",
+          "src": "assets/work/136071709/04.webp",
+          "caption": "",
+          "alt": "",
+          "w": 534,
+          "h": 267
+        },
+        {
+          "type": "image",
+          "src": "assets/work/136071709/05.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 900
+        },
+        {
+          "type": "image",
+          "src": "assets/work/136071709/06.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 693
+        },
+        {
+          "type": "image",
+          "src": "assets/work/136071709/07.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 1103
+        },
+        {
+          "type": "image",
+          "src": "assets/work/136071709/08.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 1200
+        },
+        {
+          "type": "image",
+          "src": "assets/work/136071709/09.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 1200
+        },
+        {
+          "type": "image",
+          "src": "assets/work/136071709/10.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 1030
+        }
+      ],
+      "subprojects": []
+    },
+    {
+      "id": "135764741",
+      "title": "Huge · Worldwide Intranet",
+      "meta": "UX · Worldwide intranet",
+      "eyebrow": "Intranet · Huge · 2022",
+      "summary": "A worldwide intranet for Huge, designed to connect and support the agency's global teams. UX design by Marcos Carvalho, Nathalie Rosie Taylor, and Rachael Feinman.",
+      "secondary": false,
+      "visible": true,
+      "source": "behance",
+      "behanceUrl": "https://www.behance.net/gallery/135764741/Huge-Worldwide-Intranet",
+      "tools": [
+        "Adobe Photoshop",
+        "Adobe Ilustrator",
+        "Sketch",
+        "Adobe XD"
+      ],
+      "cover": "assets/work/135764741/cover.webp",
+      "hoverImages": [
+        "assets/work/135764741/cover.webp"
+      ],
+      "firstImage": "assets/work/135764741/01.webp",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "assets/work/135764741/01.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 437
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135764741/02.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 510
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135764741/03.webp",
+          "caption": "",
+          "alt": "",
+          "w": 586,
+          "h": 293
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135764741/04.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 1200
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135764741/05.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 1022
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135764741/06.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 1200
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135764741/07.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 1200
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135764741/08.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 587
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135764741/09.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 1200
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135764741/10.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 1200
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135764741/11.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 723
+        },
+        {
+          "type": "text",
+          "text": "UX designers: Marcos Carvalho, Nathalie Rosie Taylor, Rachael Feinman."
+        }
+      ],
+      "subprojects": []
+    },
+    {
+      "id": "118534117",
+      "title": "Evil Apples",
+      "meta": "Game UX · Art direction · NY",
+      "eyebrow": "Mobile card game · UX/UI · Art direction · 2021",
+      "summary": "UX/UI game design and art direction for Evil Apples, a mobile card game — from interaction design to illustration.",
+      "secondary": false,
+      "visible": true,
+      "source": "behance",
+      "behanceUrl": "https://www.behance.net/gallery/118534117/Evil-Apples-UXUI-Game-Design-Art-Direction",
+      "tools": [
+        "Adobe XD",
+        "Adobe Photoshop",
+        "Sketch",
+        "Adobe Illustrator"
+      ],
+      "cover": "assets/work/118534117/cover.webp",
+      "hoverImages": [
+        "assets/work/118534117/cover.webp"
+      ],
+      "firstImage": "assets/work/118534117/01.webp",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "assets/work/118534117/01.webp",
+          "caption": "",
+          "alt": "Image may contain: cartoon",
+          "w": 600,
+          "h": 1200
+        }
+      ],
+      "subprojects": []
+    },
+    {
+      "id": "76147897",
+      "title": "Bodebrown",
+      "meta": "UX · UI · Brand",
+      "eyebrow": "Website redesign · Bodebrown · 2019",
+      "summary": "A new website for Bodebrown, an artisanal beer company from Curitiba, built around content, custom illustrations and icons.",
+      "secondary": false,
+      "visible": true,
+      "source": "behance",
+      "behanceUrl": "https://www.behance.net/gallery/76147897/Redesigning-the-Bodebrown-Experience-UXUI",
+      "tools": [
+        "Adobe Photoshop",
+        "Adobe Illustrator",
+        "Adobe InDesign",
+        "Sketch",
+        "Adobe After Effects"
+      ],
+      "cover": "assets/work/76147897/cover.webp",
+      "hoverImages": [
+        "assets/work/76147897/cover.webp"
+      ],
+      "firstImage": "assets/work/76147897/01.webp",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "assets/work/76147897/01.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 1200
+        },
+        {
+          "type": "image",
+          "src": "assets/work/76147897/02.webp",
+          "caption": "",
+          "alt": "",
+          "w": 1366,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/76147897/03.webp",
+          "caption": "",
+          "alt": "",
+          "w": 2732,
+          "h": 19235
+        }
+      ],
+      "subprojects": []
+    },
+    {
+      "id": "209221077",
+      "title": "dlocal · CONNECT",
+      "meta": "Global event · Brand",
+      "eyebrow": "Event brand identity · dLocal · 2024",
+      "summary": "Connect is a worldwide event by dLocal, a global payments company, gathering leading companies and executives to share insights on expanding access to payments across Africa, Asia and Latin America. The brand was built to work as a structured logo and to break down into shapes for use as a graphic mesh.",
+      "secondary": false,
+      "visible": true,
+      "source": "behance",
+      "behanceUrl": "https://www.behance.net/gallery/209221077/dlocal-CONNECT",
+      "tools": [
+        "Adobe InDesign",
+        "Adobe Photoshop",
+        "Adobe Ilustrator",
+        "Figma",
+        "Adobe After Effects",
+        "Adobe Premiere Pro"
+      ],
+      "cover": "assets/work/209221077/cover.webp",
+      "hoverImages": [
+        "assets/work/209221077/cover.webp"
+      ],
+      "firstImage": "assets/work/209221077/01.webp",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "assets/work/209221077/01.webp",
+          "caption": "",
+          "alt": "Image may contain: flag",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "text",
+          "text": "Connect is an event developed by dLocal - an worlwide payment enterprise. In 2023 world leading companies, high-level executives, as well as entities gathered together to share insights on how we can create easy access to payments in markets such as Africa, Asia and Latin America, despite quite challenging market dynamics."
+        },
+        {
+          "type": "embed",
+          "provider": "youtube",
+          "src": "https://www.youtube.com/embed/Mrq5fCFen_g?si=PXQ7h2hRXiw64T8L&controls=0",
+          "caption": ""
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/02.webp",
+          "caption": "",
+          "alt": "Image may contain: sky and screenshot",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/03.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 329
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/04.webp",
+          "caption": "",
+          "alt": "",
+          "w": 5464,
+          "h": 8192
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/05.webp",
+          "caption": "",
+          "alt": "",
+          "w": 5199,
+          "h": 7795
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/06.webp",
+          "caption": "",
+          "alt": "Image may contain: screenshot, illustration and cartoon",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/07.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/08.webp",
+          "caption": "",
+          "alt": "Image may contain: vector graphics",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/09.webp",
+          "caption": "",
+          "alt": "Image may contain: screenshot",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/10.webp",
+          "caption": "",
+          "alt": "Image may contain: abstract, screenshot and colorfulness",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "text",
+          "text": "When thinking about the event and the ideas that are exchanged there, we thought about building a brand that worked in a structured way as a logo, as well as being broken down to use shapes as a graphic mesh. We distribute this among the most diverse materials."
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/11.webp",
+          "caption": "",
+          "alt": "Image may contain: illustration and circle",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/12.webp",
+          "caption": "",
+          "alt": "Image may contain: vector graphics",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/13.webp",
+          "caption": "",
+          "alt": "Image may contain: person, clothing and indoor",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/14.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/15.webp",
+          "caption": "",
+          "alt": "Image may contain: screenshot",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "text",
+          "text": "Working from Brazil, we coordinate production together with local suppliers in Punta del Este (Uruguay), Singapore and London (UK)."
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/16.webp",
+          "caption": "",
+          "alt": "",
+          "w": 8192,
+          "h": 5464
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/17.webp",
+          "caption": "",
+          "alt": "",
+          "w": 8192,
+          "h": 5464
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/18.webp",
+          "caption": "",
+          "alt": "Image may contain: cartoon, screenshot and vector graphics",
+          "w": 600,
+          "h": 750
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/19.webp",
+          "caption": "",
+          "alt": "Image may contain: drawing, illustration and painting",
+          "w": 600,
+          "h": 750
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/20.webp",
+          "caption": "",
+          "alt": "",
+          "w": 4000,
+          "h": 2250
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/21.webp",
+          "caption": "",
+          "alt": "",
+          "w": 4000,
+          "h": 2250
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/22.webp",
+          "caption": "",
+          "alt": "Image may contain: screenshot, poster and map",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/23.webp",
+          "caption": "",
+          "alt": "Image may contain: poster, screenshot and handwriting",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/24.webp",
+          "caption": "",
+          "alt": "Image may contain: ground, sign and handwriting",
+          "w": 600,
+          "h": 752
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/25.webp",
+          "caption": "",
+          "alt": "Image may contain: lighthouse",
+          "w": 600,
+          "h": 843
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/26.webp",
+          "caption": "",
+          "alt": "Image may contain: illustration",
+          "w": 600,
+          "h": 676
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/27.webp",
+          "caption": "",
+          "alt": "",
+          "w": 2000,
+          "h": 2500
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/28.webp",
+          "caption": "",
+          "alt": "",
+          "w": 2000,
+          "h": 2500
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/29.webp",
+          "caption": "",
+          "alt": "Image may contain: screenshot and cartoon",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/30.webp",
+          "caption": "",
+          "alt": "Image may contain: indoor, couch and sofa",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/31.webp",
+          "caption": "",
+          "alt": "",
+          "w": 2000,
+          "h": 2500
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/32.webp",
+          "caption": "",
+          "alt": "",
+          "w": 2000,
+          "h": 2500
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/33.webp",
+          "caption": "",
+          "alt": "Image may contain: person, clothing and human face",
+          "w": 534,
+          "h": 267
+        },
+        {
+          "type": "image",
+          "src": "assets/work/209221077/34.webp",
+          "caption": "",
+          "alt": "Image may contain: cartoon and poster",
+          "w": 600,
+          "h": 338
+        }
+      ],
+      "subprojects": []
+    },
+    {
+      "id": "225576979",
+      "title": "void · floating spa",
+      "meta": "Branding · Visual identity",
+      "eyebrow": "Brand and visual identity · void · 2025",
+      "summary": "Void is the first manufacturer of float tanks in Brazil, built for those seeking relief, silence, and reconnection. Inside capsules of warm Epsom-salt water, the body floats free from stimuli and gravity, combining engineering, architecture, and design for deep rest.",
+      "secondary": true,
+      "visible": true,
+      "source": "behance",
+      "behanceUrl": "https://www.behance.net/gallery/225576979/void-floating-spa",
+      "tools": [
+        "Adobe Illustrator",
+        "Adobe Photoshop",
+        "Figma",
+        "Adobe Premiere Pro",
+        "Adobe InDesign"
+      ],
+      "cover": "assets/work/225576979/cover.webp",
+      "hoverImages": [
+        "assets/work/225576979/cover.webp"
+      ],
+      "firstImage": "assets/work/225576979/01.webp",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "assets/work/225576979/01.webp",
+          "caption": "",
+          "alt": "Image may contain: human face",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/02.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 501
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/03.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/04.webp",
+          "caption": "",
+          "alt": "Image may contain: screenshot",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/05.webp",
+          "caption": "",
+          "alt": "Image may contain: illustration",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/06.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/07.webp",
+          "caption": "",
+          "alt": "Image may contain: screenshot",
+          "w": 600,
+          "h": 375
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/08.webp",
+          "caption": "",
+          "alt": "Image may contain: swimming and screenshot",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/09.webp",
+          "caption": "",
+          "alt": "Image may contain: screenshot",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/10.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/11.webp",
+          "caption": "",
+          "alt": "Image may contain: screenshot",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/12.webp",
+          "caption": "",
+          "alt": "Image may contain: screenshot and indoor",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/13.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/14.webp",
+          "caption": "",
+          "alt": "Image may contain: nude and hand",
+          "w": 600,
+          "h": 378
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/15.webp",
+          "caption": "",
+          "alt": "Image may contain: mobile phone",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/16.webp",
+          "caption": "",
+          "alt": "Image may contain: art and screenshot",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/17.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 375
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/18.webp",
+          "caption": "",
+          "alt": "Image may contain: screenshot",
+          "w": 600,
+          "h": 375
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/19.webp",
+          "caption": "",
+          "alt": "Image may contain: outdoor, building and door",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/20.webp",
+          "caption": "",
+          "alt": "Image may contain: wall, sink and indoor",
+          "w": 600,
+          "h": 400
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/21.webp",
+          "caption": "",
+          "alt": "Image may contain: wall and indoor",
+          "w": 600,
+          "h": 375
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/22.webp",
+          "caption": "",
+          "alt": "Image may contain: wall, table and vase",
+          "w": 600,
+          "h": 375
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/23.webp",
+          "caption": "",
+          "alt": "Image may contain: indoor",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/24.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 375
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/25.webp",
+          "caption": "",
+          "alt": "Image may contain: screenshot and cartoon",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/26.webp",
+          "caption": "",
+          "alt": "Image may contain: art",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/27.webp",
+          "caption": "",
+          "alt": "",
+          "w": 5168,
+          "h": 3448
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/28.webp",
+          "caption": "",
+          "alt": "",
+          "w": 5304,
+          "h": 7952
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/29.webp",
+          "caption": "",
+          "alt": "",
+          "w": 3448,
+          "h": 5168
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/30.webp",
+          "caption": "",
+          "alt": "",
+          "w": 3448,
+          "h": 5168
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/31.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 375
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/32.webp",
+          "caption": "",
+          "alt": "Image may contain: cartoon, sketch and drawing",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/33.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/34.webp",
+          "caption": "",
+          "alt": "",
+          "w": 538,
+          "h": 269
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/35.webp",
+          "caption": "",
+          "alt": "Image may contain: person, clothing and man",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/36.webp",
+          "caption": "",
+          "alt": "Image may contain: wall, door and indoor",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/225576979/37.webp",
+          "caption": "",
+          "alt": "",
+          "w": 212,
+          "h": 106
+        }
+      ],
+      "subprojects": []
+    },
+    {
+      "id": "54196333",
+      "title": "Feel.U",
+      "meta": "Branding · Music label",
+      "eyebrow": "Music label branding · Feel.U · 2017",
+      "summary": "Brand identity for Feel.U, a music label and artist collective focused on electronic music — danceable, introspective and experimental. The logotype is built from micro filaments that expand and contract with ambient sound, generating a different mark for every situation, alongside a Brand Maker platform that shapes forms from sound waves captured by the microphone.",
+      "secondary": true,
+      "visible": true,
+      "source": "behance",
+      "behanceUrl": "https://www.behance.net/gallery/54196333/FeelU",
+      "tools": [
+        "Adobe Illustrator",
+        "Adobe Photoshop"
+      ],
+      "cover": "assets/work/54196333/cover.webp",
+      "hoverImages": [
+        "assets/work/54196333/cover.webp"
+      ],
+      "firstImage": "assets/work/54196333/01.webp",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "assets/work/54196333/01.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 339
+        },
+        {
+          "type": "text",
+          "text": "Feel.U\nBranding/ Design/ Sound\n\n⌅\n\n–– Uma marca para cada beat.\n\nFeel.U é um selo musical e coletivo de artistas focado em música eletrônica: dançante, introspectiva e experimental.\n\nImergindo nessa cultura e posicionamento, partimos para explorar possibilidades gráficas que pudessem criar uma identidade visual aberta e mutável, que preservasse a essência da marca, mas que pudesse traduzir a dinâmica e variedade que permeia o trabalho dos seus artistas. A partir desse conceito desenvolvemos uma marca composta por micro filamentos, que formam a tipografia do logotipo. Desses minúsculos pontos, linhas se expandem e contraem conforme o som do ambiente e criam uma marca diferente para cada situação específica. Para materializar o conceito construímos uma plataforma chamada Feel.U Brand Maker, que cria novas formas usando ondas sonoras capturadas pelo microfone do computador ou smartphone (apenas Android, #rip Apple que não autoriza a utilização de microfone no browser). Sem aleatoriedades, repetições ou padrões pré-definidos. Além disso, o Brand Maker será utilizado como projeção de parede nas festas e shows organizadas pela marca.\n\nColoque seu som, clique e salve a marca Feel.U da sua música preferida.\nCada artista, uma marca. Cada marca, um experimento.​​​​​​​\n\n⇥ https://feelu.me​​​​​​​\n○○⦿○"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/02.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 585
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/03.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 339
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/04.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/05.webp",
+          "caption": "",
+          "alt": "",
+          "w": 700,
+          "h": 395
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/06.webp",
+          "caption": "",
+          "alt": "",
+          "w": 700,
+          "h": 395
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/07.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 339
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/08.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 488
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/09.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 339
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/10.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 339
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/11.webp",
+          "caption": "",
+          "alt": "",
+          "w": 1646,
+          "h": 1646
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/12.webp",
+          "caption": "",
+          "alt": "",
+          "w": 1646,
+          "h": 1646
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/13.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 339
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/14.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 339
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/15.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 339
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/16.webp",
+          "caption": "",
+          "alt": "",
+          "w": 1400,
+          "h": 790
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/17.webp",
+          "caption": "",
+          "alt": "",
+          "w": 1400,
+          "h": 790
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/18.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 339
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/19.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 339
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/20.webp",
+          "caption": "",
+          "alt": "",
+          "w": 1080,
+          "h": 1350
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/21.webp",
+          "caption": "",
+          "alt": "",
+          "w": 1080,
+          "h": 1350
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/22.webp",
+          "caption": "",
+          "alt": "",
+          "w": 2400,
+          "h": 3000
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/23.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 339
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/24.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 360
+        },
+        {
+          "type": "image",
+          "src": "assets/work/54196333/25.webp",
+          "caption": "",
+          "alt": "Image may contain: cartoon",
+          "w": 250,
+          "h": 125
+        }
+      ],
+      "subprojects": []
+    },
+    {
+      "id": "233337759",
+      "title": "viva la vegan",
+      "meta": "Brand · Editorial",
+      "eyebrow": "Visual identity and editorial · 2025",
+      "summary": "",
+      "secondary": true,
+      "visible": true,
+      "source": "behance",
+      "behanceUrl": "https://www.behance.net/gallery/233337759/viva-la-vegan",
+      "tools": [
+        "Adobe InDesign",
+        "Adobe Illustrator",
+        "Adobe Photoshop"
+      ],
+      "cover": "assets/work/233337759/cover.webp",
+      "hoverImages": [
+        "assets/work/233337759/cover.webp"
+      ],
+      "firstImage": "assets/work/233337759/01.webp",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "assets/work/233337759/01.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/233337759/02.webp",
+          "caption": "",
+          "alt": "Image may contain: cartoon, illustration and typography",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/233337759/03.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/233337759/04.webp",
+          "caption": "",
+          "alt": "Image may contain: building, door and outdoor",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/233337759/05.webp",
+          "caption": "",
+          "alt": "Image may contain: cartoon and dish",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/233337759/06.webp",
+          "caption": "",
+          "alt": "Image may contain: fast food, food and menu",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/233337759/07.webp",
+          "caption": "",
+          "alt": "Image may contain: fast food, food and sandwich",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/233337759/08.webp",
+          "caption": "",
+          "alt": "Image may contain: cartoon, drawing and handwriting",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/233337759/09.webp",
+          "caption": "",
+          "alt": "Image may contain: fast food",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/233337759/10.webp",
+          "caption": "",
+          "alt": "Image may contain: fast food, food and sandwich",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/233337759/11.webp",
+          "caption": "",
+          "alt": "Image may contain: cartoon, drawing and sketch",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/233337759/12.webp",
+          "caption": "",
+          "alt": "Image may contain: window, menu and book",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/233337759/13.webp",
+          "caption": "",
+          "alt": "Image may contain: food, fast food and menu",
+          "w": 600,
+          "h": 369
+        },
+        {
+          "type": "image",
+          "src": "assets/work/233337759/14.webp",
+          "caption": "",
+          "alt": "Image may contain: drawing, sketch and illustration",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/233337759/15.webp",
+          "caption": "",
+          "alt": "Image may contain: sky, outdoor and sign",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/233337759/16.webp",
+          "caption": "",
+          "alt": "Image may contain: food, fast food and snack",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/233337759/17.webp",
+          "caption": "",
+          "alt": "Image may contain: cartoon, drawing and poster",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/233337759/18.webp",
+          "caption": "",
+          "alt": "Image may contain: person, wall and indoor",
+          "w": 600,
+          "h": 338
+        }
+      ],
+      "subprojects": []
+    },
+    {
+      "id": "250632349",
+      "title": "Lerdo · pink neon",
+      "meta": "Founder · Apparel",
+      "eyebrow": "Apparel design · Lerdo · 2026",
+      "summary": "Apparel and sportswear design for Lerdo, built around a pink neon visual identity.",
+      "secondary": true,
+      "visible": true,
+      "source": "behance",
+      "behanceUrl": "https://www.behance.net/gallery/250632349/lerdo-pink-neon",
+      "tools": [
+        "Adobe Photoshop",
+        "Adobe InDesign",
+        "Adobe Illustrator"
+      ],
+      "cover": "assets/work/250632349/cover.webp",
+      "hoverImages": [
+        "assets/work/250632349/cover.webp"
+      ],
+      "firstImage": "assets/work/250632349/01.webp",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "assets/work/250632349/01.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/02.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/03.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/04.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/05.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 750
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/06.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 750
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/07.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/08.webp",
+          "caption": "",
+          "alt": "",
+          "w": 2000,
+          "h": 2500
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/09.webp",
+          "caption": "",
+          "alt": "",
+          "w": 2000,
+          "h": 2500
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/10.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/11.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/12.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/13.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/14.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/15.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/16.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/17.webp",
+          "caption": "",
+          "alt": "",
+          "w": 1999,
+          "h": 2500
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/18.webp",
+          "caption": "",
+          "alt": "",
+          "w": 1999,
+          "h": 2500
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/19.webp",
+          "caption": "",
+          "alt": "",
+          "w": 2000,
+          "h": 2500
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/20.webp",
+          "caption": "",
+          "alt": "",
+          "w": 2000,
+          "h": 2500
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/21.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/22.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/23.webp",
+          "caption": "",
+          "alt": "",
+          "w": 562,
+          "h": 820
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/24.webp",
+          "caption": "",
+          "alt": "",
+          "w": 212,
+          "h": 106
+        }
+      ],
+      "subprojects": []
+    },
+    {
+      "id": "135014753",
+      "title": "Vertigem",
+      "meta": "Founder · Cycling apparel",
+      "eyebrow": "Cycling jersey · Lerdo · 2022",
+      "summary": "A cycling jersey and apparel graphics built around pattern design. Creative and art direction by Marcos Carvalho, with photography by Ann Schwaner and production by Camila Kogut and Lucia Malucelli.",
+      "secondary": true,
+      "visible": true,
+      "source": "behance",
+      "behanceUrl": "https://www.behance.net/gallery/135014753/VERTIGEM",
+      "tools": [
+        "Adobe Photoshop",
+        "Adobe Illustrator"
+      ],
+      "cover": "assets/work/135014753/cover.webp",
+      "hoverImages": [
+        "assets/work/135014753/cover.webp"
+      ],
+      "firstImage": "assets/work/135014753/01.webp",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "assets/work/135014753/01.webp",
+          "caption": "",
+          "alt": "",
+          "w": 534,
+          "h": 267
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135014753/02.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 1200
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135014753/03.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 463
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135014753/04.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 533
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135014753/05.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 403
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135014753/06.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 1065
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135014753/07.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 1200
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135014753/08.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 772
+        },
+        {
+          "type": "text",
+          "text": "You can buy clicking here (https://lerdo.cc/vertigem)"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135014753/09.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 520
+        },
+        {
+          "type": "text",
+          "text": "Creative Direction / Art direction / Design: Marcos Carvalho\nPhotographer: Ann Schwaner | Production: Camila Kogut and Lucia Malucelli\nModels: Thiago Macarini and Marina Richter"
+        }
+      ],
+      "subprojects": []
+    },
+    {
+      "id": "120517563",
+      "title": "Mononoke · Progresso",
+      "meta": "Album cover · Music video",
+      "eyebrow": "Album cover and music video · Mononoke · 2021",
+      "summary": "Cover art for Progresso by the crust/screamo punk band Mononoke, an album whose lyrics confront a society sold on unsustainable mechanical progress. The work spans the album cover, the single cover for Raymond, and a music video for the track, with text effects made analog by projecting onto fabric before being applied digitally.",
+      "secondary": true,
+      "visible": true,
+      "source": "behance",
+      "behanceUrl": "https://www.behance.net/gallery/120517563/Mononoke-Progresso-%28album-cover-and-music-video%29",
+      "tools": [
+        "Adobe Photoshop",
+        "Adobe After Effects",
+        "Adobe Illustrator",
+        "Adobe Premiere Pro"
+      ],
+      "cover": "assets/work/120517563/cover.webp",
+      "hoverImages": [
+        "assets/work/120517563/cover.webp"
+      ],
+      "firstImage": "assets/work/120517563/01.webp",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "assets/work/120517563/01.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 427
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/02.webp",
+          "caption": "",
+          "alt": "",
+          "w": 178,
+          "h": 89
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/03.webp",
+          "caption": "",
+          "alt": "",
+          "w": 178,
+          "h": 89
+        },
+        {
+          "type": "text",
+          "text": "/album_cover_art"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/04.webp",
+          "caption": "",
+          "alt": "",
+          "w": 178,
+          "h": 89
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/05.webp",
+          "caption": "",
+          "alt": "",
+          "w": 720,
+          "h": 1280
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/06.webp",
+          "caption": "",
+          "alt": "",
+          "w": 960,
+          "h": 1280
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/07.webp",
+          "caption": "",
+          "alt": "",
+          "w": 178,
+          "h": 89
+        },
+        {
+          "type": "text",
+          "text": "Mononoke é uma banda punk de crust/screamo.\n\nAs letras nesse disco, chamado Progresso, falam sobre o lugar onde fomos jogados.\n\nSob o Sol de uma sociedade que tenta nos engana diariamente com discursos de um progresso mecânico insustentável, compreendemos que as inflamações decorrentes de choques fazem doer o tecido que assegura nossa existência como sociedade.\n\nNossas posições políticas nos trouxeram a imagem da guerreira que luta contra os abusos sofridos pela natureza como um símbolode resistência, por isso o nome trazido da linda animação do estúdio ecoativista Gibli .\n\nAs diferentes texturas e movimentos são o eterno desencaixe que sentimos. Como muitos brasileiros, somos diariamente confrontados com as adversidades e miséria de muitos. O projeto ainda em curso no Brasil tem como objetivo calar o pensar de todos aqueles que sofrem, fazer com que se sintam abençoados por terem o mínimo e pregar que todos temos direitos iguais e oportunidades.\n\n_\n\nMononoke is a crust/screamo punk band.\n\nThe lyrics on this album, called Progresso, talk about the place where we were played.Under the sun of a society that tries to deceive us daily with speeches of unsustainable mechanical progress, we understand that inflammation resulting from shocks hurts the fabric that ensures our existence as a society.\n\nOur political positions brought us the image of the warrior who fights against the abuses suffered by nature as a symbol of resistance, that's why the name was brought from the beautiful animation of the eco-activist studio Gibli.\n\nThe different textures and movements are the eternal detachment that we feel. Like many Brazilians, we are daily faced with the adversities and misery of many. The project still underway in Brazil aims to silence the thinking of all those who suffer, make them feel blessed for having the minimum and preach that we all have equal rights and opportunities.\n\nIn one of the last countries in the world to ban slavery, social and historical erasure is the rule."
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/08.webp",
+          "caption": "",
+          "alt": "",
+          "w": 178,
+          "h": 89
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/09.webp",
+          "caption": "",
+          "alt": "",
+          "w": 1280,
+          "h": 720
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/10.webp",
+          "caption": "",
+          "alt": "",
+          "w": 547,
+          "h": 742
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/11.webp",
+          "caption": "",
+          "alt": "",
+          "w": 1080,
+          "h": 608
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/12.webp",
+          "caption": "",
+          "alt": "",
+          "w": 178,
+          "h": 89
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/13.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 425
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/14.webp",
+          "caption": "",
+          "alt": "",
+          "w": 356,
+          "h": 178
+        },
+        {
+          "type": "embed",
+          "provider": "spotify",
+          "src": "https://open.spotify.com/embed/album/2kPa8gK90b0z8NifGKstTR",
+          "caption": ""
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/15.webp",
+          "caption": "",
+          "alt": "",
+          "w": 534,
+          "h": 267
+        },
+        {
+          "type": "text",
+          "text": "/music_video\nMononoke - Raymond (2019)"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/16.webp",
+          "caption": "",
+          "alt": "",
+          "w": 178,
+          "h": 89
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/17.webp",
+          "caption": "",
+          "alt": "",
+          "w": 394,
+          "h": 197
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/18.webp",
+          "caption": "",
+          "alt": "",
+          "w": 356,
+          "h": 178
+        },
+        {
+          "type": "text",
+          "text": "Mersault, protagonista do livro O Estrangeiro, se deixa levar pela amizade com seu vizinho Raymond que o coloca numa situação que compromete sua vida.\n\nEle serve é uma metáfora social sobre como nos prendemos na cidade, com contratos, empregos e compromissos. Assim como Meursault, acabamos sendo levados indiferentemente para uma grande armadilha da civilização, ganhando pequenas comodidades para continuar fazer a máquina girar.\n\n_\n\nRaymond\n(letra de Yuri Radziwill)\n\nNa agressão chamada cidade\nÀs vezes crio péssimos laços\nQue me mantém firmemente amarrado\n\nCom distrações sonho acordado\nMe afundo no poço chamado progresso\nQue me mantém firmemente amarrado\n\nAfundando em progresso\n\n_\n\nMersault, protagonist of the book The Foreigner, lets himself be carried away by the friendship with his neighbor Raymond who puts him in a situation that compromises his life.\n\nIt serves as a social metaphor for how we lock ourselves in the city, with contracts, jobs and commitments. Like Meursault, we ended up being indifferently taken to a great trap of civilization, gaining small amenities to continue to spin the machine.\n\n_\n\nRaymond\n(lyrics by Yuri Radziwill)\n\nIn the aggression called city\nSometimes I create lousy bonds\nthat keeps me firmly tied\n\nWith waking dream distractions\nI sink into the well called progressthat keeps me firmly tied\nSinking in progress"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/19.webp",
+          "caption": "",
+          "alt": "",
+          "w": 178,
+          "h": 89
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/20.webp",
+          "caption": "",
+          "alt": "",
+          "w": 1080,
+          "h": 608
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/21.webp",
+          "caption": "",
+          "alt": "",
+          "w": 1080,
+          "h": 608
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/22.webp",
+          "caption": "",
+          "alt": "",
+          "w": 178,
+          "h": 89
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/23.webp",
+          "caption": "",
+          "alt": "",
+          "w": 1080,
+          "h": 608
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/24.webp",
+          "caption": "",
+          "alt": "",
+          "w": 178,
+          "h": 89
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/25.webp",
+          "caption": "",
+          "alt": "",
+          "w": 768,
+          "h": 432
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/26.webp",
+          "caption": "",
+          "alt": "",
+          "w": 1080,
+          "h": 608
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/27.webp",
+          "caption": "",
+          "alt": "",
+          "w": 356,
+          "h": 178
+        },
+        {
+          "type": "embed",
+          "provider": "youtube",
+          "src": "https://www.youtube.com/embed/JyEWdZjIna8",
+          "caption": ""
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/28.webp",
+          "caption": "",
+          "alt": "",
+          "w": 178,
+          "h": 89
+        },
+        {
+          "type": "text",
+          "text": "Os efeitos no texto foram feitos de forma analógica com projeção em tecido e aplicação digital posterior.\n\n_\n\nThe effects on the text were done in an analog way with projection on fabric and later digital application."
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/29.webp",
+          "caption": "",
+          "alt": "",
+          "w": 178,
+          "h": 89
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/30.webp",
+          "caption": "",
+          "alt": "",
+          "w": 360,
+          "h": 203
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/31.webp",
+          "caption": "",
+          "alt": "",
+          "w": 203,
+          "h": 360
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/32.webp",
+          "caption": "",
+          "alt": "",
+          "w": 360,
+          "h": 203
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/33.webp",
+          "caption": "",
+          "alt": "",
+          "w": 534,
+          "h": 267
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/34.webp",
+          "caption": "",
+          "alt": "",
+          "w": 1280,
+          "h": 960
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/35.webp",
+          "caption": "",
+          "alt": "",
+          "w": 534,
+          "h": 267
+        },
+        {
+          "type": "text",
+          "text": "/raymond_single_cover"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/36.webp",
+          "caption": "",
+          "alt": "",
+          "w": 178,
+          "h": 89
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/37.webp",
+          "caption": "",
+          "alt": "",
+          "w": 200,
+          "h": 200
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/38.webp",
+          "caption": "",
+          "alt": "",
+          "w": 200,
+          "h": 200
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/39.webp",
+          "caption": "",
+          "alt": "",
+          "w": 820,
+          "h": 312
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/40.webp",
+          "caption": "",
+          "alt": "",
+          "w": 178,
+          "h": 89
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/41.webp",
+          "caption": "",
+          "alt": "Image may contain: cartoon, illustration and art",
+          "w": 600,
+          "h": 425
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/42.webp",
+          "caption": "",
+          "alt": "",
+          "w": 534,
+          "h": 267
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/43.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 427
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/44.webp",
+          "caption": "",
+          "alt": "",
+          "w": 178,
+          "h": 89
+        },
+        {
+          "type": "text",
+          "text": "O que é progresso? Está muito longe do que o neoliberalismo coloca à partir de uma visão de produção e opressão de vidas que perambulam tentando sanar suas dívidas e medos, suas depressões e cansaços causados por toda a pressão de sermos mais à todo momento, em tudo.\n\nVemos o progresso de forma tecnocrática, dataísta, onde esquece-se que números são desprovidos de narrativa, são duros e impessoais, servem para tudo, hoje, até para mostrar o quanto os outros são mais interessantes, ativando assim a visão de nós mesmos como projetos.\n\nCoisificamos a nós mesmos para que não nos sentíssemos menos.\nNos fechamos dentro de nossas fortalezas de concreto e aço.\nAcabamos aos poucos com o espaço comum e de troca.\n\n_\n\nWhat is progress? It is far from what neoliberalism puts on the basis of a vision of production and oppression of lives that roam around trying to remedy their debts and fears, their depressions and fatigue caused by all the pressure to be more all the time, in everything.\n\nWe see progress in a technocratic, dataistic way, where we forget that numbers are devoid of narrative, they are hard and impersonal, they serve everything today, even to show how much more others are more interesting, thus activating the view of ourselves as projects.\n\nWe objectify ourselves so that we don't feel less.\nWe shut ourselves up inside our concrete and steel fortresses.\nWe gradually ended up with the common and exchange space."
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/45.webp",
+          "caption": "",
+          "alt": "",
+          "w": 534,
+          "h": 267
+        },
+        {
+          "type": "image",
+          "src": "assets/work/120517563/46.webp",
+          "caption": "",
+          "alt": "",
+          "w": 203,
+          "h": 360
+        }
+      ],
+      "subprojects": []
+    },
+    {
+      "id": "135486111",
+      "title": "Tristes Trópicos",
+      "meta": "Cover and art",
+      "eyebrow": "Album cover · Electronic music · 2022",
+      "summary": "Cover and art direction for Tristes Trópicos, a Brazilian electronic music release with a tropical, politically charged register.",
+      "secondary": true,
+      "visible": true,
+      "source": "behance",
+      "behanceUrl": "https://www.behance.net/gallery/135486111/Tristes-Tropicos-Cover-and-Art",
+      "tools": [
+        "Adobe Photoshop",
+        "Adobe Illustrator",
+        "Figma"
+      ],
+      "cover": "assets/work/135486111/cover.webp",
+      "hoverImages": [
+        "assets/work/135486111/cover.webp"
+      ],
+      "firstImage": "assets/work/135486111/01.webp",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "assets/work/135486111/01.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 1092
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135486111/02.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 797
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135486111/03.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 367
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135486111/04.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 1200
+        },
+        {
+          "type": "embed",
+          "provider": "adobe",
+          "src": "https://www-ccv.adobe.io/v1/player/ccv/UIbxkZM4Hzi/embed?api_key=behance1&bgcolor=%23191919",
+          "caption": ""
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135486111/05.webp",
+          "caption": "",
+          "alt": "Image may contain: screenshot, drawing and cartoon",
+          "w": 600,
+          "h": 533
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135486111/06.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 667
+        },
+        {
+          "type": "embed",
+          "provider": "spotify",
+          "src": "https://open.spotify.com/embed/album/3hf3MOcJXO5C0ebS444hQW?utm_source=generator",
+          "caption": ""
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135486111/07.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 600
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135486111/08.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 1197
+        },
+        {
+          "type": "image",
+          "src": "assets/work/135486111/09.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 1200
+        },
+        {
+          "type": "embed",
+          "provider": "adobe",
+          "src": "https://www-ccv.adobe.io/v1/player/ccv/SmDroBirGfo/embed?api_key=behance1&bgcolor=%23191919",
+          "caption": ""
+        }
+      ],
+      "subprojects": []
+    }
+  ]
+}

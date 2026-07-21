@@ -38,23 +38,34 @@ img{max-width:100%;display:block}
 .hero .eyebrow{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);
   font-weight:500;margin-bottom:26px}
 .hero h1{font-weight:700;font-size:clamp(52px,11vw,168px);line-height:.94;letter-spacing:-.03em}
-.hero .lead{font-weight:400;font-size:clamp(20px,2.6vw,34px);line-height:1.28;max-width:24ch;margin-top:34px}
+.hero .lead{font-weight:400;font-size:clamp(20px,2.6vw,34px);line-height:1.28;max-width:34ch;margin-top:34px}
+.hero .casemeta{margin-top:30px;display:flex;flex-wrap:wrap;gap:12px 26px;align-items:baseline;
+  font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.hero .casemeta .behance{color:var(--fg);border-bottom:1px solid var(--line);transition:border-color .25s}
+.hero .casemeta .behance:hover{border-color:var(--fg)}
 
 /* hero figure */
 .herofig{margin:2vh 0 0}
 .herofig img{width:100%;height:min(72vh,760px);object-fit:cover}
 
 /* generic block flow */
-.blocks{max-width:960px;margin:0 auto;padding:9vh 0}
+.blocks{max-width:960px;margin:0 auto;padding:3vh 0 8vh}
 .blocks.wide{max-width:var(--maxw)}
 .b-text{font-weight:400;font-size:clamp(18px,1.7vw,23px);line-height:1.55;margin:0 auto 1.4em;max-width:64ch}
 .b-text:last-child{margin-bottom:0}
-.b-fig{margin:6vh 0}
-.b-fig img{width:100%}
+/* images in a case stack as a tight visual sequence, not spaced-out cards;
+   text/embeds get a little more air around them (see below) */
+.b-fig{margin:10px 0}
+.b-fig img{width:100%;display:block}
+/* breathing room only where an image meets text or an embed, not image↔image */
+.b-text + .b-fig{margin-top:5vh}
+.b-fig + .b-text{margin-top:5vh}
+.b-embed,.b-video-native{margin-top:5vh;margin-bottom:5vh}
 .b-fig figcaption{font-size:13px;letter-spacing:.02em;color:var(--muted);margin-top:12px;text-align:center}
-.b-video .vwrap{position:relative;width:100%;padding-top:56.25%;background:#000}
-.b-video .vwrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.b-video .vwrap,.b-embed .vwrap{position:relative;width:100%;padding-top:56.25%;background:#000}
+.b-video .vwrap iframe,.b-embed .vwrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .b-video-native video{width:100%;max-height:80vh;background:#000;display:block}
+.b-embed iframe.spotify{width:100%;max-width:720px;height:352px;border:0;margin:0 auto;display:block;border-radius:12px}
 .b-link{display:inline-flex;align-items:center;gap:10px;margin:6px 14px 6px 0;padding:14px 24px;
   border:1px solid var(--fg);border-radius:100px;font-size:14px;letter-spacing:.04em;text-transform:uppercase;
   text-decoration:none;transition:background .25s,color .25s}
@@ -98,6 +109,13 @@ img{max-width:100%;display:block}
 .rv.in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.rv{transition:none}html{scroll-behavior:auto}}
 
+/* page transition wipe — matches the cinematic nav on index/solvefy (CSS only) */
+#page-transition{position:fixed;inset:0;z-index:300;background:var(--fg);pointer-events:none;
+  clip-path:inset(100% 0 0 0);transition:clip-path .6s cubic-bezier(.76,0,.24,1)}
+#page-transition.cover{clip-path:inset(0 0 0 0)}
+#page-transition.reveal{clip-path:inset(0 0 100% 0)}
+@media (prefers-reduced-motion:reduce){#page-transition{display:none}}
+
 @media (max-width:720px){
   .chapter .chhead{grid-template-columns:1fr;gap:10px}
   .chapter h2{align-self:auto}
@@ -106,6 +124,7 @@ img{max-width:100%;display:block}
 </head>
 <body>
 <div id="grain"></div>
+<div id="page-transition"></div>
 
 <nav class="nav">
   <a href="index.html" data-back>Marcos Carvalho</a>
@@ -120,11 +139,22 @@ img{max-width:100%;display:block}
 /* ---------- read project from the CMS (shared localStorage) ---------- */
 const params = new URLSearchParams(location.search);
 const id = params.get('id');
-let data = null;
-try { data = JSON.parse(localStorage.getItem('projects-crm-v1')); } catch(e){}
-const project = data && Array.isArray(data.projects) ? data.projects.find(p => p.id === id) : null;
-
 const app = document.getElementById('app');
+let data = null, project = null;
+
+/* Source of truth for the published site is the static data/projects.json
+   (works for every visitor). The CMS localStorage, when present on the
+   author's own machine, overrides project CONTENT by id for live preview,
+   while the static file still defines the canonical order. */
+async function loadData(){
+  let stat = null, ls = null;
+  try { const r = await fetch('data/projects.json', { cache: 'no-cache' }); if (r.ok) stat = await r.json(); } catch(e){}
+  try { ls = JSON.parse(localStorage.getItem('projects-crm-v1')); } catch(e){}
+  const order = [], map = new Map();
+  (stat && Array.isArray(stat.projects) ? stat.projects : []).forEach(p => { map.set(p.id, p); order.push(p.id); });
+  (ls && Array.isArray(ls.projects) ? ls.projects : []).forEach(p => { if (!map.has(p.id)) order.push(p.id); map.set(p.id, p); });
+  return { projects: order.map(i => map.get(i)) };
+}
 const esc = s => (s || '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 /* ---------- read-only access to the CMS's IndexedDB video store ----------
@@ -174,17 +204,20 @@ function youtubeId(url){
   return null;
 }
 
-if (!project){
-  app.innerHTML = `<div class="notfound">
-    <h1>Case não encontrado</h1>
-    <p style="color:var(--muted);max-width:46ch">Este projeto não existe no CMS neste navegador, ou o link está sem id.
-    Abra o CMS, edite o projeto e use o link da home.</p>
-    <a href="index.html">← Voltar para a home</a>
-  </div>`;
-  document.title = 'Case não encontrado — Marcos Carvalho';
-} else {
-  render(project);
-}
+(async function init(){
+  data = await loadData();
+  project = data.projects.find(p => p.id === id) || null;
+  if (!project){
+    app.innerHTML = `<div class="notfound">
+      <h1>Case não encontrado</h1>
+      <p style="color:var(--muted);max-width:46ch">Este projeto não existe, ou o link está sem id.
+      <a href="index.html">← Voltar para a home</a>
+    </div>`;
+    document.title = 'Case não encontrado — Marcos Carvalho';
+  } else {
+    render(project);
+  }
+})();
 
 /* ---------- render one content block into a container ---------- */
 function renderBlock(b){
@@ -203,8 +236,24 @@ function renderBlock(b){
   if (b.type === 'image' && b.src){
     const fig = document.createElement('figure');
     fig.className = 'b-fig rv';
-    fig.innerHTML = `<img src="${b.src}" alt="${esc(b.caption)}">` +
+    fig.innerHTML = `<img src="${b.src}" alt="${esc(b.alt || b.caption)}" loading="lazy" decoding="async">` +
       (b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : '');
+    return fig;
+  }
+  if (b.type === 'embed' && b.src){
+    // imported Behance embeds: YouTube / Vimeo / Spotify / Adobe CCV video
+    const fig = document.createElement('figure');
+    fig.className = 'b-fig b-embed rv';
+    const cap = b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : '';
+    if (b.provider === 'spotify'){
+      fig.innerHTML = `<iframe class="spotify" src="${esc(b.src)}" loading="lazy"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>` + cap;
+    } else {
+      fig.innerHTML = `<div class="vwrap"><iframe src="${esc(b.src)}" loading="lazy"
+        title="${esc(b.caption || 'Embedded media')}" referrerpolicy="strict-origin-when-cross-origin"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe></div>` + cap;
+    }
     return fig;
   }
   if (b.type === 'video' && (b.mediaId || b.src)){
@@ -258,15 +307,24 @@ function renderBlocksInto(container, blocks){
 /* ---------- render the whole case ---------- */
 function render(p){
   document.title = (p.title || 'Case') + ' — Marcos Carvalho';
-  const heroImg = (p.hoverImages && p.hoverImages[0]) || p.hoverImage || (p.blocks.find(b => b.type === 'image' && b.src) || {}).src;
+  // hero image = the project's first full-res image; it then leads the body,
+  // so we skip that one block below to avoid showing it twice.
+  const heroImg = p.firstImage || (p.hoverImages && p.hoverImages[0]) || p.hoverImage
+                  || (p.blocks.find(b => b.type === 'image' && b.src) || {}).src;
   const frag = document.createDocumentFragment();
 
+  const tools = (p.tools && p.tools.length) ? p.tools.join(' · ') : '';
   // hero
   const hero = document.createElement('header');
   hero.className = 'hero';
   hero.innerHTML = `<div class="wrap">
-    ${p.meta ? `<div class="eyebrow rv">${esc(p.meta)}</div>` : ''}
+    ${(p.eyebrow || p.meta) ? `<div class="eyebrow rv">${esc(p.eyebrow || p.meta)}</div>` : ''}
     <h1 class="rv">${esc(p.title || 'Untitled')}</h1>
+    ${p.summary ? `<p class="lead rv">${esc(p.summary)}</p>` : ''}
+    ${(tools || p.behanceUrl) ? `<div class="casemeta rv">
+      ${tools ? `<span class="tools">${esc(tools)}</span>` : ''}
+      ${p.behanceUrl ? `<a class="behance" href="${esc(p.behanceUrl)}" target="_blank" rel="noopener">View on Behance ↗</a>` : ''}
+    </div>` : ''}
   </div>`;
   frag.appendChild(hero);
 
@@ -274,15 +332,20 @@ function render(p){
   if (heroImg){
     const hf = document.createElement('figure');
     hf.className = 'herofig rv';
-    hf.innerHTML = `<img src="${heroImg}" alt="">`;
+    hf.innerHTML = `<img src="${heroImg}" alt="${esc(p.title || '')}" decoding="async">`;
     frag.appendChild(hf);
   }
 
-  // overview blocks (project-level content)
+  // overview blocks (project-level content) — drop the one image already used as hero
   if (p.blocks && p.blocks.length){
     const ov = document.createElement('section');
     ov.className = 'blocks wrap';
-    renderBlocksInto(ov, p.blocks);
+    let skipped = false;
+    const body = p.blocks.filter(b => {
+      if (!skipped && b.type === 'image' && b.src === heroImg){ skipped = true; return false; }
+      return true;
+    });
+    renderBlocksInto(ov, body);
     frag.appendChild(ov);
   }
 
@@ -353,6 +416,35 @@ function setupReveals(){
   }, { rootMargin: '0px 0px -12% 0px' });
   items.forEach(el => io.observe(el));
 }
+</script>
+
+<script>
+/* cinematic page-transition wipe, shared behaviour with index/solvefy but
+   CSS-driven here (this page doesn't load GSAP). Reveals on arrival when we
+   came from a wiped link, and wipes out before same-origin navigations. */
+(function(){
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ov = document.getElementById('page-transition');
+  if (!ov || reduce) return;
+  if (sessionStorage.getItem('pt-arrive')){
+    sessionStorage.removeItem('pt-arrive');
+    ov.style.transition = 'none';           // snap to fully covered, no anim
+    ov.classList.add('cover');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      ov.style.transition = '';             // then wipe away
+      ov.classList.remove('cover'); ov.classList.add('reveal');
+    }));
+  }
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a'); if (!a) return;
+    const href = a.getAttribute('href') || '';
+    if (a.target === '_blank' || !href || href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto')) return;
+    e.preventDefault();
+    sessionStorage.setItem('pt-arrive', '1');
+    ov.classList.remove('reveal'); ov.classList.add('cover');
+    setTimeout(() => { location.href = href; }, 560);
+  });
+})();
 </script>
 </body>
 </html>

@@ -7,34 +7,12 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 gsap.registerPlugin(ScrollTrigger);
 
-/* ============ HYDRATE SELECTED WORK FROM THE CMS ============
-   The CMS (cms.html, same origin) writes projects to localStorage. If present,
-   rebuild the Selected work list from it (order, title, meta, link, hover
-   image). Falls back to the hardcoded rows when there's no CMS data yet. */
-function escapeHtml(s){ return (s || '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-function hydrateWorkFromCMS(){
-  let data;
-  try { data = JSON.parse(localStorage.getItem('projects-crm-v1')); } catch(e){ return; }
-  if (!data || !Array.isArray(data.projects)) return;
-  const visible = data.projects.filter(p => p.visible !== false);
-  if (!visible.length) return;
-  const proj = document.querySelector('#work .proj');
-  if (!proj) return;
-  proj.innerHTML = '';
-  visible.forEach(p => {
-    const a = document.createElement('a');
-    a.className = 'row rv' + (p.secondary ? ' sec' : '');
-    // every project opens its own internal case page — never Behance / external
-    a.href = 'projeto.html?id=' + encodeURIComponent(p.id);
-    a.setAttribute('data-transition', '');
-    a.dataset.thumb = p.id;
-    a.innerHTML = `<span class="t">${escapeHtml(p.title || 'Untitled')} <span class="arrow">↗</span></span><span class="m">${escapeHtml(p.meta || '')}</span>`;
-    const hi = Array.isArray(p.hoverImages) ? p.hoverImages : (p.hoverImage ? [p.hoverImage] : []);
-    if (hi.length) a._hoverImages = hi;
-    proj.appendChild(a);
-  });
-}
-hydrateWorkFromCMS();
+/* ============ SELECTED WORK ============
+   The Selected-work list is baked canonically into index.html (every project,
+   incl. the imported Behance cases, links to its internal projeto.html?id=...).
+   It ships static so it works for every visitor with no JS/CMS/localStorage
+   dependency. Case content itself is served from data/projects.json by
+   projeto.html. Edit index.html (or regenerate) to change the list. */
 
 /* ============ LOADER ============ */
 function runLoader() {
@@ -277,7 +255,9 @@ if (craft) {
       const slug = row.dataset.thumb;
       const cat = row.dataset.cat || '';
       const name = row.querySelector('.t').textContent.replace('↗', '').trim();
-      const imgs = (row._hoverImages && row._hoverImages.length) ? row._hoverImages : [`assets/work/${slug}.jpg`];
+      const imgs = (row._hoverImages && row._hoverImages.length) ? row._hoverImages
+        : (row.dataset.hover ? row.dataset.hover.split(',').filter(Boolean)
+        : [`assets/work/${slug}/cover.webp`]);
 
       // two stacked <img> layers crossfade between frames — visibly alive,
       // unlike swapping a single element's src which can look frozen
