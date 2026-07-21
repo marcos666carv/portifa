@@ -3,3 +3,7 @@
 # reachable at /solvefy.html as a backup. 200! forces the rewrite to win over
 # the existing solvefy.html file while keeping the URL clean.
 /solvefy   /projeto.html?id=solvefy   200!
+
+# With post-processing off (see netlify.toml), pretty URLs are disabled, so keep
+# the clean /cms entry point working.
+/cms       /cms.html                  200

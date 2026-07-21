@@ -1,0 +1,6 @@
+# Netlify was serving a stale/inconsistent index.html (craft wall present but
+# the Selected-work list stuck on old external links) — its HTML post-processing
+# was caching a bad copy. Skipping processing makes the raw committed files
+# authoritative and forces a clean rebuild. _redirects still applies.
+[build.processing]
+  skip_processing = true
