@@ -61,6 +61,17 @@ img{max-width:100%;display:block}
 .b-text + .b-fig{margin-top:5vh}
 .b-fig + .b-text{margin-top:5vh}
 .b-embed,.b-video-native{margin-top:5vh;margin-bottom:5vh}
+
+/* grouped images: a justified row that fills the width (never overflows) */
+.b-row{display:flex;gap:10px;margin:10px 0;align-items:flex-start}
+.b-rowitem{flex:1 1 0;min-width:0;margin:0}
+.b-rowitem img{width:100%;height:auto;display:block}
+.b-rowitem figcaption{font-size:12px;letter-spacing:.02em;color:var(--muted);margin-top:8px}
+.b-text + .b-row,.b-row + .b-text{margin-top:5vh}
+@media (max-width:600px){
+  .b-row{flex-wrap:wrap}
+  .b-rowitem{flex:1 1 calc(50% - 5px)!important}
+}
 .b-fig figcaption{font-size:13px;letter-spacing:.02em;color:var(--muted);margin-top:12px;text-align:center}
 .b-video .vwrap,.b-embed .vwrap{position:relative;width:100%;padding-top:56.25%;background:#000}
 .b-video .vwrap iframe,.b-embed .vwrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
@@ -75,10 +86,83 @@ img{max-width:100%;display:block}
 /* chapters (subprojects) */
 .chapters{border-top:1px solid var(--line);margin-top:4vh}
 .chapter{border-bottom:1px solid var(--line);padding:11vh 0}
-.chapter .chhead{display:grid;grid-template-columns:minmax(120px,1fr) 3fr;gap:clamp(20px,5vw,80px);align-items:start}
-.chapter .chnum{font-weight:200;font-size:clamp(60px,9vw,150px);line-height:.8;color:var(--fg);opacity:.16}
-.chapter h2{font-weight:700;font-size:clamp(30px,5vw,68px);line-height:1.02;letter-spacing:-.02em;align-self:end}
-.chapter .chblocks{margin-top:5vh}
+.chapter .chhead{display:flex;justify-content:space-between;align-items:flex-end;gap:clamp(24px,5vw,80px)}
+/* chapter number: moved to the right, faint (20%), title leads on the left.
+   higher specificity so it isn't overridden by the .rv.in reveal opacity */
+.chapter .chhead .chnum{order:2;flex:none;text-align:right;font-weight:200;font-size:clamp(48px,8vw,140px);line-height:.8;color:var(--fg);opacity:.2}
+.chapter h2{order:1;font-weight:700;font-size:clamp(30px,5vw,68px);line-height:1.02;letter-spacing:-.02em}
+.chapter .chblocks{margin-top:10vh}
+
+/* big numbers / big points — a stat-tile band tied to the chapter */
+.chstats{display:flex;flex-wrap:wrap;border-top:1px solid var(--line);margin:8vh 0 0}
+/* same breathing room below the numbers block as above it, before the text */
+.chstats + .chblocks{margin-top:8vh}
+.chstat{flex:1 1 0;min-width:150px;padding:30px 26px 6px 0}
+.chstat:not(:first-child){border-left:1px solid var(--line);padding-left:26px}
+.chstat .v{font-weight:700;font-size:clamp(38px,5vw,72px);line-height:.9;letter-spacing:-.02em}
+.chstat .l{font-size:clamp(13px,1.15vw,15px);color:var(--muted);margin-top:14px;line-height:1.35;max-width:26ch}
+@media (max-width:600px){
+  .chstat{flex:1 1 100%;padding:22px 0 6px}
+  .chstat:not(:first-child){border-left:0;border-top:1px solid var(--line);padding-left:0}
+}
+
+/* horizontal chapter gallery — images stay fixed in their frame (fixed px
+   height, no vh recalculation or transform, so nothing moves/zooms on scroll) */
+.chgallery-wrap{position:relative;margin:14vh 0 0}
+.chgallery{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:4px;
+  scrollbar-width:none;-ms-overflow-style:none;cursor:grab;overscroll-behavior-x:contain}
+.chgallery::-webkit-scrollbar{display:none}
+.chgallery.drag{cursor:grabbing;scroll-snap-type:none}
+/* fixed height on the IMAGE (not the figure) so the caption flows right below
+   it and is always visible — no clipping, no scroll to reveal it */
+.gslide{flex:0 0 auto;margin:0;scroll-snap-align:start;cursor:zoom-in}
+.gslide img{height:480px;width:auto;max-width:none;display:block;pointer-events:none;background:#ecece9;border-radius:2px}
+.gslide figcaption{font-size:12px;color:var(--muted);margin-top:12px;letter-spacing:.02em}
+@media (max-width:600px){.gslide img{height:58vw}}
+/* plain arrows, no circle — vertically centred on the image (480/2) */
+.gnav{position:absolute;top:240px;transform:translateY(-50%);background:none;border:0;padding:6px 10px;
+  color:var(--fg);font-size:52px;line-height:0;cursor:pointer;z-index:2;opacity:.5;
+  transition:opacity .2s ease, transform .2s ease;text-shadow:0 1px 12px rgba(245,244,240,.95)}
+.gnav:hover{opacity:1}
+.gprev{left:-4px}.gnext{right:-4px}
+.gprev:hover{transform:translateY(-50%) translateX(-3px)}
+.gnext:hover{transform:translateY(-50%) translateX(3px)}
+.gnav.off{opacity:0;pointer-events:none}
+@media (hover:none){.gnav{display:none}}
+
+/* reveal without movement for image containers (they fade, never slide/zoom) */
+.chgallery-wrap.rv,.b-row.rv{transform:none}
+
+/* left rail: chapter anchors + active state */
+.chnav{position:fixed;top:50%;left:32px;transform:translateY(-50%);z-index:40;
+  display:flex;flex-direction:column;gap:16px;max-width:190px}
+.chnav a{display:flex;align-items:center;gap:11px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;transition:color .3s ease}
+.chnav a::before{content:"";width:16px;height:1px;flex:none;background:currentColor;transition:width .3s ease}
+.chnav a .ct{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chnav a:hover{color:var(--fg)}
+.chnav a.active{color:var(--fg)}
+.chnav a.active::before{width:34px}
+@media (max-width:1340px){.chnav{display:none}}
+@media (prefers-reduced-motion:reduce){.chnav a,.chnav a::before{transition:none}}
+
+/* lightbox (chapter galleries) */
+#lightbox{position:fixed;inset:0;z-index:400;display:none;align-items:center;justify-content:center;
+  background:rgba(5,5,5,.95);backdrop-filter:blur(6px)}
+#lightbox.open{display:flex}
+.lb-stage{margin:0;display:flex;flex-direction:column;align-items:center;gap:16px}
+#lb-img{max-width:92vw;max-height:82vh;width:auto;height:auto;object-fit:contain;
+  box-shadow:0 40px 100px rgba(0,0,0,.55);cursor:pointer}
+#lb-cap{color:#f5f4f0;font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.65}
+.lb-close,.lb-nav{position:fixed;background:none;border:0;color:#f5f4f0;cursor:pointer;z-index:401;
+  opacity:.7;transition:opacity .2s ease,transform .2s ease;line-height:0;padding:12px;font-weight:300}
+.lb-close:hover,.lb-nav:hover{opacity:1}
+.lb-close{top:16px;right:22px;font-size:24px}
+.lb-nav{top:50%;transform:translateY(-50%);font-size:56px}
+.lb-prev{left:10px}.lb-next{right:10px}
+.lb-prev:hover{transform:translateY(-50%) translateX(-3px)}.lb-next:hover{transform:translateY(-50%) translateX(3px)}
+@media (max-width:600px){.lb-nav{font-size:40px}#lb-img{max-height:74vh}}
+@media (prefers-reduced-motion:reduce){#lightbox{backdrop-filter:none}}
 
 /* all projects list */
 .morework{padding:10vh 0 4vh;border-top:1px solid var(--line)}
@@ -117,14 +201,22 @@ img{max-width:100%;display:block}
 @media (prefers-reduced-motion:reduce){#page-transition{display:none}}
 
 @media (max-width:720px){
-  .chapter .chhead{grid-template-columns:1fr;gap:10px}
-  .chapter h2{align-self:auto}
+  .chapter .chhead{gap:14px}
+  .chapter .chnum{font-size:clamp(38px,11vw,64px)}
 }
 </style>
 </head>
 <body>
 <div id="grain"></div>
 <div id="page-transition"></div>
+
+<!-- lightbox for the chapter galleries -->
+<div id="lightbox" aria-hidden="true">
+  <button class="lb-close" aria-label="Close">✕</button>
+  <button class="lb-nav lb-prev" aria-label="Previous">‹</button>
+  <button class="lb-nav lb-next" aria-label="Next">›</button>
+  <figure class="lb-stage"><img id="lb-img" src="" alt=""><figcaption id="lb-cap"></figcaption></figure>
+</div>
 
 <nav class="nav">
   <a href="index.html" data-back>Marcos Carvalho</a>
@@ -289,9 +381,40 @@ function renderBlock(b){
   return document.createDocumentFragment();
 }
 
+/* a justified row of images: flex-grow ∝ aspect ratio gives a uniform height
+   that fills the container width exactly, without overflowing it */
+function renderImageRow(imgs){
+  const row = document.createElement('div');
+  row.className = 'b-row rv';
+  imgs.forEach(b => {
+    const fig = document.createElement('figure');
+    fig.className = 'b-rowitem';
+    // initial estimate from stored dims (avoids layout jump), then corrected to
+    // the TRUE aspect on load so the row heights come out perfectly uniform
+    fig.style.flexGrow = (b.w && b.h) ? (b.w / b.h) : 1.5;
+    fig.innerHTML = `<img src="${b.src}" alt="${esc(b.alt || b.caption || '')}" decoding="async">` +
+                    (b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : '');
+    const img = fig.querySelector('img');
+    img.addEventListener('load', () => { if (img.naturalHeight) fig.style.flexGrow = img.naturalWidth / img.naturalHeight; }, { once: true });
+    row.appendChild(fig);
+  });
+  return row;
+}
+
 function renderBlocksInto(container, blocks){
+  const arr = blocks || [];
   let linkRow = null;
-  (blocks || []).forEach(b => {
+  for (let i = 0; i < arr.length; i++){
+    const b = arr[i];
+    // consecutive images sharing a group id -> one justified, width-filling row
+    if (b.type === 'image' && b.src && b.group){
+      const g = b.group, run = [];
+      while (i < arr.length && arr[i].type === 'image' && arr[i].src && arr[i].group === g){ run.push(arr[i]); i++; }
+      i--;
+      linkRow = null;
+      container.appendChild(renderImageRow(run));
+      continue;
+    }
     // YouTube links render full width like a figure, not grouped as a pill button
     const isPlainLink = b.type === 'link' && b.url && !youtubeId(b.url);
     if (isPlainLink){
@@ -301,7 +424,7 @@ function renderBlocksInto(container, blocks){
       linkRow = null;
       container.appendChild(renderBlock(b));
     }
-  });
+  }
 }
 
 /* ---------- render the whole case ---------- */
@@ -357,20 +480,67 @@ function render(p){
     subs.forEach((s, i) => {
       const sec = document.createElement('section');
       sec.className = 'chapter';
+      sec.id = 'ch-' + i;
       const inner = document.createElement('div');
       inner.className = 'wrap';
       inner.innerHTML = `<div class="chhead">
         <div class="chnum rv">${String(i + 1).padStart(2, '0')}</div>
         <h2 class="rv">${esc(s.title || 'Untitled')}</h2>
       </div>`;
+      const blocks = s.blocks || [];
+      const textBlocks = blocks.filter(b => b.type !== 'image');
+      const imgBlocks = blocks.filter(b => b.type === 'image' && b.src);
+
+      // big numbers / big points — a stat-tile band, BEFORE the text
+      const stats = Array.isArray(s.stats) ? s.stats
+        : (s.highlight ? [{ value: s.highlight.big, label: s.highlight.small }] : []);
+      const valid = stats.filter(t => (t.value || '').trim() || (t.label || '').trim());
+      if (valid.length){
+        const band = document.createElement('div');
+        band.className = 'chstats rv';
+        band.innerHTML = valid.map(t =>
+          `<div class="chstat"><div class="v">${esc(t.value || '')}</div>` +
+          `<div class="l">${esc(t.label || '')}</div></div>`).join('');
+        inner.appendChild(band);
+      }
+
+      // then the text / links / embeds (images become the horizontal gallery below)
       const blk = document.createElement('div');
       blk.className = 'chblocks';
-      renderBlocksInto(blk, s.blocks);
+      renderBlocksInto(blk, textBlocks);
       inner.appendChild(blk);
+
+      // horizontal image gallery (scroll / arrows / drag), not a vertical stack
+      if (imgBlocks.length){
+        const wrap = document.createElement('div');
+        wrap.className = 'chgallery-wrap rv';
+        const track = document.createElement('div');
+        track.className = 'chgallery';
+        imgBlocks.forEach(b => {
+          const fig = document.createElement('figure');
+          fig.className = 'gslide';
+          fig.innerHTML = `<img src="${b.src}" alt="${esc(b.alt || b.caption || '')}" decoding="async">` +
+                          (b.caption ? `<figcaption>${esc(b.caption)}</figcaption>` : '');
+          track.appendChild(fig);
+        });
+        wrap.appendChild(track);
+        wrap.insertAdjacentHTML('beforeend',
+          '<button class="gnav gprev" aria-label="Anterior">‹</button><button class="gnav gnext" aria-label="Próximo">›</button>');
+        inner.appendChild(wrap);
+      }
       sec.appendChild(inner);
       chs.appendChild(sec);
     });
     frag.appendChild(chs);
+
+    // left rail: anchors the chapters and highlights the current one
+    if (subs.length > 1){
+      const nav = document.createElement('nav');
+      nav.className = 'chnav';
+      nav.innerHTML = subs.map((s, i) =>
+        `<a href="#ch-${i}" data-ch="${i}"><span class="ct">${esc(s.title || '')}</span></a>`).join('');
+      frag.appendChild(nav);
+    }
   }
 
   // all other projects (index at the end of the case)
@@ -404,6 +574,110 @@ function render(p){
   app.appendChild(frag);
   hydrateVideoBlocks(app);
   setupReveals();
+  initGalleries();
+  initChNav();
+}
+
+/* ---------- left rail: highlight the current chapter, smooth-scroll on click ---------- */
+function initChNav(){
+  const nav = document.querySelector('.chnav'); if (!nav) return;
+  const links = [...nav.querySelectorAll('a')];
+  const secs = links.map(a => document.getElementById(a.getAttribute('href').slice(1)));
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const sync = () => {
+    const mid = innerHeight * 0.4;
+    let active = 0;
+    secs.forEach((s, i) => { if (s && s.getBoundingClientRect().top <= mid) active = i; });
+    links.forEach((a, i) => a.classList.toggle('active', i === active));
+  };
+  document.addEventListener('scroll', sync, { passive: true });
+  addEventListener('resize', sync);
+  sync();
+  links.forEach((a, i) => a.addEventListener('click', e => {
+    e.preventDefault();
+    secs[i]?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  }));
+}
+
+/* ---------- lightbox shared by the chapter galleries ---------- */
+const _lb = document.getElementById('lightbox');
+const _lbImg = document.getElementById('lb-img');
+const _lbCap = document.getElementById('lb-cap');
+let _lbList = [], _lbIdx = -1;
+function lbShow(i){
+  if (!_lbList.length) return;
+  _lbIdx = (i + _lbList.length) % _lbList.length;
+  _lbImg.src = _lbList[_lbIdx].src; _lbImg.alt = _lbList[_lbIdx].cap || '';
+  _lbCap.textContent = _lbList[_lbIdx].cap || '';
+}
+function lbOpen(list, i){
+  _lbList = list; lbShow(i);
+  _lb.classList.add('open'); _lb.setAttribute('aria-hidden', 'false');
+  document.documentElement.style.overflow = 'hidden';
+}
+function lbClose(){
+  _lb.classList.remove('open'); _lb.setAttribute('aria-hidden', 'true');
+  document.documentElement.style.overflow = ''; _lbImg.src = '';
+}
+if (_lb){
+  _lb.querySelector('.lb-close').addEventListener('click', e => { e.stopPropagation(); lbClose(); });
+  _lb.querySelector('.lb-prev').addEventListener('click', e => { e.stopPropagation(); lbShow(_lbIdx - 1); });
+  _lb.querySelector('.lb-next').addEventListener('click', e => { e.stopPropagation(); lbShow(_lbIdx + 1); });
+  _lbImg.addEventListener('click', e => { e.stopPropagation(); lbShow(_lbIdx + 1); });
+  _lb.addEventListener('click', lbClose);
+  addEventListener('keydown', e => {
+    if (!_lb.classList.contains('open')) return;
+    if (e.key === 'Escape') lbClose();
+    else if (e.key === 'ArrowLeft') lbShow(_lbIdx - 1);
+    else if (e.key === 'ArrowRight') lbShow(_lbIdx + 1);
+  });
+  let sx = 0;
+  _lb.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive: true });
+  _lb.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - sx;
+    if (Math.abs(dx) > 45) lbShow(_lbIdx + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+}
+
+/* ---------- horizontal chapter galleries (scroll / arrows / drag / wheel / lightbox) ---------- */
+function initGalleries(){
+  document.querySelectorAll('.chgallery-wrap').forEach(wrap => {
+    const track = wrap.querySelector('.chgallery');
+    const prev = wrap.querySelector('.gprev'), next = wrap.querySelector('.gnext');
+    const page = () => Math.max(260, track.clientWidth * 0.85);
+    prev.addEventListener('click', () => track.scrollBy({ left: -page(), behavior: 'smooth' }));
+    next.addEventListener('click', () => track.scrollBy({ left: page(), behavior: 'smooth' }));
+    const upd = () => {
+      prev.classList.toggle('off', track.scrollLeft < 8);
+      next.classList.toggle('off', track.scrollLeft + track.clientWidth >= track.scrollWidth - 8);
+    };
+    track.addEventListener('scroll', upd, { passive: true });
+    addEventListener('resize', upd);
+    setTimeout(upd, 80);
+    // drag to scroll (suppresses the click-to-open when it was actually a drag)
+    let down = false, sx = 0, sl = 0, moved = false;
+    track.addEventListener('pointerdown', e => { down = true; moved = false; sx = e.clientX; sl = track.scrollLeft; });
+    addEventListener('pointerup', () => { down = false; track.classList.remove('drag'); });
+    track.addEventListener('pointermove', e => {
+      if (!down) return;
+      if (Math.abs(e.clientX - sx) > 4){ moved = true; track.classList.add('drag'); }
+      track.scrollLeft = sl - (e.clientX - sx);
+    });
+    // NOTE: no vertical-wheel->horizontal hijack — scrolling with the cursor
+    // over the strip must scroll the PAGE down normally. Horizontal browsing is
+    // via the arrows, drag, or a native sideways trackpad swipe.
+    // click a slide -> open the lightbox at that image, browsing this gallery
+    track.addEventListener('click', e => {
+      if (moved) return;
+      const slide = e.target.closest('.gslide'); if (!slide) return;
+      const slides = [...track.querySelectorAll('.gslide')];
+      const list = slides.map(s => ({
+        src: s.querySelector('img').src,
+        cap: s.querySelector('figcaption')?.textContent || s.querySelector('img').alt || '',
+      }));
+      lbOpen(list, slides.indexOf(slide));
+    });
+  });
 }
 
 /* ---------- scroll reveals ---------- */

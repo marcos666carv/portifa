@@ -97,7 +97,7 @@ function addForm(data, index) {
   /* travelling marks must be monumental when they cross the camera
      (AIR reference): ~70% of frame height at the window centre;
      bigger than that and you are inside blown-white geometry */
-  const targetWidth = index === 0 ? 1.17 : 3.42;
+  const targetWidth = index === 0 ? 2.34 : 3.42;
   const fit = targetWidth / Math.max(size.x, size.y);
 
   /* big close-up faces reflect the whole bright studio and flash white;

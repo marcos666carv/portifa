@@ -262,17 +262,51 @@ a{color:var(--accent)}
 .stile .ord{position:absolute;top:5px;left:5px;font-size:9px;color:#fff;background:rgba(13,13,15,.6);border-radius:5px;padding:2px 5px}
 
 /* ---- pick-from-cases modal ---- */
-.pickmodal{position:fixed;top:50%;left:50%;transform:translate(-50%,-48%);z-index:60;width:min(860px,94vw);max-height:86vh;
+.pickmodal{position:fixed;top:50%;left:50%;transform:translate(-50%,-48%);z-index:60;width:min(1120px,94vw);max-height:88vh;
   background:var(--bg);border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column;
   opacity:0;pointer-events:none;transition:opacity .2s, transform .2s}
 .pickmodal.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
 .pickhead,.pickfoot{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line)}
 .pickfoot{border-bottom:0;border-top:1px solid var(--line)}
-.pickgrid{overflow-y:auto;padding:16px 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
-.pickcell{position:relative;aspect-ratio:1;border:1px solid var(--line);border-radius:9px;overflow:hidden;cursor:pointer}
+.pickgrid{overflow-y:auto;padding:6px 20px 18px}
+.picksec-h{position:sticky;top:0;background:var(--bg);z-index:2;display:flex;align-items:baseline;gap:8px;
+  padding:14px 2px 9px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  border-bottom:1px solid var(--line);margin-bottom:10px}
+.picksec-h .n{color:#54545c;letter-spacing:.06em}
+.picksec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px;margin-bottom:20px}
+.pickcell{position:relative;height:100px;border:1px solid var(--line);border-radius:8px;overflow:hidden;cursor:pointer;
+  background:var(--panel-2);transition:border-color .12s,transform .06s}
+.pickcell:hover{border-color:#3d3d44}
+.pickcell:active{transform:scale(.98)}
 .pickcell img{width:100%;height:100%;object-fit:cover;display:block}
 .pickcell.sel{outline:3px solid var(--accent);outline-offset:-3px}
-.pickcell.sel::after{content:"✓";position:absolute;top:4px;right:6px;color:#fff;background:var(--accent);width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px}
+.pickcell.sel::after{content:"✓";position:absolute;top:5px;right:6px;color:#fff;background:var(--accent);width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+
+/* ---- image grouping (justified rows on the case) ---- */
+.bsel{display:inline-flex;align-items:center;gap:5px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);cursor:pointer;margin-left:auto;user-select:none}
+.bsel input{width:13px;height:13px;margin:0;accent-color:var(--accent)}
+.block .bhead .del{margin-left:12px}
+.block.imgblock .bhead .del{margin-left:12px}
+.block.grouped{border-color:#3a5bd0}
+.block.grouped::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);border-radius:3px 0 0 3px}
+.grpbadge{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);
+  background:rgba(91,140,255,.12);border:1px solid rgba(91,140,255,.4);border-radius:6px;padding:3px 8px;cursor:pointer;margin-left:auto}
+.grpbadge:hover{background:rgba(91,140,255,.22)}
+.grpbadge + .bsel{margin-left:12px}
+.grpbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;
+  background:var(--panel-2);border:1px solid var(--accent);border-radius:10px;padding:10px 14px;margin-bottom:14px}
+.grpbar span{font-size:13px;color:var(--fg);margin-right:auto}
+
+/* ---- chapter stat tiles editor ---- */
+.statlist{display:flex;flex-direction:column;gap:8px}
+.statrow{display:flex;gap:8px;align-items:center}
+.statrow input{background:var(--panel-2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;color:var(--fg);font-size:13px;outline:none}
+.statrow input:focus{border-color:var(--accent)}
+.statrow .statv{flex:0 0 130px;font-weight:600}
+.statrow .statl{flex:1;min-width:0}
+.statdel{color:var(--muted);padding:8px 10px;border-radius:7px;font-size:12px;flex:0 0 auto}
+.statdel:hover{color:var(--danger);background:rgba(255,92,108,.1)}
 </style>
 </head>
 <body>
@@ -345,6 +379,16 @@ a{color:var(--accent)}
         <div class="hoverlabel">Imagens do hover <span style="opacity:.7">— escolha uma ou várias; com 2+ elas rodam como um gif no hover</span></div>
         <div class="hoverthumbs" id="hoverThumbs"></div>
       </div>
+    </div>
+
+    <div id="chHighlight" class="hidden">
+      <div class="sectlabel">Números em destaque <span style="opacity:.7">— viram uma faixa de stats no capítulo</span></div>
+      <div class="statlist" id="statList"></div>
+      <button class="btn" id="addStatBtn" style="margin-top:10px">
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2"><path d="M12 5v14M5 12h14"/></svg>
+        Adicionar número
+      </button>
+      <p class="cfghint">Cada item vira um tile (número grande + rótulo), lado a lado. As imagens do “Conteúdo do subprojeto” viram uma galeria horizontal abaixo do capítulo.</p>
     </div>
 
     <div id="subSection">
@@ -597,14 +641,21 @@ function migrateHover(o){
   if (!Array.isArray(o.hoverImages)) o.hoverImages = o.hoverImage ? [o.hoverImage] : [];
   delete o.hoverImage;
 }
+function ensureIds(blocks){ (blocks || []).forEach(b => { if (!b.id) b.id = 'b' + uid(); }); }
 function migrateAll(){
   if (!Array.isArray(state.montage)) state.montage = [];
   if (!Array.isArray(state.craft)) state.craft = [];
   state.projects.forEach(p => {
     if (!Array.isArray(p.blocks)) p.blocks = [];
     if (!Array.isArray(p.subprojects)) p.subprojects = [];
+    ensureIds(p.blocks);                               // imported blocks lacked ids
     migrateHover(p);
-    p.subprojects.forEach(s => { if (!Array.isArray(s.blocks)) s.blocks = []; migrateHover(s); });
+    p.subprojects.forEach(s => {
+      if (!s.id) s.id = 's' + uid();
+      if (!Array.isArray(s.blocks)) s.blocks = [];
+      ensureIds(s.blocks);
+      migrateHover(s);
+    });
   });
 }
 
@@ -729,6 +780,7 @@ function renderEditorChrome(){
   backBtn.classList.toggle('hidden', !isSub);
   document.getElementById('projOnly').classList.toggle('hidden', isSub);
   document.getElementById('subSection').classList.toggle('hidden', isSub);
+  document.getElementById('chHighlight').classList.toggle('hidden', !isSub);
   document.getElementById('deleteBtn').textContent = isSub ? 'Excluir subprojeto' : 'Excluir projeto';
   document.getElementById('contentLabel').textContent = isSub ? 'Conteúdo do subprojeto' : 'Conteúdo';
   titleField.placeholder = isSub ? 'Nome do subprojeto' : 'Nome do projeto';
@@ -736,6 +788,7 @@ function renderEditorChrome(){
 
 function openEditor(id, subId = null){
   editingId = id; editingSubId = subId;
+  blockSel.clear();
   const node = current(); if (!node) return;
   renderEditorChrome();
   titleField.value = node.title || '';
@@ -800,13 +853,39 @@ const cfgVisible = document.getElementById('cfgVisible');
 const cfgSecondary = document.getElementById('cfgSecondary');
 const hoverThumbs = document.getElementById('hoverThumbs');
 
+const statList = document.getElementById('statList');
 function renderHomeCfg(){
   const p = current(); if (!p) return;
   cfgMeta.value = p.meta || '';
   cfgVisible.checked = p.visible !== false;
   cfgSecondary.checked = !!p.secondary;
+  renderChStats();
   renderHoverThumbs();
 }
+/* chapter stat tiles (big number + label), a repeatable list */
+function renderChStats(){
+  const s = current(); if (!s || !statList) return;
+  if (!Array.isArray(s.stats)){
+    s.stats = s.highlight ? [{ value: s.highlight.big || '', label: s.highlight.small || '' }] : [];
+    if (s.highlight) delete s.highlight;
+  }
+  statList.innerHTML = '';
+  s.stats.forEach((t, i) => {
+    const row = document.createElement('div'); row.className = 'statrow';
+    const v = document.createElement('input'); v.className = 'statv'; v.placeholder = 'Nº (18%)'; v.value = t.value || '';
+    const l = document.createElement('input'); l.className = 'statl'; l.placeholder = 'rótulo (of revenue kept)'; l.value = t.label || '';
+    const del = document.createElement('button'); del.className = 'statdel'; del.textContent = '✕'; del.title = 'Remover';
+    v.addEventListener('input', () => { t.value = v.value; save(); });
+    l.addEventListener('input', () => { t.label = l.value; save(); });
+    del.addEventListener('click', () => { s.stats.splice(i, 1); save(); renderChStats(); });
+    row.append(v, l, del); statList.appendChild(row);
+  });
+}
+document.getElementById('addStatBtn').addEventListener('click', () => {
+  const s = current(); if (!s) return;
+  if (!Array.isArray(s.stats)) s.stats = [];
+  s.stats.push({ value: '', label: '' }); save(); renderChStats();
+});
 cfgMeta.addEventListener('input', () => { const p = current(); if (p){ p.meta = cfgMeta.value; save(); } });
 cfgVisible.addEventListener('change', () => { const p = current(); if (p){ p.visible = cfgVisible.checked; save(); } });
 cfgSecondary.addEventListener('change', () => { const p = current(); if (p){ p.secondary = cfgSecondary.checked; save(); } });
@@ -848,12 +927,50 @@ function renderHoverThumbs(){
 let pickingHover = false;
 function pickHover(){ pickingHover = true; filePicker.multiple = true; filePicker.value = ''; filePicker.click(); }
 
+/* selection for grouping images into a justified row on the case page */
+let blockSel = new Set();
+function groupSelected(){
+  const p = current(); if (!p) return;
+  const isSel = b => blockSel.has(b.id) && b.type === 'image';
+  const selected = p.blocks.filter(isSel);
+  if (selected.length < 2) return;
+  const gid = 'g' + uid();
+  selected.forEach(b => b.group = gid);
+  const firstPos = p.blocks.findIndex(isSel);
+  const insertAt = p.blocks.slice(0, firstPos).filter(b => !isSel(b)).length;
+  const remaining = p.blocks.filter(b => !isSel(b));
+  p.blocks = [...remaining.slice(0, insertAt), ...selected, ...remaining.slice(insertAt)];
+  blockSel.clear(); save(); renderBlocks();
+  toast(selected.length + ' imagens agrupadas em linha');
+}
+function ungroupRow(gid){
+  const p = current(); if (!p) return;
+  p.blocks.forEach(b => { if (b.group === gid) delete b.group; });
+  save(); renderBlocks();
+}
+
 function renderBlocks(){
   const p = current(); if (!p) return;
   blocksEl.innerHTML = '';
   if (!p.blocks.length){
     blocksEl.innerHTML = `<div class="blocks-empty">Nenhum conteúdo ainda. Adicione texto, imagem ou link abaixo.</div>`;
     return;
+  }
+  // action bar: group the currently selected images
+  const selCount = p.blocks.filter(b => blockSel.has(b.id) && b.type === 'image').length;
+  if (selCount >= 1){
+    const bar = document.createElement('div');
+    bar.className = 'grpbar';
+    bar.innerHTML = `<span>${selCount} ${selCount === 1 ? 'imagem selecionada' : 'imagens selecionadas'}</span>`;
+    const grp = document.createElement('button');
+    grp.className = 'btn primary'; grp.textContent = 'Agrupar em linha';
+    grp.disabled = selCount < 2; grp.style.opacity = selCount < 2 ? .5 : 1;
+    grp.addEventListener('click', groupSelected);
+    const clr = document.createElement('button');
+    clr.className = 'btn ghost'; clr.textContent = 'Limpar seleção';
+    clr.addEventListener('click', () => { blockSel.clear(); renderBlocks(); });
+    bar.append(grp, clr);
+    blocksEl.appendChild(bar);
   }
   p.blocks.forEach(b => blocksEl.appendChild(renderBlock(b)));
   hydrateVideoBlocks(blocksEl);
@@ -889,6 +1006,27 @@ function renderBlock(b){
     const p = current(); p.blocks = p.blocks.filter(x => x.id !== b.id); save(); renderBlocks();
     if (b.mediaId) deleteMediaBlob(b.mediaId);
   });
+  // image blocks can be selected + grouped into a justified row
+  if (b.type === 'image'){
+    el.classList.add('imgblock');
+    const del = head.querySelector('.del');
+    if (b.group){
+      el.classList.add('grouped');
+      const badge = document.createElement('button');
+      badge.className = 'grpbadge'; badge.title = 'Desagrupar esta linha';
+      badge.textContent = '⬌ em linha ✕';
+      badge.addEventListener('click', () => ungroupRow(b.group));
+      head.insertBefore(badge, del);
+    }
+    const sel = document.createElement('label');
+    sel.className = 'bsel';
+    sel.innerHTML = `<input type="checkbox" ${blockSel.has(b.id) ? 'checked' : ''}> agrupar`;
+    sel.querySelector('input').addEventListener('change', e => {
+      if (e.target.checked) blockSel.add(b.id); else blockSel.delete(b.id);
+      renderBlocks();
+    });
+    head.insertBefore(sel, del);
+  }
   el.appendChild(head);
 
   const body = document.createElement('div');
@@ -1222,17 +1360,31 @@ function openPick(name){
   pickTarget = name; pickSel = new Set(); pickLib = libraryImages();
   document.getElementById('pickTitle').textContent = 'Escolher imagens → ' + (name === 'montage' ? 'montagem' : 'craft');
   const grid = document.getElementById('pickGrid'); grid.innerHTML = '';
-  pickLib.forEach(im => {
+  const updCount = () => { document.getElementById('pickCount').textContent = pickSel.size ? pickSel.size + ' selecionada(s)' : ''; };
+  const cell = im => {
     const c = document.createElement('div'); c.className = 'pickcell';
     c.innerHTML = `<img src="${im.src}" loading="lazy" alt="">`;
+    if (pickSel.has(im.src)) c.classList.add('sel');
     c.addEventListener('click', () => {
       if (pickSel.has(im.src)){ pickSel.delete(im.src); c.classList.remove('sel'); }
       else { pickSel.add(im.src); c.classList.add('sel'); }
-      document.getElementById('pickCount').textContent = pickSel.size + ' selecionada(s)';
+      updCount();
     });
-    grid.appendChild(c);
+    return c;
+  };
+  // group by project so the picker is scannable instead of one giant wall
+  const groups = new Map();
+  pickLib.forEach(im => { const t = im.title || 'Outras'; if (!groups.has(t)) groups.set(t, []); groups.get(t).push(im); });
+  groups.forEach((imgs, title) => {
+    const h = document.createElement('div'); h.className = 'picksec-h';
+    h.innerHTML = `${title.replace(/</g,'&lt;')} <span class="n">${imgs.length}</span>`;
+    grid.appendChild(h);
+    const g = document.createElement('div'); g.className = 'picksec-grid';
+    imgs.forEach(im => g.appendChild(cell(im)));
+    grid.appendChild(g);
   });
-  document.getElementById('pickCount').textContent = '';
+  grid.scrollTop = 0;
+  updCount();
   pickOverlay.classList.add('open'); pickModal.classList.add('open'); pickModal.setAttribute('aria-hidden','false');
 }
 function closePick(){ pickOverlay.classList.remove('open'); pickModal.classList.remove('open'); pickModal.setAttribute('aria-hidden','true'); }
