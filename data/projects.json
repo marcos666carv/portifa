@@ -69,6 +69,38 @@
           ]
         },
         {
+          "id": "solv-5",
+          "title": "The leads engine",
+          "meta": "",
+          "hoverImages": [],
+          "blocks": [
+            {
+              "type": "text",
+              "text": "A clear OKR: identify and source qualified leads in a short window. I designed and built a platform that ran the whole hunt end to end."
+            },
+            {
+              "type": "text",
+              "text": "Workspaces per ICP. Separate workspaces for different searches and ICPs, so each product's hunt stayed focused.\n\nContext-based search. It matched companies by the product-usage context of what we offered and by CNAE across the Brazilian company registry, and pulled decision-makers and C-levels from LinkedIn — all gathered on one page with a market-score ranking.\n\nReady to act. Playbook, contact journey and the MQL/SQL split came built in, and a direct API connection pushed leads straight into Spotter, the tool the sales team already used.\n\nOKR crushed on day one. The month's target — 200 leads for product A and 100 for product B — was beaten in the first day of use."
+            }
+          ]
+        },
+        {
+          "id": "solv-6",
+          "title": "The research",
+          "meta": "",
+          "hoverImages": [],
+          "blocks": [
+            {
+              "type": "text",
+              "text": "I brought research into the design and product process, grounding decisions in customer pain and churn data instead of guesses."
+            },
+            {
+              "type": "text",
+              "text": "Pain discovery. Research to identify customer pains and map where the product actually hurt.\n\nChurn analysis and quick wins. Churn analysis surfaced fast wins for win-back.\n\nPLG for experience. Product-led-growth strategies defined to lift experience and CX.\n\nIt saved revenue. The team I coordinated shipped presentations, blueprints and definitions that improved usability — and pulled 3 large clients, around 18% of revenue, back from churning."
+            }
+          ]
+        },
+        {
           "id": "solv-4",
           "title": "The team",
           "meta": "",
