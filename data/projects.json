@@ -2289,5 +2289,326 @@
       ],
       "subprojects": []
     }
+  ],
+  "montage": [
+    {
+      "id": "m1",
+      "src": "assets/photos/study.png",
+      "sym": false
+    },
+    {
+      "id": "m2",
+      "src": "assets/photos/hands.png",
+      "sym": false
+    },
+    {
+      "id": "m3",
+      "src": "assets/cerol/sun.svg",
+      "sym": true
+    },
+    {
+      "id": "m4",
+      "src": "assets/cerol/urchin.svg",
+      "sym": true
+    },
+    {
+      "id": "m5",
+      "src": "assets/cerol/scribble.svg",
+      "sym": true
+    },
+    {
+      "id": "m6",
+      "src": "assets/cerol/creature.svg",
+      "sym": true
+    },
+    {
+      "id": "m7",
+      "src": "assets/cerol/void.svg",
+      "sym": true
+    }
+  ],
+  "craft": [
+    {
+      "id": "c1",
+      "src": "assets/work/225576979/01.webp",
+      "title": "void · floating spa",
+      "caseId": "225576979"
+    },
+    {
+      "id": "c2",
+      "src": "assets/work/233337759/01.webp",
+      "title": "viva la vegan",
+      "caseId": "233337759"
+    },
+    {
+      "id": "c3",
+      "src": "assets/work/250632349/01.webp",
+      "title": "Lerdo · pink neon",
+      "caseId": "250632349"
+    },
+    {
+      "id": "c4",
+      "src": "assets/work/135014753/01.webp",
+      "title": "Vertigem",
+      "caseId": "135014753"
+    },
+    {
+      "id": "c5",
+      "src": "assets/work/120517563/01.webp",
+      "title": "Mononoke · Progresso",
+      "caseId": "120517563"
+    },
+    {
+      "id": "c6",
+      "src": "assets/work/135486111/01.webp",
+      "title": "Tristes Trópicos",
+      "caseId": "135486111"
+    },
+    {
+      "id": "c7",
+      "src": "assets/work/54196333/01.webp",
+      "title": "Feel.U",
+      "caseId": "54196333"
+    },
+    {
+      "id": "c8",
+      "src": "assets/work/209221077/01.webp",
+      "title": "dlocal · CONNECT",
+      "caseId": "209221077"
+    },
+    {
+      "id": "c9",
+      "src": "assets/work/76147897/01.webp",
+      "title": "Bodebrown",
+      "caseId": "76147897"
+    },
+    {
+      "id": "c10",
+      "src": "assets/work/225576979/05.webp",
+      "title": "void · floating spa",
+      "caseId": "225576979"
+    },
+    {
+      "id": "c11",
+      "src": "assets/work/233337759/04.webp",
+      "title": "viva la vegan",
+      "caseId": "233337759"
+    },
+    {
+      "id": "c12",
+      "src": "assets/work/250632349/04.webp",
+      "title": "Lerdo · pink neon",
+      "caseId": "250632349"
+    },
+    {
+      "id": "c13",
+      "src": "assets/work/135014753/02.webp",
+      "title": "Vertigem",
+      "caseId": "135014753"
+    },
+    {
+      "id": "c14",
+      "src": "assets/work/120517563/07.webp",
+      "title": "Mononoke · Progresso",
+      "caseId": "120517563"
+    },
+    {
+      "id": "c15",
+      "src": "assets/work/135486111/04.webp",
+      "title": "Tristes Trópicos",
+      "caseId": "135486111"
+    },
+    {
+      "id": "c16",
+      "src": "assets/work/54196333/06.webp",
+      "title": "Feel.U",
+      "caseId": "54196333"
+    },
+    {
+      "id": "c17",
+      "src": "assets/work/209221077/07.webp",
+      "title": "dlocal · CONNECT",
+      "caseId": "209221077"
+    },
+    {
+      "id": "c18",
+      "src": "assets/work/225576979/10.webp",
+      "title": "void · floating spa",
+      "caseId": "225576979"
+    },
+    {
+      "id": "c19",
+      "src": "assets/work/233337759/07.webp",
+      "title": "viva la vegan",
+      "caseId": "233337759"
+    },
+    {
+      "id": "c20",
+      "src": "assets/work/250632349/08.webp",
+      "title": "Lerdo · pink neon",
+      "caseId": "250632349"
+    },
+    {
+      "id": "c21",
+      "src": "assets/work/135014753/04.webp",
+      "title": "Vertigem",
+      "caseId": "135014753"
+    },
+    {
+      "id": "c22",
+      "src": "assets/work/120517563/15.webp",
+      "title": "Mononoke · Progresso",
+      "caseId": "120517563"
+    },
+    {
+      "id": "c23",
+      "src": "assets/work/135486111/06.webp",
+      "title": "Tristes Trópicos",
+      "caseId": "135486111"
+    },
+    {
+      "id": "c24",
+      "src": "assets/work/54196333/11.webp",
+      "title": "Feel.U",
+      "caseId": "54196333"
+    },
+    {
+      "id": "c25",
+      "src": "assets/work/209221077/13.webp",
+      "title": "dlocal · CONNECT",
+      "caseId": "209221077"
+    },
+    {
+      "id": "c26",
+      "src": "assets/work/225576979/14.webp",
+      "title": "void · floating spa",
+      "caseId": "225576979"
+    },
+    {
+      "id": "c27",
+      "src": "assets/work/233337759/10.webp",
+      "title": "viva la vegan",
+      "caseId": "233337759"
+    },
+    {
+      "id": "c28",
+      "src": "assets/work/250632349/12.webp",
+      "title": "Lerdo · pink neon",
+      "caseId": "250632349"
+    },
+    {
+      "id": "c29",
+      "src": "assets/work/135014753/06.webp",
+      "title": "Vertigem",
+      "caseId": "135014753"
+    },
+    {
+      "id": "c30",
+      "src": "assets/work/120517563/24.webp",
+      "title": "Mononoke · Progresso",
+      "caseId": "120517563"
+    },
+    {
+      "id": "c31",
+      "src": "assets/work/135486111/08.webp",
+      "title": "Tristes Trópicos",
+      "caseId": "135486111"
+    },
+    {
+      "id": "c32",
+      "src": "assets/work/54196333/16.webp",
+      "title": "Feel.U",
+      "caseId": "54196333"
+    },
+    {
+      "id": "c33",
+      "src": "assets/work/209221077/18.webp",
+      "title": "dlocal · CONNECT",
+      "caseId": "209221077"
+    },
+    {
+      "id": "c34",
+      "src": "assets/work/225576979/19.webp",
+      "title": "void · floating spa",
+      "caseId": "225576979"
+    },
+    {
+      "id": "c35",
+      "src": "assets/work/233337759/13.webp",
+      "title": "viva la vegan",
+      "caseId": "233337759"
+    },
+    {
+      "id": "c36",
+      "src": "assets/work/250632349/16.webp",
+      "title": "Lerdo · pink neon",
+      "caseId": "250632349"
+    },
+    {
+      "id": "c37",
+      "src": "assets/work/135014753/08.webp",
+      "title": "Vertigem",
+      "caseId": "135014753"
+    },
+    {
+      "id": "c38",
+      "src": "assets/work/120517563/33.webp",
+      "title": "Mononoke · Progresso",
+      "caseId": "120517563"
+    },
+    {
+      "id": "c39",
+      "src": "assets/work/54196333/21.webp",
+      "title": "Feel.U",
+      "caseId": "54196333"
+    },
+    {
+      "id": "c40",
+      "src": "assets/work/209221077/24.webp",
+      "title": "dlocal · CONNECT",
+      "caseId": "209221077"
+    },
+    {
+      "id": "c41",
+      "src": "assets/work/225576979/24.webp",
+      "title": "void · floating spa",
+      "caseId": "225576979"
+    },
+    {
+      "id": "c42",
+      "src": "assets/work/233337759/16.webp",
+      "title": "viva la vegan",
+      "caseId": "233337759"
+    },
+    {
+      "id": "c43",
+      "src": "assets/work/250632349/20.webp",
+      "title": "Lerdo · pink neon",
+      "caseId": "250632349"
+    },
+    {
+      "id": "c44",
+      "src": "assets/work/120517563/40.webp",
+      "title": "Mononoke · Progresso",
+      "caseId": "120517563"
+    },
+    {
+      "id": "c45",
+      "src": "assets/work/209221077/29.webp",
+      "title": "dlocal · CONNECT",
+      "caseId": "209221077"
+    },
+    {
+      "id": "c46",
+      "src": "assets/work/225576979/28.webp",
+      "title": "void · floating spa",
+      "caseId": "225576979"
+    },
+    {
+      "id": "c47",
+      "src": "assets/work/225576979/33.webp",
+      "title": "void · floating spa",
+      "caseId": "225576979"
+    }
   ]
 }

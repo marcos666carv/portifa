@@ -340,21 +340,23 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
 
 /* ============ CRAFT WALL LIGHTBOX ============
    Tap a masonry tile to open it big; arrows / swipe / keys to move through the
-   whole wall, click the backdrop or ✕ or Esc to close. Locks Lenis while open. */
+   whole wall, click the backdrop or ✕ or Esc to close. Locks Lenis while open.
+   Uses event delegation on #wall so it keeps working when the CMS rebuilds the
+   tiles from data/projects.json. */
 (function () {
   const lb = document.getElementById('lightbox');
   const wall = document.getElementById('wall');
   if (!lb || !wall) return;
   const img = document.getElementById('lb-img');
   const cap = document.getElementById('lb-cap');
-  const tiles = [...wall.querySelectorAll('.tile')];
-  if (!tiles.length) return;
+  const tiles = () => [...wall.querySelectorAll('.tile')];
   let idx = -1;
 
   const show = (i) => {
-    idx = (i + tiles.length) % tiles.length;
-    const t = tiles[idx];
-    img.src = t.dataset.full;
+    const ts = tiles(); if (!ts.length) return;
+    idx = (i + ts.length) % ts.length;
+    const t = ts[idx];
+    img.src = t.dataset.full || t.querySelector('img')?.src || '';
     img.alt = t.dataset.title || '';
     cap.textContent = t.dataset.title || '';
   };
@@ -373,7 +375,10 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
     img.src = '';
   };
 
-  tiles.forEach((t, i) => t.addEventListener('click', () => open(i)));
+  wall.addEventListener('click', (e) => {
+    const t = e.target.closest('.tile'); if (!t) return;
+    open(tiles().indexOf(t));
+  });
   lb.querySelector('.lb-close').addEventListener('click', (e) => { e.stopPropagation(); close(); });
   lb.querySelector('.lb-prev').addEventListener('click', (e) => { e.stopPropagation(); show(idx - 1); });
   lb.querySelector('.lb-next').addEventListener('click', (e) => { e.stopPropagation(); show(idx + 1); });
@@ -385,11 +390,55 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
     else if (e.key === 'ArrowLeft') show(idx - 1);
     else if (e.key === 'ArrowRight') show(idx + 1);
   });
-  // touch swipe
   let sx = 0;
   lb.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; }, { passive: true });
   lb.addEventListener('touchend', (e) => {
     const dx = e.changedTouches[0].clientX - sx;
     if (Math.abs(dx) > 45) show(idx + (dx < 0 ? 1 : -1));
   }, { passive: true });
+})();
+
+/* ============ HOME CONTENT FROM THE CMS (montage + craft wall) ============
+   The opening montage and the craft grid ship baked into index.html as a
+   default/fallback. If data/projects.json carries CMS-authored `montage` /
+   `craft` lists, rebuild them from that so they're editable without touching
+   markup. Fetched once, in parallel with the loader (which waits on the 3D),
+   so the montage is usually rebuilt before it plays; worst case it plays the
+   baked default. */
+(function () {
+  const esc = (s) => (s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  function buildMontage(frames) {
+    const stage = document.getElementById('hero-montage');
+    if (!stage || !frames.length) return;
+    stage.innerHTML = frames.map(f =>
+      `<figure${f.sym ? ' class="sym"' : ''}><img src="${esc(f.src)}" alt=""></figure>`).join('');
+  }
+
+  function buildCraft(tiles) {
+    const wall = document.getElementById('wall');
+    if (!wall || !tiles.length) return;
+    wall.innerHTML = tiles.map(t =>
+      `<button class="tile rv" data-full="${esc(t.src)}" data-title="${esc(t.title)}" data-id="${esc(t.caseId)}">` +
+      `<img src="${esc(t.src)}" loading="lazy" decoding="async" alt="${esc(t.title)}"></button>`).join('');
+    // give the freshly built tiles their scroll-reveal + cursor treatment
+    gsap.utils.toArray('#wall .tile').forEach(el => {
+      ScrollTrigger.create({ trigger: el, start: 'top 92%', onEnter: () => el.classList.add('is-in') });
+      if (cursorEl) {
+        el.addEventListener('pointerenter', () => cursorEl.classList.add('big'));
+        el.addEventListener('pointerleave', () => cursorEl.classList.remove('big'));
+      }
+    });
+    if (window.ScrollTrigger) ScrollTrigger.refresh();
+  }
+  const cursorEl = document.getElementById('cursor');
+
+  fetch('data/projects.json', { cache: 'no-cache' })
+    .then(r => r.ok ? r.json() : null)
+    .then(d => {
+      if (!d) return;
+      if (Array.isArray(d.montage) && d.montage.length) buildMontage(d.montage);
+      if (Array.isArray(d.craft) && d.craft.length) buildCraft(d.craft);
+    })
+    .catch(() => {});
 })();
