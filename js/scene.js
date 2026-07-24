@@ -73,6 +73,10 @@ const chrome = new THREE.MeshPhysicalMaterial({
    and Brand-and-art chapters folded into the single Selected work list. */
 const SYMBOLS = ['Asset 3', 'sun', 'urchin'];
 const GAP = 21; // 50% more distance
+/* the craft sphere's sticky stage is opaque, so the urchin's flyby is pulled
+   forward (z -33 instead of -42) to peak in the transparent craft-statement
+   band right before that section swallows the view */
+const Z_POS = [0, -GAP, -33];
 const OFFSET = [
   [0, 0],        // void: hero, centred
   [-1.7, 0.7],   // sun
@@ -108,7 +112,7 @@ function addForm(data, index) {
 
   const mesh = new THREE.Mesh(geo, mat);
   mesh.scale.set(fit, -fit, fit); // flip Y, SVG is y-down
-  mesh.position.set(OFFSET[index][0], OFFSET[index][1], -index * GAP);
+  mesh.position.set(OFFSET[index][0], OFFSET[index][1], Z_POS[index] ?? -index * GAP);
   mesh.userData.spin = 0.08 + index * 0.02;
   mesh.userData.floatSeed = index * 1.7;
   mesh.userData.baseY = OFFSET[index][1];

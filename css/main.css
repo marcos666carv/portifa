@@ -332,21 +332,25 @@ section{position:relative}
 }
 
 /* ---- craft wall (loose Pinterest-style masonry) ---- */
-.craftwall{padding-top:clamp(36px,6vh,80px);padding-bottom:clamp(70px,13vh,150px)}
-.craftwall .lbl{margin-bottom:32px}
-.wall{column-count:2;column-gap:12px}
-@media (min-width:640px){.wall{column-count:3}}
-@media (min-width:1000px){.wall{column-count:4}}
-@media (min-width:1500px){.wall{column-count:5}}
+/* ---- craft sphere: a slowly rotating 3D globe of images (ref: brik.space
+   sphere layout — perspective view, billboarded tiles, face to camera).
+   Tiles are absolutely positioned; js/main.js projects them every frame. ---- */
+.craftwall{position:relative;height:330svh;min-height:560px;padding:0}
+.craftwall .stage{position:sticky;top:0;height:100svh;min-height:560px;overflow:hidden;background:var(--blk,#050505)}
+.craftwall .lbl{position:absolute;top:28px;left:32px;z-index:300;margin:0}
+.wall{position:absolute;inset:0;touch-action:pan-y pinch-zoom;cursor:grab}
+.wall.dragging{cursor:grabbing}
 .tile{
-  display:block;width:100%;margin:0 0 12px;padding:0;border:0;background:#e7e6e1;
-  break-inside:avoid;cursor:pointer;overflow:hidden;position:relative;line-height:0;
+  position:absolute;left:0;top:0;width:calc(var(--w,14) * 1vmin);
+  margin:0;padding:0;border:0;background:transparent;
+  cursor:pointer;line-height:0;
+  /* no will-change here: 47 promoted layers blow Chrome's compositor
+     budget and tiles silently stop painting — 2D transforms stay cheap */
 }
-.tile img{width:100%;height:auto;display:block;
-  transition:transform .6s cubic-bezier(.16,.84,.36,1)}
-.tile::after{content:"";position:absolute;inset:0;background:var(--blk);opacity:0;transition:opacity .3s}
-.tile:hover img{transform:scale(1.045)}
-.tile:hover::after{opacity:.05}
+.tile img{width:100%;height:auto;display:block;transition:filter .3s}
+.tile:hover img{filter:brightness(1.15)}
+.tile:focus{outline:0}
+.tile:focus-visible{outline:2px solid var(--wht);outline-offset:3px}
 
 /* ---- lightbox (tap a tile to open it big) ---- */
 #lightbox{

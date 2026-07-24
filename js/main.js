@@ -398,6 +398,125 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
   }, { passive: true });
 })();
 
+/* ============ CRAFT SPHERE ============
+   The loose-craft wall is a slowly rotating 3D globe of images (absorbed from
+   brik.space's sphere layout: Fibonacci distribution, perspective projection,
+   tiles billboarded to the camera, continuous auto-rotation ~5°/s). Drag
+   horizontally to spin (with inertia); vertical touch still scrolls the page
+   (touch-action: pan-y). A real drag suppresses the click so the lightbox
+   only opens on a tap. Pauses whenever the section leaves the viewport. */
+(function () {
+  const section = document.getElementById('craftwall');
+  const wall = document.getElementById('wall');
+  if (!section || !wall) return;
+
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const BASE_SPEED = reduced ? 0 : 0.09;   // rad/s — the reference's leisurely spin
+  const PERSP = 1000;                      // focal length in px
+  const TILT = -0.16;                      // fixed X tilt so the poles read as depth
+  const frac = (n) => n - Math.floor(n);
+
+  let tiles = [], pts = [], RX = 500, RY = 300, RZ = 380;
+  let rotY = 0, vel = 0, running = false, raf = 0, last = 0;
+
+  function setup() {
+    tiles = [...wall.querySelectorAll('.tile')];
+    const N = tiles.length; if (!N) return;
+    pts = [];
+    const GA = Math.PI * (3 - Math.sqrt(5));            // golden angle
+    for (let i = 0; i < N; i++) {
+      const y = 1 - (2 * (i + 0.5)) / N;                // Fibonacci sphere: even spread
+      const r = Math.sqrt(1 - y * y);
+      pts.push({ x: Math.cos(GA * i) * r, y, z: Math.sin(GA * i) * r });
+      // deterministic size mix — a few heroes, some mids, mostly small tiles
+      const rnd = frac(Math.sin(i * 127.1) * 43758.5453);
+      let w = i % 11 === 0 ? 34 : i % 5 === 0 ? 20 : 10 + rnd * 7;  // vmin
+      const ar = parseAspect(tiles[i].querySelector('img'));
+      if (ar && ar < 0.8) w *= 0.72;                    // tall pieces: rein the width in
+      if (ar && ar > 2.4) w *= 1.3;                     // wide banners: let them stretch
+      tiles[i].style.setProperty('--w', w.toFixed(1));
+    }
+    resize();
+    render(0);
+  }
+  function parseAspect(img) {
+    const m = /aspect-ratio:\s*([\d.]+)\s*\/\s*([\d.]+)/.exec(img?.getAttribute('style') || '');
+    return m ? (+m[1]) / (+m[2]) : (img?.naturalWidth && img?.naturalHeight ? img.naturalWidth / img.naturalHeight : 0);
+  }
+  function resize() {
+    /* ellipsoid, not a ball: wide in x so tiles reach the stage edges (like
+       the reference canvas), tall-ish in y, depth from the smaller side */
+    RX = wall.clientWidth * 0.42;
+    RY = wall.clientHeight * 0.40;
+    RZ = Math.min(wall.clientWidth, wall.clientHeight) * 0.5;
+  }
+
+  function render(dt) {
+    rotY += (BASE_SPEED + vel) * dt;
+    vel *= Math.pow(0.05, dt);                          // drag inertia decays in ~1s
+    const cx = wall.clientWidth / 2, cy = wall.clientHeight / 2;
+    const cosT = Math.cos(TILT), sinT = Math.sin(TILT);
+    const ca = Math.cos(rotY), sa = Math.sin(rotY);
+    for (let i = 0; i < tiles.length; i++) {
+      const p = pts[i];
+      /* spin then tilt on the UNIT sphere, scale axes last — keeps every
+         tile inside the stage bounds instead of flying off top/bottom */
+      const x1 = p.x * ca + p.z * sa;
+      const z1 = -p.x * sa + p.z * ca;
+      const yu = p.y * cosT - z1 * sinT;
+      const zu = p.y * sinT + z1 * cosT;
+      const x = x1 * RX, y = yu * RY, z = zu * RZ;
+      const s = PERSP / (PERSP - z);
+      const t = tiles[i];
+      t.style.transform = `translate(-50%,-50%) translate(${(cx + x * s).toFixed(2)}px,${(cy + y * s).toFixed(2)}px) scale(${s.toFixed(4)})`;
+      t.style.zIndex = 100 + Math.round(z / 4);
+      t.style.opacity = (0.55 + 0.45 * (z + RZ) / (2 * RZ)).toFixed(3);
+    }
+  }
+
+  /* drag to spin — pointer events; vertical touch keeps scrolling the page */
+  let dragging = false, lastX = 0, startX = 0, startY = 0, moved = 0, dragVel = 0, lastT = 0;
+  wall.addEventListener('pointerdown', (e) => {
+    if (e.button) return;
+    dragging = true; moved = 0; dragVel = 0;
+    lastX = startX = e.clientX; startY = e.clientY; lastT = performance.now();
+    wall.classList.add('dragging');
+  });
+  addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - lastX; lastX = e.clientX;
+    moved = Math.max(moved, Math.hypot(e.clientX - startX, e.clientY - startY));
+    rotY += dx * 0.0038;
+    const now = performance.now();
+    dragVel = (dx * 0.0038) / Math.max((now - lastT) / 1000, 1 / 240);
+    lastT = now;
+    if (!running) render(0);
+  }, { passive: true });
+  addEventListener('pointerup', () => {
+    if (!dragging) return;
+    dragging = false; wall.classList.remove('dragging');
+    vel = Math.max(-1.4, Math.min(1.4, dragVel));
+  });
+  wall.addEventListener('click', (e) => {              // a drag is not a tap
+    if (moved > 8) { e.stopPropagation(); e.preventDefault(); moved = 0; }
+  }, true);
+
+  function loop(ts) {
+    raf = requestAnimationFrame(loop);
+    const dt = Math.min((ts - last) / 1000, 0.05); last = ts;
+    render(dt);
+  }
+  const io = new IntersectionObserver(([en]) => {
+    if (en.isIntersecting && !running) { running = true; last = performance.now(); raf = requestAnimationFrame(loop); }
+    else if (!en.isIntersecting && running) { running = false; cancelAnimationFrame(raf); }
+  }, { rootMargin: '15%' });
+  io.observe(section);
+  addEventListener('resize', () => { resize(); if (!running) render(0); });
+
+  setup();
+  window.__initCraftSphere = setup;                    // CMS rebuild re-enters here
+})();
+
 /* ============ HOME CONTENT FROM THE CMS (montage + craft wall) ============
    The opening montage and the craft grid ship baked into index.html as a
    default/fallback. If data/projects.json carries CMS-authored `montage` /
@@ -419,11 +538,11 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
     const wall = document.getElementById('wall');
     if (!wall || !tiles.length) return;
     wall.innerHTML = tiles.map(t =>
-      `<button class="tile rv" data-full="${esc(t.src)}" data-title="${esc(t.title)}" data-id="${esc(t.caseId)}">` +
+      `<button class="tile" data-full="${esc(t.src)}" data-title="${esc(t.title)}" data-id="${esc(t.caseId)}">` +
       `<img src="${esc(t.src)}" loading="lazy" decoding="async" alt="${esc(t.title)}"></button>`).join('');
-    // give the freshly built tiles their scroll-reveal + cursor treatment
+    // re-seat the fresh tiles on the sphere + cursor treatment
+    if (window.__initCraftSphere) window.__initCraftSphere();
     gsap.utils.toArray('#wall .tile').forEach(el => {
-      ScrollTrigger.create({ trigger: el, start: 'top 92%', onEnter: () => el.classList.add('is-in') });
       if (cursorEl) {
         el.addEventListener('pointerenter', () => cursorEl.classList.add('big'));
         el.addEventListener('pointerleave', () => cursorEl.classList.remove('big'));
