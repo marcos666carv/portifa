@@ -329,6 +329,8 @@ a{color:var(--accent)}
 .pubresult.ok .pr-icon::after{content:"✓"}
 .pubresult.err .pr-icon{background:var(--danger)}
 .pubresult.err .pr-icon::after{content:"!"}
+.pubresult.warn .pr-icon{background:#c98a1e}
+.pubresult.warn .pr-icon::after{content:"↑"}
 .pubresult .pr-body{min-width:0;flex:1}
 .pubresult .pr-msg{font-size:13.5px;line-height:1.4;color:var(--fg);word-break:break-word}
 .pubresult .pr-link{display:inline-block;margin-top:4px;font-size:12.5px;color:var(--accent)}
@@ -672,9 +674,13 @@ async function pullFromSite(){
   if (!d || !Array.isArray(d.projects)) throw new Error('formato inválido');
   return d;
 }
+/* remember which published revision the local draft is based on, so we can tell
+   when the live site moved ahead of this browser (see checkSiteNewer). */
+const BASE_REV = 'crm-base-rev';
+function stampBaseRev(d){ try { localStorage.setItem(BASE_REV, String((d && d.revision) || 0)); } catch(e){} }
 async function seedFromSiteIfEmpty(){
   if (state.projects.length) return;
-  try { state = await pullFromSite(); save(); } catch (e) { console.warn('seed from site failed', e); }
+  try { state = await pullFromSite(); save(); stampBaseRev(state); } catch (e) { console.warn('seed from site failed', e); }
 }
 function migrateHover(o){
   if (!Array.isArray(o.hoverImages)) o.hoverImages = o.hoverImage ? [o.hoverImage] : [];
@@ -1286,11 +1292,16 @@ function showPub(state, msg, link){
   el.className = 'pubresult show ' + state;
   document.getElementById('prMsg').textContent = msg;
   const a = document.getElementById('prLink');
+  a.dataset.action = '';                                  // default: plain link; callers set an action after
   if (link){ a.href = link.href; a.textContent = link.text; } else { a.removeAttribute('href'); a.textContent = ''; }
   el.setAttribute('aria-hidden', 'false');
 }
 function hidePub(){ const el = document.getElementById('pubResult'); el.classList.remove('show'); el.setAttribute('aria-hidden', 'true'); }
 document.getElementById('prClose').addEventListener('click', hidePub);
+/* the banner link can carry an in-page action (e.g. "Puxar do site") instead of navigating */
+document.getElementById('prLink').addEventListener('click', (e) => {
+  if (e.currentTarget.dataset.action === 'pull'){ e.preventDefault(); e.currentTarget.dataset.action = ''; hidePub(); document.getElementById('pullBtn').click(); }
+});
 
 async function publishToSite(){
   const btn = document.getElementById('publishBtn');
@@ -1299,7 +1310,8 @@ async function publishToSite(){
   const api = `https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}`;
   const headers = { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
   migrateAll();
-  const payload = { version: state.version || 1, generatedFrom: 'cms', count: state.projects.length,
+  const rev = Date.now();                                 // revision stamp: lets other browsers detect the site moved ahead
+  const payload = { version: state.version || 1, revision: rev, generatedFrom: 'cms', count: state.projects.length,
                     projects: state.projects, montage: state.montage || [], craft: state.craft || [] };
   const json = JSON.stringify(payload, null, 2);
   if (json.length > 8_000_000){ showPub('err', 'Muito grande (' + Math.round(json.length/1e6) + 'MB) — imagens enviadas viram base64. Reduza antes de publicar.'); return; }
@@ -1320,6 +1332,7 @@ async function publishToSite(){
       throw new Error((pj.message || ('HTTP ' + put.status)) + (put.status === 403 ? ' — o token precisa de Contents: Read and write no repo portifa.' : ''));
     }
     const short = ((pj.commit && pj.commit.sha) || '').slice(0, 7);
+    try { localStorage.setItem(BASE_REV, String(rev)); } catch(e){}   // this draft is now in sync with what we just published
     showPub('ok', 'Publicado ✓  (commit ' + short + '). A Netlify vai atualizar em ~1 min.', { href: 'https://portmarcos.netlify.app', text: 'Abrir o site →' });
     toast('Publicado ✓');
   } catch (err){
@@ -1380,7 +1393,8 @@ function toast(msg){
 document.getElementById('pullBtn').addEventListener('click', async () => {
   if (state.projects.length && !confirm('Puxar os cases publicados do site vai SUBSTITUIR o que está aqui neste navegador. Continuar?')) return;
   try {
-    state = await pullFromSite(); migrateAll(); save(); renderBoard();
+    state = await pullFromSite(); migrateAll(); save(); stampBaseRev(state); renderBoard();
+    hidePub();
     toast('Cases do site carregados');
   } catch (e) { toast('Falha ao puxar do site (' + (e.message || e) + ')'); }
 });
@@ -1515,11 +1529,28 @@ document.addEventListener('keydown', e => {
   else if (siteDrawer.classList.contains('open')) closeSite();
 });
 
+/* warn when the published site moved ahead of this browser's draft, so edits
+   here don't silently overwrite newer live content on the next publish. */
+async function checkSiteNewer(){
+  try {
+    const r = await fetch('data/projects.json', { cache: 'no-cache' });
+    if (!r.ok) return;
+    const d = await r.json();
+    const liveRev = (d && d.revision) || 0;
+    const baseRev = Number(localStorage.getItem(BASE_REV) || 0);
+    if (liveRev > baseRev && state.projects.length){
+      showPub('warn', 'O site foi publicado depois do seu rascunho neste navegador. Puxe do site antes de editar — senão o próximo Publicar sobrescreve o que está no ar.',
+              { href: '#', text: 'Puxar do site agora →' });
+      document.getElementById('prLink').dataset.action = 'pull';
+    }
+  } catch(e){ /* offline / not served — ignore */ }
+}
 /* init: seed from the live site on a fresh browser, then render */
 (async function init(){
   await seedFromSiteIfEmpty();
   migrateAll();
   renderBoard();
+  checkSiteNewer();
 })();
 </script>
 </body>
