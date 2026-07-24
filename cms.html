@@ -307,6 +307,12 @@ a{color:var(--accent)}
 .statrow .statl{flex:1;min-width:0}
 .statdel{color:var(--muted);padding:8px 10px;border-radius:7px;font-size:12px;flex:0 0 auto}
 .statdel:hover{color:var(--danger);background:rgba(255,92,108,.1)}
+
+/* ---- publish button ---- */
+.btn.publish{background:#2f8f4e;border-color:#2f8f4e;color:#fff}
+.btn.publish:hover{background:#37a65b;border-color:#37a65b}
+.btn.publish:disabled{opacity:.6;cursor:default}
+.btn.publish.busy{pointer-events:none}
 </style>
 </head>
 <body>
@@ -346,6 +352,10 @@ a{color:var(--accent)}
   <button class="btn primary" id="newBtn">
     <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
     Novo projeto
+  </button>
+  <button class="btn publish" id="publishBtn" title="Publicar direto no site (commit no repo → Netlify)">
+    <svg viewBox="0 0 24 24"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+    Publicar
   </button>
 </div>
 
@@ -1226,6 +1236,59 @@ document.getElementById('exportBtn').addEventListener('click', () => {
   a.click(); URL.revokeObjectURL(a.href);
   toast('Backup exportado');
 });
+
+/* ============ PUBLISH: commit data/projects.json straight to the repo ============
+   Writes the current state to GitHub's Contents API (fine-grained token with
+   Contents: write on the portifa repo, kept in this browser's localStorage);
+   Netlify then auto-deploys. Works from any origin (localhost or the live CMS). */
+const GH = { owner: 'marcos666carv', repo: 'portifa', path: 'data/projects.json', branch: 'main', key: 'gh-token' };
+function utf8ToBase64(str){ return btoa(unescape(encodeURIComponent(str))); }
+function ghToken(force){
+  let t = force ? '' : (localStorage.getItem(GH.key) || '');
+  if (!t){
+    t = (prompt('Cole seu GitHub token (fine-grained · repo ' + GH.repo + ' · Contents: write).\nFica salvo só neste navegador; revogável a qualquer hora.') || '').trim();
+    if (t) localStorage.setItem(GH.key, t);
+  }
+  return t;
+}
+async function publishToSite(){
+  const btn = document.getElementById('publishBtn');
+  const token = ghToken();
+  if (!token) return;
+  const api = `https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}`;
+  const headers = { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+  migrateAll();
+  const payload = { version: state.version || 1, generatedFrom: 'cms', count: state.projects.length,
+                    projects: state.projects, montage: state.montage || [], craft: state.craft || [] };
+  const json = JSON.stringify(payload, null, 2);
+  if (json.length > 8_000_000){ toast('Muito grande (' + Math.round(json.length/1e6) + 'MB) — imagens enviadas viram base64. Reduza antes de publicar.'); return; }
+  const content = utf8ToBase64(json);
+  btn.classList.add('busy'); const label = btn.innerHTML; btn.innerHTML = 'Publicando…';
+  try {
+    const cur = await fetch(api + '?ref=' + GH.branch, { headers });
+    if (cur.status === 401){ localStorage.removeItem(GH.key); throw new Error('Token inválido ou expirado — clique em Publicar de novo pra recolar.'); }
+    const sha = cur.ok ? (await cur.json()).sha : undefined;
+    const body = { message: 'CMS: update projects (' + new Date().toISOString().slice(0,16).replace('T',' ') + ')', content, branch: GH.branch };
+    if (sha) body.sha = sha;
+    const put = await fetch(api, { method: 'PUT', headers, body: JSON.stringify(body) });
+    if (!put.ok){
+      const e = await put.json().catch(() => ({}));
+      if (put.status === 401) localStorage.removeItem(GH.key);
+      throw new Error(e.message || ('HTTP ' + put.status));
+    }
+    toast('Publicado ✓ — a Netlify atualiza em ~1 min.');
+  } catch (err){
+    toast('Falha ao publicar: ' + (err.message || err));
+  } finally {
+    btn.classList.remove('busy'); btn.innerHTML = label;
+  }
+}
+document.getElementById('publishBtn').addEventListener('click', (e) => {
+  if (e.shiftKey){ ghToken(true); return; }   // shift+click = trocar o token
+  if (!state.projects.length){ toast('Nada pra publicar — abra e carregue os projetos primeiro.'); return; }
+  if (confirm('Publicar o estado atual direto no site?\nIsso sobrescreve o data/projects.json publicado.')) publishToSite();
+});
+
 const importInput = Object.assign(document.createElement('input'), { type:'file', accept:'application/json' });
 document.getElementById('importBtn').addEventListener('click', () => { importInput.value = ''; importInput.click(); });
 importInput.addEventListener('change', () => {
