@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedFrom": "behance",
+  "generatedFrom": "cms",
   "count": 13,
   "projects": [
     {
@@ -2647,16 +2647,6 @@
   ],
   "montage": [
     {
-      "id": "m1",
-      "src": "assets/photos/study.png",
-      "sym": false
-    },
-    {
-      "id": "m2",
-      "src": "assets/photos/hands.png",
-      "sym": false
-    },
-    {
       "id": "m3",
       "src": "assets/cerol/sun.svg",
       "sym": true
@@ -2667,19 +2657,59 @@
       "sym": true
     },
     {
-      "id": "m5",
-      "src": "assets/cerol/scribble.svg",
-      "sym": true
+      "id": "mrxlix5rxfxfq",
+      "src": "assets/work/120517563/37.webp",
+      "sym": false
     },
     {
-      "id": "m6",
-      "src": "assets/cerol/creature.svg",
-      "sym": true
+      "id": "mrxlix5rnmjsk",
+      "src": "assets/work/135486111/07.webp",
+      "sym": false
     },
     {
-      "id": "m7",
-      "src": "assets/cerol/void.svg",
-      "sym": true
+      "id": "mrxljxh1wnqyg",
+      "src": "assets/work/250632349/15.webp",
+      "sym": false
+    },
+    {
+      "id": "mry74jklpcj0b",
+      "src": "assets/work/136071709/cover.webp",
+      "sym": false
+    },
+    {
+      "id": "mry74jkl5cqim",
+      "src": "assets/work/135764741/cover.webp",
+      "sym": false
+    },
+    {
+      "id": "mry74jklb3xll",
+      "src": "assets/work/118534117/cover.webp",
+      "sym": false
+    },
+    {
+      "id": "mry74jklx1842",
+      "src": "assets/work/209221077/03.webp",
+      "sym": false
+    },
+    {
+      "id": "mry74jkl33toj",
+      "src": "assets/work/54196333/04.webp",
+      "sym": false
+    },
+    {
+      "id": "mry74jkl13p82",
+      "src": "assets/work/250632349/23.webp",
+      "sym": false
+    },
+    {
+      "id": "mry74jklk97z0",
+      "src": "assets/work/120517563/23.webp",
+      "sym": false
+    },
+    {
+      "id": "mry74jklskjdl",
+      "src": "assets/work/135486111/03.webp",
+      "sym": false
     }
   ],
   "craft": [
