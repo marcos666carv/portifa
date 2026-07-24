@@ -1,3 +1,8 @@
+# The site moved to marcoscarvalho.work (Vercel). This file only applies on
+# Netlify, so the legacy portmarcos.netlify.app 301s every path to the new
+# canonical domain. Vercel uses vercel.json instead and never reads this.
+https://portmarcos.netlify.app/* https://marcoscarvalho.work/:splat 301!
+
 # Solvefy is now a CMS-editable case (projeto.html?id=solvefy).
 # Keep the clean /solvefy URL pointing at it. The old bespoke page is still
 # reachable at /solvefy.html as a backup. 200! forces the rewrite to win over
