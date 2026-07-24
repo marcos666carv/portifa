@@ -313,6 +313,28 @@ a{color:var(--accent)}
 .btn.publish:hover{background:#37a65b;border-color:#37a65b}
 .btn.publish:disabled{opacity:.6;cursor:default}
 .btn.publish.busy{pointer-events:none}
+
+/* ---- publish result banner (big, stays until closed) ---- */
+.pubresult{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-16px);z-index:80;
+  display:none;align-items:center;gap:14px;max-width:min(680px,92vw);
+  padding:15px 16px 15px 18px;border-radius:14px;border:1px solid var(--line);
+  background:var(--panel);box-shadow:0 18px 50px rgba(0,0,0,.45);opacity:0;transition:opacity .2s,transform .2s}
+.pubresult.show{display:flex;opacity:1;transform:translateX(-50%) translateY(0)}
+.pubresult .pr-icon{flex:0 0 auto;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:700;color:#fff}
+.pubresult.busy .pr-icon{background:var(--accent)}
+.pubresult.busy .pr-icon::after{content:"";width:13px;height:13px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:prspin .7s linear infinite}
+@keyframes prspin{to{transform:rotate(360deg)}}
+.pubresult.ok .pr-icon{background:#2f8f4e}
+.pubresult.ok .pr-icon::after{content:"✓"}
+.pubresult.err .pr-icon{background:var(--danger)}
+.pubresult.err .pr-icon::after{content:"!"}
+.pubresult .pr-body{min-width:0;flex:1}
+.pubresult .pr-msg{font-size:13.5px;line-height:1.4;color:var(--fg);word-break:break-word}
+.pubresult .pr-link{display:inline-block;margin-top:4px;font-size:12.5px;color:var(--accent)}
+.pubresult .pr-link:empty{display:none}
+.pubresult .pr-close{flex:0 0 auto;color:var(--muted);font-size:14px;padding:4px 8px;border-radius:7px}
+.pubresult .pr-close:hover{color:var(--fg);background:var(--panel-2)}
 </style>
 </head>
 <body>
@@ -472,6 +494,13 @@ a{color:var(--accent)}
 <input type="file" id="videoPicker" accept="video/*" class="hidden" />
 <input type="file" id="siteUpload" accept="image/*" multiple class="hidden" />
 <div class="toast" id="toast"></div>
+
+<!-- prominent publish result (stays until closed) -->
+<div class="pubresult" id="pubResult" aria-hidden="true">
+  <span class="pr-icon" id="prIcon"></span>
+  <div class="pr-body"><div class="pr-msg" id="prMsg"></div><a class="pr-link" id="prLink" target="_blank" rel="noopener"></a></div>
+  <button class="pr-close" id="prClose" aria-label="Fechar">✕</button>
+</div>
 
 <script>
 'use strict';
@@ -1251,41 +1280,57 @@ function ghToken(force){
   }
   return t;
 }
+/* big, persistent result banner so you always know the outcome */
+function showPub(state, msg, link){
+  const el = document.getElementById('pubResult');
+  el.className = 'pubresult show ' + state;
+  document.getElementById('prMsg').textContent = msg;
+  const a = document.getElementById('prLink');
+  if (link){ a.href = link.href; a.textContent = link.text; } else { a.removeAttribute('href'); a.textContent = ''; }
+  el.setAttribute('aria-hidden', 'false');
+}
+function hidePub(){ const el = document.getElementById('pubResult'); el.classList.remove('show'); el.setAttribute('aria-hidden', 'true'); }
+document.getElementById('prClose').addEventListener('click', hidePub);
+
 async function publishToSite(){
   const btn = document.getElementById('publishBtn');
   const token = ghToken();
-  if (!token) return;
+  if (!token){ showPub('err', 'Publicação cancelada — nenhum token informado.'); return; }
   const api = `https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}`;
   const headers = { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
   migrateAll();
   const payload = { version: state.version || 1, generatedFrom: 'cms', count: state.projects.length,
                     projects: state.projects, montage: state.montage || [], craft: state.craft || [] };
   const json = JSON.stringify(payload, null, 2);
-  if (json.length > 8_000_000){ toast('Muito grande (' + Math.round(json.length/1e6) + 'MB) — imagens enviadas viram base64. Reduza antes de publicar.'); return; }
+  if (json.length > 8_000_000){ showPub('err', 'Muito grande (' + Math.round(json.length/1e6) + 'MB) — imagens enviadas viram base64. Reduza antes de publicar.'); return; }
   const content = utf8ToBase64(json);
-  btn.classList.add('busy'); const label = btn.innerHTML; btn.innerHTML = 'Publicando…';
+  const label = btn.innerHTML; btn.classList.add('busy'); btn.innerHTML = 'Publicando…';
+  showPub('busy', 'Publicando no repositório…');
   try {
     const cur = await fetch(api + '?ref=' + GH.branch, { headers });
-    if (cur.status === 401){ localStorage.removeItem(GH.key); throw new Error('Token inválido ou expirado — clique em Publicar de novo pra recolar.'); }
+    if (cur.status === 401){ localStorage.removeItem(GH.key); throw new Error('Token inválido/sem permissão (401). Shift+clique no Publicar pra recolar. Confirme: fine-grained · repo portifa · Contents: Read and write.'); }
+    if (cur.status === 404){ throw new Error('Repo ou arquivo não encontrado (404) — o token tem acesso ao repositório portifa?'); }
     const sha = cur.ok ? (await cur.json()).sha : undefined;
     const body = { message: 'CMS: update projects (' + new Date().toISOString().slice(0,16).replace('T',' ') + ')', content, branch: GH.branch };
     if (sha) body.sha = sha;
     const put = await fetch(api, { method: 'PUT', headers, body: JSON.stringify(body) });
+    const pj = await put.json().catch(() => ({}));
     if (!put.ok){
-      const e = await put.json().catch(() => ({}));
-      if (put.status === 401) localStorage.removeItem(GH.key);
-      throw new Error(e.message || ('HTTP ' + put.status));
+      if (put.status === 401 || put.status === 403) localStorage.removeItem(GH.key);
+      throw new Error((pj.message || ('HTTP ' + put.status)) + (put.status === 403 ? ' — o token precisa de Contents: Read and write no repo portifa.' : ''));
     }
-    toast('Publicado ✓ — a Netlify atualiza em ~1 min.');
+    const short = ((pj.commit && pj.commit.sha) || '').slice(0, 7);
+    showPub('ok', 'Publicado ✓  (commit ' + short + '). A Netlify vai atualizar em ~1 min.', { href: 'https://portmarcos.netlify.app', text: 'Abrir o site →' });
+    toast('Publicado ✓');
   } catch (err){
-    toast('Falha ao publicar: ' + (err.message || err));
+    showPub('err', 'Falha ao publicar: ' + (err.message || err));
   } finally {
     btn.classList.remove('busy'); btn.innerHTML = label;
   }
 }
 document.getElementById('publishBtn').addEventListener('click', (e) => {
-  if (e.shiftKey){ ghToken(true); return; }   // shift+click = trocar o token
-  if (!state.projects.length){ toast('Nada pra publicar — abra e carregue os projetos primeiro.'); return; }
+  if (e.shiftKey){ ghToken(true); showPub('ok', 'Token atualizado neste navegador.'); setTimeout(hidePub, 2500); return; }
+  if (!state.projects.length){ showPub('err', 'Nada pra publicar — carregue os projetos primeiro (Puxar do site).'); return; }
   if (confirm('Publicar o estado atual direto no site?\nIsso sobrescreve o data/projects.json publicado.')) publishToSite();
 });
 
