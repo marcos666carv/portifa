@@ -377,7 +377,7 @@ a{color:var(--accent)}
     <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
     Novo projeto
   </button>
-  <button class="btn publish" id="publishBtn" title="Publicar direto no site (commit no repo → Netlify)">
+  <button class="btn publish" id="publishBtn" title="Publicar direto no site (commit no repo → Vercel)">
     <svg viewBox="0 0 24 24"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
     Publicar
   </button>
@@ -1275,7 +1275,7 @@ document.getElementById('exportBtn').addEventListener('click', () => {
 /* ============ PUBLISH: commit data/projects.json straight to the repo ============
    Writes the current state to GitHub's Contents API (fine-grained token with
    Contents: write on the portifa repo, kept in this browser's localStorage);
-   Netlify then auto-deploys. Works from any origin (localhost or the live CMS). */
+   Vercel then auto-deploys. Works from any origin (localhost or the live CMS). */
 const GH = { owner: 'marcos666carv', repo: 'portifa', path: 'data/projects.json', branch: 'main', key: 'gh-token' };
 function utf8ToBase64(str){ return btoa(unescape(encodeURIComponent(str))); }
 function ghToken(force){
@@ -1333,7 +1333,7 @@ async function publishToSite(){
     }
     const short = ((pj.commit && pj.commit.sha) || '').slice(0, 7);
     try { localStorage.setItem(BASE_REV, String(rev)); } catch(e){}   // this draft is now in sync with what we just published
-    showPub('ok', 'Publicado ✓  (commit ' + short + '). A Netlify vai atualizar em ~1 min.', { href: 'https://portmarcos.netlify.app', text: 'Abrir o site →' });
+    showPub('ok', 'Publicado ✓  (commit ' + short + '). O site atualiza em ~1 min.', { href: 'https://marcoscarvalho.work', text: 'Abrir o site →' });
     toast('Publicado ✓');
   } catch (err){
     showPub('err', 'Falha ao publicar: ' + (err.message || err));
