@@ -51,6 +51,12 @@ body{
 }
 a{color:inherit;text-decoration:none}
 b{font-weight:600}
+/* kill the 300ms tap delay and double-tap zoom on interactive elements */
+a,button,.row,.tile{touch-action:manipulation}
+a:focus-visible,button:focus-visible{outline:2px solid var(--fg);outline-offset:4px}
+/* inside difference-blended containers a near-black outline vanishes in
+   light theme — white survives the blend against any backdrop */
+.nav a:focus-visible,.nav button:focus-visible,.chnav a:focus-visible{outline-color:var(--wht)}
 ::selection{background:var(--fg);color:var(--bg)}
 img{max-width:100%;display:block}
 
@@ -109,7 +115,10 @@ html:not(.fonts-ready) body{cursor:auto}
 .nav{
   position:fixed;top:0;left:0;right:0;z-index:50;
   display:flex;justify-content:space-between;align-items:center;
-  padding:24px 32px;font-size:12px;letter-spacing:.05em;text-transform:uppercase;
+  /* viewport-fit=cover: keep the brand out of the notch / curved corners */
+  padding:max(24px, env(safe-area-inset-top)) max(32px, env(safe-area-inset-right))
+          24px max(32px, env(safe-area-inset-left));
+  font-size:12px;letter-spacing:.05em;text-transform:uppercase;
   mix-blend-mode:difference;color:var(--wht);
   transition:transform .5s cubic-bezier(.22,.61,.36,1);
 }
@@ -118,7 +127,10 @@ html:not(.fonts-ready) body{cursor:auto}
 .nav .right{font-size:11px;letter-spacing:.08em;color:var(--gray)}
 
 /* ---- content layer ---- */
-.content{position:relative;z-index:10}
+/* viewport-fit=cover extends the page under the notch in landscape; the 3D
+   canvas stays full bleed while every section's content keeps clear of it */
+.content{position:relative;z-index:10;
+  padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
 section{position:relative}
 .pad{padding-left:32px;padding-right:32px}
 .max{max-width:1600px;margin:0 auto}
@@ -155,7 +167,13 @@ section{position:relative}
 .lbl.is-in::before{transform:scaleX(1)}
 
 /* ---- hero ---- */
-.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:120px 32px 44px;pointer-events:none}
+.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:120px 32px 44px;pointer-events:none}
+/* the h1 exists for structure/SEO on every size; it only becomes a visible
+   stacked wordmark on small screens (see the 767px block below) */
+.hero-name{
+  position:absolute;width:1px;height:1px;overflow:hidden;
+  clip-path:inset(50%);white-space:nowrap;margin:-1px;padding:0;border:0;
+}
 .hero .btm{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
 /* centred scroll cue: a down arrow that bobs to invite the scroll */
 .hero .scroll-cue{
@@ -259,6 +277,9 @@ section{position:relative}
 .row:hover .t .arrow{opacity:1;transform:translateX(0)}
 .row .m{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--gray-th)}
 .row.sec .t{font-weight:500}
+/* injected by main.js on every load; only the phone layout reveals it
+   (display gate lives in CSS so breakpoint crossings never strand it) */
+.row .row-thumb{display:none}
 
 /* ---- thumb follower ---- */
 #thumb{
@@ -325,6 +346,26 @@ section{position:relative}
 #cursor.big .ring{width:64px;height:64px}
 @media (hover:none){#cursor{display:none}body{cursor:auto}}
 
+/* ---- motion chip (iOS gyroscope permission) ----
+   scene.js unhides it only on touch devices whose gyroscope is permission
+   gated; one tap requests DeviceOrientation access, then it disappears */
+.motion-chip{
+  position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));
+  transform:translateX(-50%);z-index:56;
+  display:inline-flex;align-items:center;gap:10px;
+  /* left:50% caps auto width at 50vw — let the label breathe on 320px */
+  width:max-content;max-width:calc(100vw - 32px);
+  min-height:44px;padding:12px 22px;border-radius:100px;
+  border:1px solid var(--line-th);background:var(--bg);color:var(--fg);
+  font-family:inherit;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
+  box-shadow:0 8px 30px rgba(5,5,5,.14);cursor:pointer;
+  transition:background-color .5s cubic-bezier(.4,0,.2,1), color .5s cubic-bezier(.4,0,.2,1),
+             border-color .5s cubic-bezier(.4,0,.2,1), transform .2s ease;
+}
+.motion-chip[hidden]{display:none}
+.motion-chip:active{transform:translateX(-50%) scale(.95)}
+.motion-chip svg{width:16px;height:16px;flex:0 0 auto}
+
 /* ---- page transition overlay ---- */
 #page-transition{
   position:fixed;inset:0;z-index:300;background:var(--fg);pointer-events:none;
@@ -369,7 +410,7 @@ section{position:relative}
   line-height:1;padding:12px;font-weight:300;
 }
 .lb-close:hover,.lb-nav:hover{opacity:1}
-.lb-close{top:16px;right:22px;font-size:24px}
+.lb-close{top:max(16px, env(safe-area-inset-top));right:max(22px, env(safe-area-inset-right));font-size:24px}
 .lb-nav{top:50%;transform:translateY(-50%);font-size:56px}
 .lb-prev{left:10px}.lb-next{right:10px}
 .lb-prev:hover{transform:translateY(-50%) translateX(-3px)}
@@ -383,16 +424,107 @@ section{position:relative}
   .about .grid{grid-template-columns:1fr}
   .nav .right{display:none}
 }
+
+/* ============================================================
+   MOBILE — restructured for the small screen, not the desktop
+   squeezed. Hero becomes typographic, work rows carry visible
+   thumbnails (no hover on touch), chapters get numbered, and
+   every fixed edge respects the safe areas.
+   ============================================================ */
 @media (max-width:767px){
-  .inter { height:auto; padding:120px 20px; flex-direction:column; align-items:flex-start; pointer-events:auto; }
-  .inter .chapter-label { transform:translateY(0); opacity:1; mix-blend-mode:normal; }
-  .inter .chapter-label .num { color:var(--fg); font-size:clamp(60px,16vw,100px); }
-  .inter .chapter-label .txt { color:var(--gray-th); }
+  .nav{padding:max(18px, env(safe-area-inset-top)) 20px 18px 20px}
+  #thumb{display:none} /* hover follower is meaningless on touch */
+
+  /* while the tilt-permission chip is up it owns the bottom-centre:
+     hide the cue and lift the hero labels clear of it */
+  body.motion-cta-on .hero .scroll-cue{display:none}
+  body.motion-cta-on .hero{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+
+  /* -- hero: giant stacked name over the 3D mark -- */
+  .hero{padding:96px 20px calc(30px + env(safe-area-inset-bottom))}
+  .hero-name{
+    position:static;width:auto;height:auto;overflow:visible;
+    clip-path:none;white-space:normal;margin:0 0 20px;
+    display:flex;flex-direction:column;
+    font-weight:900;font-size:clamp(44px,15.5vw,92px);
+    line-height:.88;letter-spacing:-.03em;text-transform:uppercase;
+  }
+  .hero .btm{flex-direction:column;align-items:flex-start;gap:6px}
+  .hero .side{text-align:left}
+  /* labels own the bottom-left, so the cue moves to the right edge */
+  .hero .scroll-cue{
+    left:auto;right:22px;bottom:calc(26px + env(safe-area-inset-bottom));
+    transform:none;animation-name:scroll-bob-m;
+  }
+
+  /* -- manifesto: fills the narrow measure -- */
+  .manifesto{padding:14vh 20px 0}
+  .manifesto p{font-size:clamp(27px,7.4vw,79.2px);max-width:100%}
+
+  /* -- what I do: full-bleed panel with numbered chapters -- */
+  .whatido{padding:24px 0 64px}
+  .whatido .max{width:100%;max-width:none;padding:36px 20px 10px}
+  .caps{counter-reset:cap}
+  .cap{padding:28px 0;counter-increment:cap}
+  .cap h3{font-size:28px;margin-bottom:12px}
+  .cap h3::before{
+    content:counter(cap,decimal-leading-zero);
+    display:block;font-weight:200;font-size:12px;letter-spacing:.26em;
+    color:var(--gray-th);margin-bottom:10px;
+  }
+  .cap p{font-size:16px}
+
+  /* interstitials keep their desktop behavior: transparent 50vh windows —
+     the travelling marks render on mobile again, so the flybys are back */
+
+  /* -- selected work: thumbnail + title rows, touch-first --
+     main.js injects .row-thumb on small screens; the arrow is always
+     visible (affordance can't live behind hover on touch) */
+  .invert.pad{padding-left:20px;padding-right:20px}
+  .row{
+    display:grid;grid-template-columns:76px 1fr;grid-template-rows:auto auto;
+    column-gap:16px;row-gap:5px;align-items:center;padding:16px 0;
+  }
+  .row .row-thumb{
+    display:block;grid-column:1;grid-row:1 / 3;width:76px;aspect-ratio:4/3;
+    overflow:hidden;background:#111;
+  }
+  .row .row-thumb img{width:100%;height:100%;object-fit:cover}
+  .row .row-thumb.mark{display:flex;align-items:center;justify-content:center}
+  /* the cerol marks ship with white fills — no invert needed on the dark tile */
+  .row .row-thumb.mark .mk{width:42%;height:auto;object-fit:contain;opacity:.9}
+  .row .t{grid-column:2;grid-row:1;font-size:clamp(20px,5.8vw,26px);gap:10px;align-self:end}
+  .row .t .arrow{opacity:1;transform:none;font-size:.75em}
+  .row .m{grid-column:2;grid-row:2;align-self:start}
+  .row:hover{padding-left:0}
+  .row:active{opacity:.55;transition:opacity .08s ease}
+
+  /* -- craft statement: a band, not an empty full screen -- */
+  .craft{height:auto;min-height:62svh;padding:72px 0}
+  .craft .txt{padding:0 20px}
+
+  /* -- craft sphere: shorter travel, label inside the safe edge -- */
+  .craftwall{height:260svh}
+  .craftwall .lbl{left:20px;top:max(22px, env(safe-area-inset-top));right:20px}
+
+  /* -- about -- */
+  .about{padding:12vh 20px}
+  .about .grid{gap:32px}
+
+  /* -- contact: email on its own line so it never overflows -- */
+  .contact{padding:12vh 20px calc(52px + env(safe-area-inset-bottom))}
+  .contact .cta{font-size:clamp(30px,10.4vw,150px)}
+  .contact .cta a{display:block;font-size:.72em;margin-top:16px;width:fit-content}
+  .contact .meta{flex-direction:column;gap:10px;margin-top:44px}
+  /* stretch the tiny footer links to a 44px hit area without moving them */
+  .contact .meta a{display:inline-block;padding:14px 0;margin:-14px 0}
+}
+@keyframes scroll-bob-m{
+  0%,100%{transform:translateY(0);opacity:.45}
+  50%{transform:translateY(12px);opacity:1}
 }
 @media (max-width:600px){
-  .hero{padding:100px 20px 30px}
-  .pad,.hero,.manifesto,.feat,.about,.contact{padding-left:20px;padding-right:20px}
-  #thumb{display:none}
+  .pad,.manifesto,.feat,.about,.contact{padding-left:20px;padding-right:20px}
 }
 
 @media (prefers-reduced-motion:reduce){

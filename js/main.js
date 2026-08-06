@@ -300,6 +300,41 @@ if (craft) {
   })();
 })();
 
+/* ============ MOBILE WORK-ROW THUMBNAILS ============
+   On touch screens the hover follower never fires, so each Selected-work
+   row gets a small visible cover image instead. Injected on every load —
+   CSS keeps them display:none above 767px (lazy images inside display:none
+   never fetch), so breakpoint crossings and rotations can't strand the
+   layout in either direction. Rows with no cover on disk (non-numeric
+   slugs) render a CEROL mark directly, no 404 probe. */
+(function () {
+  const MARKS = ['sun', 'urchin', 'scribble', 'creature', 'void'];
+  document.querySelectorAll('.proj .row[data-thumb]').forEach((row, i) => {
+    const slug = row.dataset.thumb;
+    const th = document.createElement('span');
+    th.className = 'row-thumb';
+    const markFallback = () => {
+      th.classList.add('mark');
+      th.innerHTML = `<img class="mk" src="assets/cerol/${MARKS[i % MARKS.length]}.svg" alt="" loading="lazy">`;
+    };
+    const src = row.dataset.hover
+      ? row.dataset.hover.split(',')[0]
+      : (/^\d+$/.test(slug) ? `assets/work/${slug}/cover.webp` : null);
+    if (src) {
+      const img = document.createElement('img');
+      img.alt = '';
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.onerror = markFallback;
+      img.src = src;
+      th.appendChild(img);
+    } else {
+      markFallback();
+    }
+    row.prepend(th);
+  });
+})();
+
 /* ============ MAGNETIC BUTTONS ============ */
 document.querySelectorAll('[data-magnetic]').forEach(btn => {
   let bx = 0, by = 0;
@@ -419,6 +454,23 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
   let tiles = [], pts = [], RX = 500, RY = 300, RZ = 380;
   let rotY = 0, vel = 0, running = false, raf = 0, last = 0;
 
+  function sizeTiles() {
+    /* deterministic size mix — a few heroes, some mids, mostly small tiles.
+       vmin is the narrow side on phones, so the desktop numbers render
+       postage-stamp tiles there: scale the mix up (heroes less — they
+       already dominate, and every extra vmin is squared paint cost on the
+       pinned stage). Re-run on resize so breakpoint crossings re-size. */
+    const mob = innerWidth < 768;
+    for (let i = 0; i < tiles.length; i++) {
+      const rnd = frac(Math.sin(i * 127.1) * 43758.5453);
+      let w = i % 11 === 0 ? 34 : i % 5 === 0 ? 20 : 10 + rnd * 7;  // vmin
+      if (mob) w *= i % 11 === 0 ? 1.15 : 1.4;
+      const ar = parseAspect(tiles[i].querySelector('img'));
+      if (ar && ar < 0.8) w *= 0.72;                    // tall pieces: rein the width in
+      if (ar && ar > 2.4) w *= 1.3;                     // wide banners: let them stretch
+      tiles[i].style.setProperty('--w', w.toFixed(1));
+    }
+  }
   function setup() {
     tiles = [...wall.querySelectorAll('.tile')];
     const N = tiles.length; if (!N) return;
@@ -428,14 +480,8 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
       const y = 1 - (2 * (i + 0.5)) / N;                // Fibonacci sphere: even spread
       const r = Math.sqrt(1 - y * y);
       pts.push({ x: Math.cos(GA * i) * r, y, z: Math.sin(GA * i) * r });
-      // deterministic size mix — a few heroes, some mids, mostly small tiles
-      const rnd = frac(Math.sin(i * 127.1) * 43758.5453);
-      let w = i % 11 === 0 ? 34 : i % 5 === 0 ? 20 : 10 + rnd * 7;  // vmin
-      const ar = parseAspect(tiles[i].querySelector('img'));
-      if (ar && ar < 0.8) w *= 0.72;                    // tall pieces: rein the width in
-      if (ar && ar > 2.4) w *= 1.3;                     // wide banners: let them stretch
-      tiles[i].style.setProperty('--w', w.toFixed(1));
     }
+    sizeTiles();
     resize();
     render(0);
   }
@@ -469,7 +515,10 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
       const s = PERSP / (PERSP - z);
       const t = tiles[i];
       t.style.transform = `translate(-50%,-50%) translate(${(cx + x * s).toFixed(2)}px,${(cy + y * s).toFixed(2)}px) scale(${s.toFixed(4)})`;
-      t.style.zIndex = 100 + Math.round(z / 4);
+      /* z-index writes invalidate paint order for the whole stage — skip
+         the ones that wouldn't change anything */
+      const zi = 100 + Math.round(z / 4);
+      if (t.__zi !== zi) { t.__zi = zi; t.style.zIndex = zi; }
       t.style.opacity = (0.55 + 0.45 * (z + RZ) / (2 * RZ)).toFixed(3);
     }
   }
@@ -511,7 +560,7 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
     else if (!en.isIntersecting && running) { running = false; cancelAnimationFrame(raf); }
   }, { rootMargin: '15%' });
   io.observe(section);
-  addEventListener('resize', () => { resize(); if (!running) render(0); });
+  addEventListener('resize', () => { sizeTiles(); resize(); if (!running) render(0); });
 
   setup();
   window.__initCraftSphere = setup;                    // CMS rebuild re-enters here

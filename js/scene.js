@@ -164,9 +164,113 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { al
 /* ---- mouse parallax ---- */
 let mx = 0, my = 0;
 addEventListener('pointermove', e => {
+  /* touch drags fire pointermove too — those belong to scrolling, and on
+     phones the tilt sensor owns mx/my instead */
+  if (e.pointerType === 'touch') return;
   mx = e.clientX / innerWidth - 0.5;
   my = e.clientY / innerHeight - 0.5;
 });
+
+/* ---- device tilt parallax (mobile) ----
+   On touch devices the gyroscope feeds the same mx/my the mouse feeds on
+   desktop, so tilting the phone drives the camera drift and the marks'
+   rotation. iOS 13+ gates DeviceOrientation behind a user-gesture
+   permission request, surfaced as the #motion-cta chip; once granted we
+   remember it and re-arm silently on the next visit's first tap. */
+const coarse = matchMedia('(pointer: coarse)').matches;
+(function initTilt() {
+  if (reduce || !coarse || typeof DeviceOrientationEvent === 'undefined') return;
+  const chip = document.getElementById('motion-cta');
+  const RANGE = 18;            // degrees of tilt that map to full parallax
+  let baseX = null, baseY = null, lastX = null, lastY = null;
+
+  /* beta/gamma live in the DEVICE frame; remap into the SCREEN frame so a
+     physical left-right tilt always moves the camera horizontally no
+     matter how the phone is rotated */
+  const screenAngle = () => {
+    const a = (screen.orientation && typeof screen.orientation.angle === 'number')
+      ? screen.orientation.angle
+      : (typeof window.orientation === 'number' ? window.orientation : 0);
+    return ((a % 360) + 360) % 360;
+  };
+  const toScreenFrame = (beta, gamma) => {
+    switch (screenAngle()) {
+      case 90:  return [beta, -gamma];
+      case 180: return [-gamma, -beta];
+      case 270: return [-beta, gamma];
+      default:  return [gamma, beta];
+    }
+  };
+
+  function onOrient(e) {
+    if (e.beta == null || e.gamma == null) return;
+    const [tx, ty] = toScreenFrame(e.beta, e.gamma);
+    /* gamma's Euler range flips sign when the phone approaches vertical
+       (gimbal lock at beta ±90°, the normal upright hold). A jump that big
+       is never a real hand movement — re-centre instead of slamming the
+       parallax between extremes */
+    if (baseX === null || Math.abs(tx - lastX) > 45 || Math.abs(ty - lastY) > 45) {
+      baseX = tx; baseY = ty;
+    }
+    lastX = tx; lastY = ty;
+    /* the baseline drifts slowly toward the current hold angle (~5s), so
+       any new resting position becomes neutral instead of a stuck offset */
+    baseX += (tx - baseX) * 0.004;
+    baseY += (ty - baseY) * 0.004;
+    const gx = Math.max(-RANGE, Math.min(RANGE, tx - baseX));
+    const gy = Math.max(-RANGE, Math.min(RANGE, ty - baseY));
+    mx = gx / (RANGE * 2);     // same -0.5..0.5 range the mouse produces
+    my = gy / (RANGE * 2);
+  }
+
+  /* rotating the phone re-frames the axes — start neutral again */
+  const resetBase = () => { baseX = baseY = lastX = lastY = null; mx = 0; my = 0; };
+  if (screen.orientation && screen.orientation.addEventListener) {
+    screen.orientation.addEventListener('change', resetBase);
+  } else {
+    addEventListener('orientationchange', resetBase);
+  }
+
+  const start = () => addEventListener('deviceorientation', onOrient);
+  const hideChip = () => {
+    if (chip) chip.hidden = true;
+    document.body.classList.remove('motion-cta-on');
+  };
+
+  if (typeof DeviceOrientationEvent.requestPermission !== 'function') {
+    start();                   // Android & older iOS: no gate, just listen
+    return;
+  }
+
+  /* iOS 13+: the request must run inside a user gesture. Resolves 'granted'
+     or 'denied'; rejects when the gesture didn't carry user activation. */
+  const request = (onSettled) => DeviceOrientationEvent.requestPermission()
+    .then(s => {
+      if (s === 'granted') {
+        try { localStorage.setItem('tilt-ok', '1'); } catch {}
+        start();
+      } else {
+        try { localStorage.removeItem('tilt-ok'); } catch {}
+      }
+      if (onSettled) onSettled(true);
+    })
+    .catch(() => { if (onSettled) onSettled(false); });
+
+  let granted = false;
+  try { granted = localStorage.getItem('tilt-ok') === '1'; } catch {}
+  if (granted) {
+    /* granted on a previous visit: the re-request still needs a gesture,
+       so piggyback on taps until one actually settles it (a scroll-fling
+       touchend may lack user activation — keep listening) */
+    const rearm = () => request(settled => { if (settled) removeEventListener('touchend', rearm); });
+    addEventListener('touchend', rearm);
+  } else if (chip && matchMedia('(max-width: 767px)').matches) {
+    /* first visit, phones only — tablets keep the untouched desktop layout */
+    chip.hidden = false;
+    document.body.classList.add('motion-cta-on');
+    chip.addEventListener('click', () => request(hideChip));
+  }
+})();
 
 addEventListener('resize', () => {
   camera.aspect = innerWidth / innerHeight;
@@ -198,12 +302,10 @@ function tick() {
 
   forms.forEach((m, i) => {
     if (!m) return;
-    if (i !== 0 && isMobile) {
-      m.visible = false;
-      return;
-    }
+    /* travelling marks render on mobile too now that the gyroscope gives
+       them something to react to (pixel ratio is already capped at 1.5) */
     m.visible = true;
-    
+
     const driftY = Math.sin(t * m.userData.spin + i * 1.3) * 0.05;
     const aimY = reduce ? 0 : mx * 1.1 + driftY;
     const aimX = reduce ? 0 : my * 0.7;

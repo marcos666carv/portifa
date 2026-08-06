@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Marcos Carvalho — Product Design Lead &amp; AI native Designer</title>
 <meta name="description" content="Marcos Carvalho, Product Design Lead and AI native Designer. Founder of CEROL. Fourteen years turning complex systems into products people use." />
 <meta property="og:title" content="Marcos Carvalho — Product Design Lead & AI native Designer" />
@@ -13,7 +13,7 @@
 <link rel="preload" as="font" href="fonts/Pacaembu-Regular.otf" type="font/otf" crossorigin>
 <link rel="preload" as="font" href="fonts/Pacaembu-Bold.otf" type="font/otf" crossorigin>
 <link rel="preload" as="font" href="fonts/dTJakob_Rg.otf" type="font/otf" crossorigin>
-<link rel="stylesheet" href="css/main.css?v=32" />
+<link rel="stylesheet" href="css/main.css?v=33" />
 </head>
 <body>
 
@@ -49,6 +49,11 @@
 
     <!-- S1 · HERO -->
     <section class="hero">
+      <!-- the page's h1: giant stacked wordmark on small screens where the
+           3D mark alone leaves the hero empty; visually hidden on desktop -->
+      <!-- whitespace between the spans keeps the accessible/indexed name
+           "Marcos Carvalho"; flex ignores it so the stack renders the same -->
+      <h1 class="hero-name"><span>Marcos</span> <span>Carvalho</span></h1>
       <div class="btm">
         <div class="lead">Experience specialist · AI native Designer</div>
         <div class="side">
@@ -205,6 +210,15 @@
   </div>
 
   <!-- ============ FLOATING UI ============ -->
+  <!-- iOS 13+ gates the gyroscope behind a user-gesture permission request;
+       scene.js reveals this chip only on touch devices that need it -->
+  <button id="motion-cta" class="motion-chip" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+      <rect x="8.2" y="4" width="7.6" height="16" rx="1.6" transform="rotate(10 12 12)"/>
+      <path d="M4 9.4A9.6 9.6 0 0 1 5.8 5.9M20 14.6a9.6 9.6 0 0 1-1.8 3.5"/>
+    </svg>
+    <span>Tilt to explore</span>
+  </button>
   <div id="thumb"></div>
   <div id="cursor"><div class="ring"></div><div class="dot"></div></div>
   <div id="page-transition"></div>
@@ -218,7 +232,7 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-<script type="module" src="js/scene.js?v=32"></script>
-<script type="module" src="js/main.js?v=32"></script>
+<script type="module" src="js/scene.js?v=33"></script>
+<script type="module" src="js/main.js?v=33"></script>
 </body>
 </html>
