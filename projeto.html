@@ -165,7 +165,8 @@ img{max-width:100%;display:block}
 @media (prefers-reduced-motion:reduce){#lightbox{backdrop-filter:none}}
 
 /* all projects list */
-.morework{padding:10vh 0 4vh;border-top:1px solid var(--line)}
+/* vertical only — the shorthand was wiping .wrap's side padding */
+.morework{padding-top:10vh;padding-bottom:4vh;border-top:1px solid var(--line)}
 .mw-label{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
 .mw-row{display:flex;justify-content:space-between;align-items:baseline;gap:24px;
   padding:22px 0;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;
