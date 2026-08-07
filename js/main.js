@@ -453,6 +453,10 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
 
   let tiles = [], pts = [], RX = 500, RY = 300, RZ = 380;
   let rotY = 0, vel = 0, running = false, raf = 0, last = 0;
+  /* phones scrub the spin with the scroll instead of auto-rotating;
+     drag accumulates into an offset on top of the scrubbed angle */
+  const mmSmall = matchMedia('(max-width: 767px)');
+  let dragRot = 0;
 
   function sizeTiles() {
     /* deterministic size mix — a few heroes, some mids, mostly small tiles.
@@ -498,7 +502,16 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
   }
 
   function render(dt) {
-    rotY += (BASE_SPEED + vel) * dt;
+    if (mmSmall.matches) {
+      /* scroll drives the spin: one full 360° across the pinned travel,
+         so the revolution completes exactly when the page moves on */
+      const travel = Math.max(1, section.offsetHeight - innerHeight);
+      const p = Math.min(1, Math.max(0, -section.getBoundingClientRect().top / travel));
+      dragRot += vel * dt;
+      rotY = p * Math.PI * 2 + dragRot;
+    } else {
+      rotY += (BASE_SPEED + vel) * dt;
+    }
     vel *= Math.pow(0.05, dt);                          // drag inertia decays in ~1s
     const cx = wall.clientWidth / 2, cy = wall.clientHeight / 2;
     const cosT = Math.cos(TILT), sinT = Math.sin(TILT);
@@ -535,7 +548,7 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
     if (!dragging) return;
     const dx = e.clientX - lastX; lastX = e.clientX;
     moved = Math.max(moved, Math.hypot(e.clientX - startX, e.clientY - startY));
-    rotY += dx * 0.0038;
+    if (mmSmall.matches) dragRot += dx * 0.0038; else rotY += dx * 0.0038;
     const now = performance.now();
     dragVel = (dx * 0.0038) / Math.max((now - lastT) / 1000, 1 / 240);
     lastT = now;

@@ -502,9 +502,10 @@ section{position:relative}
   .craft{height:auto;min-height:62svh;padding:72px 0}
   .craft .txt{padding:0 20px}
 
-  /* -- craft sphere: shorter travel, label inside the safe edge -- */
+  /* -- craft sphere: shorter travel, no caption — the scroll-scrubbed
+     spin is the affordance -- */
   .craftwall{height:260svh}
-  .craftwall .lbl{left:20px;top:max(22px, env(safe-area-inset-top));right:20px}
+  .craftwall .lbl{display:none}
 
   /* -- about -- */
   .about{padding:12vh 20px}
