@@ -19,10 +19,10 @@
 
   .chnav{position:fixed;top:50%;right:28px;transform:translateY(-50%);z-index:40;
     display:flex;flex-direction:column;gap:22px;mix-blend-mode:difference}
-  .chnav a{font-size:11px;letter-spacing:.1em;color:var(--gray);display:flex;align-items:center;gap:10px;transition:color .3s ease}
-  .chnav a::before{content:"";width:16px;height:1px;background:currentColor;transition:width .3s ease}
-  .chnav a.active{color:var(--wht)}
-  .chnav a.active::before{width:28px;background:var(--wht)}
+  /* no hairlines: state reads through opacity alone (right-aligned labels) */
+  .chnav a{font-size:11px;letter-spacing:.1em;color:var(--wht);opacity:.4;text-align:right;transition:opacity .3s ease}
+  .chnav a:hover{opacity:.75}
+  .chnav a.active{opacity:1}
   @media (max-width:900px){ .chnav{display:none} }
 
   .chapter{min-height:100vh;padding:16vh 32px;display:flex;align-items:center;position:relative;overflow:hidden}
