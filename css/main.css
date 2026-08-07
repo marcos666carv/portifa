@@ -168,8 +168,7 @@ section{position:relative}
 
 /* ---- hero ---- */
 .hero{position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:120px 32px 44px;pointer-events:none}
-/* the h1 exists for structure/SEO on every size; it only becomes a visible
-   stacked wordmark on small screens (see the 767px block below) */
+/* the h1 exists for structure/SEO; visually hidden at every size */
 .hero-name{
   position:absolute;width:1px;height:1px;overflow:hidden;
   clip-path:inset(50%);white-space:nowrap;margin:-1px;padding:0;border:0;
@@ -440,16 +439,12 @@ section{position:relative}
   body.motion-cta-on .hero .scroll-cue{display:none}
   body.motion-cta-on .hero{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
 
-  /* -- hero: giant stacked name over the 3D mark -- */
+  /* -- hero: the 3D mark carries the frame; labels stack bottom-left,
+     each role on its own line -- */
   .hero{padding:96px 20px calc(30px + env(safe-area-inset-bottom))}
-  .hero-name{
-    position:static;width:auto;height:auto;overflow:visible;
-    clip-path:none;white-space:normal;margin:0 0 20px;
-    display:flex;flex-direction:column;
-    font-weight:900;font-size:clamp(44px,15.5vw,92px);
-    line-height:.88;letter-spacing:-.03em;text-transform:uppercase;
-  }
   .hero .btm{flex-direction:column;align-items:flex-start;gap:6px}
+  .hero .lead span{display:block}
+  .hero .lead .sep{display:none}
   .hero .side{text-align:left}
   /* labels own the bottom-left, so the cue moves to the right edge */
   .hero .scroll-cue{
@@ -457,12 +452,14 @@ section{position:relative}
     transform:none;animation-name:scroll-bob-m;
   }
 
-  /* -- manifesto: fills the narrow measure -- */
-  .manifesto{padding:14vh 20px 0}
+  /* -- manifesto: fills the narrow measure; its base breathes exactly
+     twice the section's side margin before the black panel connects -- */
+  .manifesto{padding:14vh 20px 40px}
   .manifesto p{font-size:clamp(27px,7.4vw,79.2px);max-width:100%}
 
-  /* -- what I do: full-bleed panel with numbered chapters -- */
-  .whatido{padding:24px 0 64px}
+  /* -- what I do: full-bleed panel with numbered chapters, connected
+     straight to the manifesto's white block (no transparent gap) -- */
+  .whatido{padding:0 0 32px}
   .whatido .max{width:100%;max-width:none;padding:36px 20px 10px}
   .caps{counter-reset:cap}
   .cap{padding:28px 0;counter-increment:cap}
@@ -474,8 +471,10 @@ section{position:relative}
   }
   .cap p{font-size:16px}
 
-  /* interstitials keep their desktop behavior: transparent 50vh windows —
-     the travelling marks render on mobile again, so the flybys are back */
+  /* interstitials stay transparent 3D windows (the flybys are back on
+     mobile) but at half the desktop travel, tightening What-I-do →
+     Selected-work */
+  .inter{height:25vh}
 
   /* -- selected work: thumbnail + title rows, touch-first --
      main.js injects .row-thumb on small screens; the arrow is always

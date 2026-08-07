@@ -163,6 +163,9 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { al
 
 /* ---- mouse parallax ---- */
 let mx = 0, my = 0;
+/* true once the tilt sensor is feeding mx/my — an explicit opt-in that
+   overrides the ambient reduced-motion preference in the render loop */
+let tiltActive = false;
 addEventListener('pointermove', e => {
   /* touch drags fire pointermove too — those belong to scrolling, and on
      phones the tilt sensor owns mx/my instead */
@@ -179,7 +182,7 @@ addEventListener('pointermove', e => {
    remember it and re-arm silently on the next visit's first tap. */
 const coarse = matchMedia('(pointer: coarse)').matches;
 (function initTilt() {
-  if (reduce || !coarse || typeof DeviceOrientationEvent === 'undefined') return;
+  if (!coarse || typeof DeviceOrientationEvent === 'undefined') return;
   const chip = document.getElementById('motion-cta');
   const RANGE = 18;            // degrees of tilt that map to full parallax
   let baseX = null, baseY = null, lastX = null, lastY = null;
@@ -231,16 +234,20 @@ const coarse = matchMedia('(pointer: coarse)').matches;
     addEventListener('orientationchange', resetBase);
   }
 
-  const start = () => addEventListener('deviceorientation', onOrient);
+  const start = () => { tiltActive = true; addEventListener('deviceorientation', onOrient); };
   const hideChip = () => {
     if (chip) chip.hidden = true;
     document.body.classList.remove('motion-cta-on');
   };
 
   if (typeof DeviceOrientationEvent.requestPermission !== 'function') {
-    start();                   // Android & older iOS: no gate, just listen
+    /* Android & older iOS: no permission gate — auto-start only honors
+       the OS reduced-motion preference (there's no explicit opt-in here) */
+    if (!reduce) start();
     return;
   }
+  /* iOS 13+: the chip below is an explicit opt-in, so it shows even under
+     reduced motion — tapping it is the user's own call */
 
   /* iOS 13+: the request must run inside a user gesture. Resolves 'granted'
      or 'denied'; rejects when the gesture didn't carry user activation. */
@@ -307,8 +314,10 @@ function tick() {
     m.visible = true;
 
     const driftY = Math.sin(t * m.userData.spin + i * 1.3) * 0.05;
-    const aimY = reduce ? 0 : mx * 1.1 + driftY;
-    const aimX = reduce ? 0 : my * 0.7;
+    /* reduced motion stills the ambient drift, but an explicit tilt
+       opt-in (the chip) lets the user's own hand drive the marks */
+    const aimY = (reduce && !tiltActive) ? 0 : mx * 1.1 + driftY;
+    const aimX = (reduce && !tiltActive) ? 0 : my * 0.7;
     
     m.rotation.y += (aimY - m.rotation.y) * 0.08;
     m.rotation.x += (aimX - m.rotation.x) * 0.08;
