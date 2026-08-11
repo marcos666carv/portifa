@@ -208,16 +208,31 @@ if (craft) {
 /* ============ NAV HIDE ON SCROLL DOWN ============ */
 (function () {
   const nav = document.getElementById('nav');
-  let lastY = window.scrollY;
+
+  /* The home hero already carries the wordmark, in orbit around the mark, so
+     the nav copy would just be the same name twice on the same screen — it
+     stays out of the way until you have scrolled off the hero, then drops in
+     and behaves as usual. Pages with no hero (Solvefy) keep the old rule and
+     show the nav from the first pixel. */
+  const hero = document.querySelector('.hero');
+
+  function update(scrollingDown) {
+    const y = window.scrollY;
+    let show;
+    if (hero) {
+      const left = innerHeight * 0.6;   /* the orbit ring is off screen by here */
+      const settled = innerHeight * 1.2; /* far enough that hide-on-scroll-down resumes */
+      show = y >= left && (y < settled || !scrollingDown);
+    } else {
+      show = y < 80 || !scrollingDown;
+    }
+    nav.classList.toggle('nav-hidden', !show);
+  }
+
+  update(false);
   ScrollTrigger.create({
     start: 0, end: 'max',
-    onUpdate(self) {
-      const y = window.scrollY;
-      if (y < 80) { nav.classList.remove('nav-hidden'); }
-      else if (self.direction === 1) { nav.classList.add('nav-hidden'); }
-      else { nav.classList.remove('nav-hidden'); }
-      lastY = y;
-    }
+    onUpdate(self) { update(self.direction === 1); }
   });
 })();
 

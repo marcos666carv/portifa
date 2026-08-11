@@ -7,3 +7,6 @@ carta-*.html
 # OS / editor cruft
 .DS_Store
 Thumbs.db
+
+# Claude Code local tooling (launch config, worktrees)
+.claude/

@@ -128,6 +128,187 @@ SYMBOLS.forEach((name, i) => loader.load(`assets/cerol/${name}.svg`, d => {
 /* safety net: never let the loader hang forever if an asset fails */
 setTimeout(() => { window.__meshesReady = true; }, 4000);
 
+/* ---- orbit type: the wordmark circling the hero mark ----
+   Same construction as brik.space's Orbit Type: a ribbon of triangles swept
+   around a circle, carrying a canvas texture of the repeated wordmark, spun
+   on its own axis so the type reads as it swings past the front. Two things
+   the reference leaves on the table and the hero can't afford:
+     · the canvas is sized from the ribbon's OWN aspect (circumference to band
+       height) instead of a fixed 4096x512, so letterforms arrive undistorted
+       whatever radius the ring ends up at;
+     · that width then snaps to a whole number of "MARCOS CARVALHO /" units, so
+       the wordmark meets itself at the seam instead of being cut mid letter
+       (the reference just overdraws past the canvas edge and lets it clip). */
+const ORBIT = {
+  text: 'MARCOS CARVALHO',
+  sep: '/',
+  radius: 1.25,      // world units out from the mark's centre
+  band: 0.55,        // ribbon height in world units, before the seam snap
+  cap: 0.37,         // cap height as a share of that band
+  track: 0.02,       // letter spacing in em — the loader wordmark's own value
+  weight: 700,
+  colour: '#050505',
+  tiltX: 24,         // deg — how open the ellipse reads
+  tiltZ: -6,         // deg — the slight lean the reference carries
+  /* the near half of the orbit is closer to the camera, so perspective drags
+     the ellipse's apparent centre below world zero — this lifts it back onto
+     the mark's optical middle */
+  y: 0.14,
+  phase: 0.06,       // turns of head start, so the M leads at rest
+  loop: 19           // seconds per revolution
+};
+
+const orbitGroup = new THREE.Group();
+scene.add(orbitGroup);
+let orbitMesh = null;
+
+function buildOrbit() {
+  if (orbitMesh) {
+    orbitGroup.remove(orbitMesh);
+    orbitMesh.geometry.dispose();
+    orbitMesh.material.uniforms.uMap.value.dispose();
+    orbitMesh.material.dispose();
+    orbitMesh = null;
+  }
+
+  const circ = 2 * Math.PI * ORBIT.radius;
+  /* read the viewport now rather than the load-time isMobile flag: this runs
+     again once Pacaembu lands and whenever the size class flips, so a phone
+     turned landscape isn't stuck with a portrait-sized ring texture. A zero
+     width means the window hasn't been measured yet — that is not a phone */
+  const small = innerWidth > 0 && innerWidth < 768;
+  let H = small ? 288 : 448;
+  let size = Math.round(H * ORBIT.cap);
+  let track = size * ORBIT.track;
+
+  const c = document.createElement('canvas');
+  let cx = c.getContext('2d');
+  const face = () => `${ORBIT.weight} ${size}px "Pacaembu", "Jakob", system-ui, sans-serif`;
+  const unit = (ORBIT.text + '  ' + ORBIT.sep + '  ').toUpperCase();
+  const runW = ctx => { let w = 0; for (const ch of unit) w += ctx.measureText(ch).width + track; return w; };
+
+  cx.font = face();
+  const unitW = runW(cx);
+  /* how many whole wordmarks fit around the ring at an honest 1:1 aspect */
+  const reps = Math.max(1, Math.round((H * circ / ORBIT.band) / unitW));
+  let W = Math.round(unitW * reps);
+
+  const max = renderer.capabilities.maxTextureSize || 4096;
+  if (W > max) { const k = max / W; W = max; H = Math.round(H * k); size *= k; track *= k; }
+
+  c.width = W; c.height = H;   // resizing wipes the 2d state, so re-arm it after
+  cx = c.getContext('2d');
+  cx.font = face();
+  cx.fillStyle = ORBIT.colour;
+  cx.textAlign = 'left';
+  cx.textBaseline = 'alphabetic';
+  /* centre on the caps, not on the em box: an all-caps line has no descenders,
+     so an em-centred baseline would park the wordmark under the ribbon's middle */
+  const m = cx.measureText(ORBIT.text.toUpperCase());
+  const baseline = H / 2 + (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2;
+  let x = 0;
+  for (let r = 0; r < reps; r++) for (const ch of unit) {
+    cx.fillText(ch, x, baseline);
+    x += cx.measureText(ch).width + track;
+  }
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.ClampToEdgeWrapping;
+  tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  /* mipmaps stop the far half of the ring shimmering as it recedes; WebGL1
+     can't mip a non power of two texture, so it falls back to plain linear */
+  const mip = renderer.capabilities.isWebGL2 !== false;
+  tex.generateMipmaps = mip;
+  tex.minFilter = mip ? THREE.LinearMipmapLinearFilter : THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  tex.needsUpdate = true;
+
+  /* the seam snap moved the canvas width, so take the band height back from
+     it and the letterforms stay square */
+  const band = circ * H / W;
+
+  const segU = small ? 192 : 288, segV = 1;
+  const pos = [], uv = [], idx = [];
+  for (let i = 0; i <= segU; i++) {
+    const u = i / segU, a = u * Math.PI * 2;
+    for (let j = 0; j <= segV; j++) {
+      const v = j / segV;
+      pos.push(Math.cos(a) * ORBIT.radius, (v - 0.5) * band, Math.sin(a) * ORBIT.radius);
+      uv.push(1 - u, v);   // flipped so the near face reads left to right
+    }
+  }
+  const row = segV + 1;
+  for (let i = 0; i < segU; i++) for (let j = 0; j < segV; j++) {
+    const a = i * row + j, b = a + 1, d = (i + 1) * row + j, e = d + 1;
+    idx.push(a, b, d, b, e, d);
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+  geo.setIndex(idx);
+
+  const mat = new THREE.ShaderMaterial({
+    uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, { uMap: { value: null } }]),
+    transparent: true, side: THREE.DoubleSide, depthWrite: true, fog: true,
+    vertexShader: `
+      #include <fog_pars_vertex>
+      varying vec2 vUv;
+      void main(){
+        vUv = uv;
+        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+        gl_Position = projectionMatrix * mvPosition;
+        #include <fog_vertex>
+      }
+    `,
+    fragmentShader: `
+      #include <fog_pars_fragment>
+      uniform sampler2D uMap;
+      varying vec2 vUv;
+      void main(){
+        vec4 c = texture2D(uMap, vUv);
+        /* the type is painted once, on the outside of the band — the far half
+           of the ring shows it through the ribbon, mirrored, like a shop sign
+           read from inside. Soft alpha instead of a hard cut so the letters
+           don't crawl while the ring turns */
+        float a = smoothstep(0.35, 0.62, c.a);
+        if (a < 0.02) discard;
+        gl_FragColor = vec4(c.rgb, a);
+        #include <fog_fragment>
+      }
+    `
+  });
+  mat.uniforms.uMap.value = tex;   // merge clones its values, so hand it over after
+
+  orbitMesh = new THREE.Mesh(geo, mat);
+  orbitGroup.add(orbitMesh);
+}
+/* the ring is half again as wide as the mark it circles, so a narrow window
+   would slice the wordmark off at both edges — exactly the word you came to
+   read. Pull the whole orbit in until its widest point clears the frame at
+   the hero's viewing distance. */
+function fitOrbit() {
+  const aspect = innerHeight > 0 ? innerWidth / innerHeight : camera.aspect;
+  const halfW = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * 5 * aspect;
+  orbitGroup.scale.setScalar(Math.min(1, Math.max(0.55, halfW * 0.88 / ORBIT.radius)));
+}
+
+buildOrbit();
+fitOrbit();
+/* the ring is measured in Pacaembu — remeasure once it actually lands, or the
+   fallback's metrics decide how many wordmarks fit and the seam drifts */
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(buildOrbit);
+/* refit on every resize, but only redraw the texture when the phone/desktop
+   size class actually flips — otherwise a window drag would throw away a
+   multi megabyte texture on every frame */
+let orbitSmall = innerWidth > 0 && innerWidth < 768;
+addEventListener('resize', () => {
+  const now = innerWidth > 0 && innerWidth < 768;
+  if (now !== orbitSmall) { orbitSmall = now; buildOrbit(); }
+  fitOrbit();
+});
+
 /* Faint depth dust removed by request */
 
 /* ---- scroll-linked camera travel (single global scrub) ---- */
@@ -328,10 +509,25 @@ function tick() {
     m.position.y = m.userData.baseY + (reduce ? 0 : Math.sin(t * 0.2 + m.userData.floatSeed) * 0.12);
   });
 
+  if (orbitMesh) {
+    /* the reference's "accelerate" profile: the wordmark hurries through the
+       back of the orbit and eases as it comes round to face you */
+    const tt = (t % ORBIT.loop) / ORBIT.loop;
+    const turn = tt - 0.18 * Math.sin(Math.PI * 2 * tt) / (Math.PI * 2);
+    orbitMesh.rotation.y = (ORBIT.phase + turn) * Math.PI * 2;
+
+    const still = reduce && !tiltActive;
+    orbitGroup.rotation.x = THREE.MathUtils.degToRad(ORBIT.tiltX) + (still ? 0 : -my * 0.16);
+    orbitGroup.rotation.z = THREE.MathUtils.degToRad(ORBIT.tiltZ) + (still ? 0 : mx * 0.10);
+    /* ride the hero mark's float so the two read as one object, not a hoop
+       hung in front of a drifting logo */
+    orbitGroup.position.y = ORBIT.y + (forms[0] ? forms[0].position.y : 0);
+  }
+
   renderer.render(scene, camera);
 }
 tick();
 
 /* expose scroll progress for main.js chapter-label logic if needed */
 window.__sceneProgress = () => scrollProgress;
-window.__debugScene = { scene, camera, renderer, forms, THREE };
+window.__debugScene = { scene, camera, renderer, forms, THREE, ORBIT, buildOrbit, orbit: () => orbitMesh };

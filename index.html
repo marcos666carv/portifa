@@ -13,7 +13,7 @@
 <link rel="preload" as="font" href="fonts/Pacaembu-Regular.otf" type="font/otf" crossorigin>
 <link rel="preload" as="font" href="fonts/Pacaembu-Bold.otf" type="font/otf" crossorigin>
 <link rel="preload" as="font" href="fonts/dTJakob_Rg.otf" type="font/otf" crossorigin>
-<link rel="stylesheet" href="css/main.css?v=35" />
+<link rel="stylesheet" href="css/main.css?v=38" />
 </head>
 <body>
 
@@ -40,8 +40,10 @@
   </div>
 
   <!-- ============ NAV ============ -->
-  <nav class="nav" id="nav">
-    <div class="brand">Marcos Carvalho</div>
+  <!-- starts hidden in the markup so the wordmark never flashes over the hero
+       before main.js runs, and so its reveal doesn't play against the loader -->
+  <nav class="nav nav-mask nav-hidden" id="nav">
+    <div class="brand"><span>Marcos</span> <span>Carvalho</span></div>
   </nav>
 
   <!-- ============ CONTENT ============ -->
@@ -76,9 +78,40 @@
       <div class="max">
         <div class="lbl rv">What I do</div>
         <div class="caps">
-          <div class="cap rv"><h3>AI native</h3><div><p>I design and build with AI, not just prototype around it. I shipped AI driven design workflows while the company launched Agents, its AI orchestration product.</p></div></div>
-          <div class="cap rv"><h3>Product design</h3><div><p>End to end product for desktop and mobile: research, information architecture, systems and high fidelity delivery. I reorganized a four product portfolio and lifted NPS.</p></div></div>
-          <div class="cap rv"><h3>Craft &amp; leadership</h3><div><p>Craft is the delivery, not the decoration. Product Design Lead three times over, and Founder and Design Director of my own studio, CEROL. I seed teams and cultures, not just screens.</p></div></div>
+          <div class="cap rv">
+            <!-- orchestration: the hub dispatches work down each wire and the
+                 agent that answers lights up -->
+            <div class="fig" aria-hidden="true"><svg viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+              <g class="wire"><path d="M48 48 48 18"/><path d="M48 48 76 64"/><path d="M48 48 20 64"/></g>
+              <g class="pulse"><path d="M48 48 48 18"/><path d="M48 48 76 64"/><path d="M48 48 20 64"/></g>
+              <circle class="hub" cx="48" cy="48" r="7.5"/>
+              <circle class="node" cx="48" cy="18" r="4.5"/>
+              <circle class="node" cx="76" cy="64" r="4.5"/>
+              <circle class="node" cx="20" cy="64" r="4.5"/>
+            </svg></div>
+            <h3>AI native</h3><div><p>I build with AI, not around it. Claude Code, MCPs and custom agents in my workflow since July 2025. At Solvefy I shipped AI driven design workflows that shortened delivery cycles for the whole team, and designed and built an internal leads engine end to end. Its first day of use cleared the month's target.</p></div>
+          </div>
+          <div class="cap rv">
+            <!-- four products, re-composed: grid, row, column. Nothing added or
+                 removed — only reorganised -->
+            <div class="fig" aria-hidden="true"><svg viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="1.6">
+              <rect class="blk b1" width="20" height="20" rx="2.5"/>
+              <rect class="blk b2" width="20" height="20" rx="2.5"/>
+              <rect class="blk b3" width="20" height="20" rx="2.5"/>
+              <rect class="blk b4" width="20" height="20" rx="2.5"/>
+            </svg></div>
+            <h3>Product design</h3><div><p>End to end product, from research and information architecture to systems and high fidelity delivery. Dense systems, fintech and e-commerce. At Solvefy I pulled a four product portfolio under one design system and one language, and NPS climbed. The churn research I introduced there brought back three large clients, roughly 18% of revenue.</p></div>
+          </div>
+          <div class="cap rv">
+            <!-- a stroke laid down by hand, and the dots it seeds along the way -->
+            <div class="fig" aria-hidden="true"><svg viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+              <path class="draw" pathLength="1" d="M12 70C22 34 34 24 44 40s10 26 20 20 14-24 20-38"/>
+              <circle class="seed" cx="28" cy="40" r="3.4"/>
+              <circle class="seed" cx="52" cy="56" r="3.4"/>
+              <circle class="seed" cx="74" cy="35" r="3.4"/>
+            </svg></div>
+            <h3>Craft &amp; leadership</h3><div><p>Craft is the delivery, not the decoration. Product Design Lead three times over, Design Director, and most recently design and growth together at Solvefy, leading a team of seven. Founder of CEROL, my own studio, and of Lerdo, the cycling brand I designed from zero to an ADG Brasil award. I hire, mentor and leave a culture behind.</p></div>
+          </div>
         </div>
       </div>
     </section>
@@ -95,8 +128,8 @@
         <div class="lbl rv">Selected work</div>
         <div class="proj">
           <a class="row rv" href="projeto.html?id=solvefy" data-transition data-thumb="solvefy" data-cat="Featured case"><span class="t">Solvefy <span class="arrow">↗</span></span><span class="m">Featured case · Product design, AI, growth</span></a>
-          <a class="row rv" href="https://www.behance.net/marcos_____carvalho" target="_blank" rel="noopener" data-thumb="remessa" data-cat="Fintech growth"><span class="t">Remessa Online <span class="arrow">↗</span></span><span class="m">Product Design Lead · Fintech growth</span></a>
-          <a class="row rv" href="https://www.behance.net/marcos_____carvalho" target="_blank" rel="noopener" data-thumb="leads2b" data-cat="SaaS B2B"><span class="t">Leads2b <span class="arrow">↗</span></span><span class="m">Product Design Lead · Churn stabilized</span></a>
+          <a class="row rv" href="projeto.html?id=remessa" data-transition data-thumb="remessa" data-cat="Fintech growth"><span class="t">Remessa Online <span class="arrow">↗</span></span><span class="m">Product Design Lead · Fintech growth</span></a>
+          <a class="row rv" href="projeto.html?id=leads2b" data-transition data-thumb="leads2b" data-cat="SaaS B2B"><span class="t">Leads2b <span class="arrow">↗</span></span><span class="m">Product Design Lead · Sales engagement</span></a>
           <a class="row rv" href="projeto.html?id=136071709" data-transition data-thumb="136071709" data-hover="assets/work/136071709/cover.webp,assets/work/136071709/01.webp" data-cat="Product · Data"><span class="t">Customer Care Panel · Nissan <span class="arrow">↗</span></span><span class="m">Product · Data</span></a>
           <a class="row rv" href="projeto.html?id=135764741" data-transition data-thumb="135764741" data-hover="assets/work/135764741/cover.webp,assets/work/135764741/01.webp" data-cat="UX · Worldwide intranet"><span class="t">Huge · Worldwide Intranet <span class="arrow">↗</span></span><span class="m">UX · Worldwide intranet</span></a>
           <a class="row rv" href="projeto.html?id=118534117" data-transition data-thumb="118534117" data-hover="assets/work/118534117/cover.webp,assets/work/118534117/01.webp" data-cat="Game UX · Art direction · NY"><span class="t">Evil Apples <span class="arrow">↗</span></span><span class="m">Game UX · Art direction · NY</span></a>
@@ -189,7 +222,7 @@
     <section class="about solid pad" data-theme="light">
       <div class="max grid">
         <p class="rv" data-split><b>The punk and DIY scene made me a designer years before I understood what design was.</b> Self taught musician since 13. Moved by everything new. Fourteen years later I run CEROL, my own design company, and still build worlds end to end, from the pixel to the P&amp;L.</p>
-        <div class="portrait rv"><img src="assets/photos/study.png" alt=""></div>
+        <div class="portrait rv"><img src="assets/photos/portrait.webp" alt="Marcos Carvalho" width="1400" height="1867"></div>
       </div>
     </section>
 
@@ -230,7 +263,7 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-<script type="module" src="js/scene.js?v=35"></script>
-<script type="module" src="js/main.js?v=35"></script>
+<script type="module" src="js/scene.js?v=36"></script>
+<script type="module" src="js/main.js?v=36"></script>
 </body>
 </html>

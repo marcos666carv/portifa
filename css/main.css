@@ -126,6 +126,23 @@ html:not(.fonts-ready) body{cursor:auto}
 .nav .brand{font-weight:700;letter-spacing:.02em}
 .nav .right{font-size:11px;letter-spacing:.08em;color:var(--gray)}
 
+/* ---- nav wordmark reveal (home only) ----
+   The home nav carries nothing but the wordmark, and the hero already spells
+   the name out in orbit — so instead of yanking the whole bar out of frame,
+   the type drops in from behind the top edge. Same masked line reveal the page
+   body uses (.rv-line), mirrored, because this one arrives from above. The two
+   words are offset a beat so it lands as a phrase instead of a block. */
+.nav-mask.nav-hidden{transform:none}
+.nav-mask .brand{overflow:hidden}
+.nav-mask .brand > span{
+  display:inline-block;
+  transition:transform .85s cubic-bezier(.16,.84,.36,1);
+}
+.nav-mask .brand > span:nth-child(2){transition-delay:.07s}
+/* -130% rather than -100%: the mask is the line box, so the type has to clear
+   its own height plus the leading above it before the edge hides it */
+.nav-mask.nav-hidden .brand > span{transform:translateY(-130%)}
+
 /* ---- content layer ---- */
 /* viewport-fit=cover extends the page under the notch in landscape; the 3D
    canvas stays full bleed while every section's content keeps clear of it */
@@ -136,7 +153,16 @@ section{position:relative}
 .max{max-width:1600px;margin:0 auto}
 /* reading sections morph with the theme (bg + fg follow [data-theme]) */
 .solid{background:var(--bg)}
-.invert{background:var(--bg);color:var(--fg);padding-top:clamp(28px,4vw,60px);padding-bottom:clamp(28px,4vw,60px)}
+/* Selected work is pinned black instead of following the page theme: it used
+   to render white for the beat before its own theme trigger fired and then
+   flip, which read as a flash. Same self-contained treatment .whatido .max
+   uses — the page around it still morphs, so the seam stays soft. */
+.invert{
+  --bg:#050505; --fg:#f5f4f0; --dim:#3a3a38;
+  --line-th:rgba(245,244,240,.16); --gray-th:#8d8d88;
+  background:var(--bg);color:var(--fg);
+  padding-top:clamp(28px,4vw,60px);padding-bottom:clamp(28px,4vw,60px);
+}
 .invert .gray{color:var(--gray-th)}
 /* everything carrying a theme colour morphs together over .5s (Huge duration-500);
    without this the sections snap instantly while the page bg lags behind */
@@ -212,12 +238,16 @@ section{position:relative}
 .inter.is-active .chapter-label{opacity:1;transform:translateY(0)}
 
 /* ---- manifesto (word reveal) ---- */
-.manifesto{padding:20vh 32px 0}
+/* The section closes on the same beat it breathes between paragraphs: the last
+   line keeps its own 1.1em instead of the section carrying a separate bottom
+   padding, so the two gaps can never drift apart. flow-root is what keeps that
+   margin inside the panel — without it the bottom margin collapses straight
+   out of the section and the gap disappears. */
+.manifesto{padding:20vh 32px 0;display:flow-root}
 .manifesto p{
   font-weight:600;font-size:clamp(25.2px,5.04vw,79.2px);line-height:1.06;letter-spacing:-.02em;
   max-width:23ch;margin:0 0 1.1em; /* left-aligned editorial, Huge style; -10% */
 }
-.manifesto p:last-child{margin-bottom:0}
 .manifesto .w{color:var(--dim);transition:color .1s linear}
 .manifesto .w.hot{font-weight:700}
 
@@ -230,18 +260,93 @@ section{position:relative}
   /* self-contained inverted panel, independent of the page theme */
   --bg:#050505; --fg:#f5f4f0; --dim:#3a3a38;
   --line-th:rgba(245,244,240,.16); --gray-th:#8d8d88;
-  width:fit-content;max-width:min(1000px,100%);margin:0;   /* left aligned, shrink to content */
+  width:fit-content;max-width:min(1180px,100%);margin:0;   /* left aligned, shrink to content */
   background:var(--bg);color:var(--fg);
   padding:clamp(28px,4vw,60px);
 }
-.caps{border-top:1px solid var(--line-th)}
-/* stacked: title on top, description directly under it */
-.cap{
-  border-bottom:1px solid var(--line-th);padding:44px 0;
+/* three abreast: these are peers, not a ranked list — side by side they get
+   compared instead of read top to bottom */
+.caps{
+  border-top:1px solid var(--line-th);
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
 }
-.cap h3{font-weight:600;font-size:clamp(26px,3.6vw,50px);line-height:1;margin-bottom:22px}
-.cap p{font-weight:200;font-size:clamp(16px,1.4vw,19px);line-height:1.5;color:color-mix(in srgb, var(--fg) 68%, var(--bg));max-width:60ch}
+.cap{
+  border-bottom:1px solid var(--line-th);
+  padding:38px clamp(18px,2.2vw,34px) 44px;
+}
+.cap:first-child{padding-left:0}
+.cap:last-child{padding-right:0}
+.cap + .cap{border-left:1px solid var(--line-th)}
+.cap h3{font-weight:600;font-size:clamp(20px,2vw,29px);line-height:1.05;margin-bottom:16px}
+.cap p{font-weight:200;font-size:clamp(14px,1.05vw,16px);line-height:1.55;color:color-mix(in srgb, var(--fg) 68%, var(--bg));max-width:42ch}
 .cap .proof{margin-top:14px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray)}
+
+/* ---- what-I-do figures ----
+   One monoline drawing per column, each one doing the thing its column
+   describes rather than decorating it: work dispatched to agents, four
+   products reorganised, a stroke laid down that seeds more.
+   Every figure's RESTING state is the finished state, so switching the
+   animations off (reduced motion) leaves a complete drawing, not a blank. */
+.cap .fig{
+  width:clamp(86px,8.6vw,126px);margin-bottom:30px;color:var(--fg);
+}
+.cap .fig svg{width:100%;height:auto;display:block}
+/* idle until the column is actually on screen */
+.cap .fig svg *{animation-play-state:paused}
+.cap.is-in .fig svg *{animation-play-state:running}
+
+/* AI native — the hub dispatches a packet down each wire and the agent
+   answering it lights up. That is the orchestration, drawn. */
+.fig .wire{opacity:.3}
+.fig .pulse path{stroke-dasharray:9 240;stroke-dashoffset:-260;animation:figRun 2.7s cubic-bezier(.45,0,.55,1) infinite}
+.fig .pulse path:nth-child(2){animation-delay:.2s}
+.fig .pulse path:nth-child(3){animation-delay:.4s}
+@keyframes figRun{
+  0%{stroke-dashoffset:9}
+  46%{stroke-dashoffset:-40}
+  100%{stroke-dashoffset:-40}
+}
+.fig .node{transform-box:fill-box;transform-origin:center;animation:figPing 2.7s ease-out infinite}
+.fig .node:nth-of-type(2){animation-delay:.2s}
+.fig .node:nth-of-type(3){animation-delay:.4s}
+@keyframes figPing{
+  0%,38%{transform:scale(1);opacity:.5}
+  50%{transform:scale(1.5);opacity:1}
+  72%,100%{transform:scale(1);opacity:.5}
+}
+.fig .hub{transform-box:fill-box;transform-origin:center;animation:figHub 2.7s ease-in-out infinite}
+@keyframes figHub{0%,100%{transform:scale(1)}42%{transform:scale(1.12)}}
+
+/* Product design — the same four products, re-composed: grid, row, column.
+   Nothing is added or removed, only reorganised. */
+.fig .blk{animation:none;transition:none}
+.fig .b1{animation:figB1 8s cubic-bezier(.65,0,.35,1) infinite}
+.fig .b2{animation:figB2 8s cubic-bezier(.65,0,.35,1) infinite .05s}
+.fig .b3{animation:figB3 8s cubic-bezier(.65,0,.35,1) infinite .1s}
+.fig .b4{animation:figB4 8s cubic-bezier(.65,0,.35,1) infinite .15s}
+/* all three arrangements span roughly the same box, so the figure keeps the
+   optical weight of its two neighbours through the whole cycle */
+@keyframes figB1{0%,20%{transform:translate(22px,22px)}33%,53%{transform:translate(2px,38px)}66%,86%{transform:translate(38px,2px)}100%{transform:translate(22px,22px)}}
+@keyframes figB2{0%,20%{transform:translate(54px,22px)}33%,53%{transform:translate(26px,38px)}66%,86%{transform:translate(38px,26px)}100%{transform:translate(54px,22px)}}
+@keyframes figB3{0%,20%{transform:translate(22px,54px)}33%,53%{transform:translate(50px,38px)}66%,86%{transform:translate(38px,50px)}100%{transform:translate(22px,54px)}}
+@keyframes figB4{0%,20%{transform:translate(54px,54px)}33%,53%{transform:translate(74px,38px)}66%,86%{transform:translate(38px,74px)}100%{transform:translate(54px,54px)}}
+
+/* Craft & leadership — a stroke made by hand, and the dots it seeds along
+   the way. pathLength=1 keeps the draw timing independent of the geometry. */
+.fig .draw{stroke-dasharray:1;stroke-dashoffset:0;animation:figDraw 5.6s ease-in-out infinite}
+@keyframes figDraw{
+  0%{stroke-dashoffset:1;opacity:1}
+  40%,84%{stroke-dashoffset:0;opacity:1}
+  96%,100%{stroke-dashoffset:0;opacity:0}
+}
+.fig .seed{transform-box:fill-box;transform-origin:center;animation:figSeed 5.6s cubic-bezier(.16,.84,.36,1) infinite}
+.fig .seed:nth-of-type(2){animation-delay:.14s}
+.fig .seed:nth-of-type(3){animation-delay:.28s}
+@keyframes figSeed{
+  0%,24%{transform:scale(0);opacity:0}
+  38%,84%{transform:scale(1);opacity:1}
+  94%,100%{transform:scale(0);opacity:0}
+}
 
 /* ---- solvefy teaser ---- */
 .feat{padding:12vh 32px 14vh}
@@ -419,7 +524,13 @@ section{position:relative}
 
 /* ---- responsive ---- */
 @media (max-width:900px){
-  .cap{grid-template-columns:1fr;gap:10px}
+  /* three columns need room to breathe — below that they stack again */
+  .caps{grid-template-columns:1fr}
+  .cap{padding:32px 0}
+  .cap + .cap{border-left:0}
+  .cap h3{font-size:clamp(22px,3.4vw,30px)}
+  .cap p{font-size:16px;max-width:60ch}
+  .cap .fig{width:84px;margin-bottom:20px}
   .about .grid{grid-template-columns:1fr}
   .nav .right{display:none}
 }
@@ -452,9 +563,10 @@ section{position:relative}
     transform:none;animation-name:scroll-bob-m;
   }
 
-  /* -- manifesto: fills the narrow measure; its base breathes exactly
-     twice the section's side margin before the black panel connects -- */
-  .manifesto{padding:14vh 20px 40px}
+  /* -- manifesto: fills the narrow measure; the base gap comes from the last
+     paragraph's own 1.1em (see the desktop rule), not from a fixed padding,
+     so it matches the space between paragraphs here too -- */
+  .manifesto{padding:14vh 20px 0}
   .manifesto p{font-size:clamp(27px,7.4vw,79.2px);max-width:100%}
 
   /* -- what I do: full-bleed panel with numbered chapters, connected
@@ -528,7 +640,9 @@ section{position:relative}
 }
 
 @media (prefers-reduced-motion:reduce){
-  .rv,.rv-line>*,.craft .imgwrap img,.lbl::before{transition:none !important}
+  .rv,.rv-line>*,.craft .imgwrap img,.lbl::before,.nav-mask .brand>span{transition:none !important}
+  /* every figure's resting state is already the finished drawing */
+  .cap .fig svg *{animation:none !important}
   html,body,#gl{transition:none !important}
   #hero-montage{display:none}
 }
