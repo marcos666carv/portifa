@@ -287,6 +287,8 @@ a{color:var(--accent)}
   color:var(--muted);cursor:pointer;margin-left:auto;user-select:none}
 .bsel input{width:13px;height:13px;margin:0;accent-color:var(--accent)}
 .block .bhead .del{margin-left:12px}
+.block .bhead .dl{color:var(--muted);font-size:12px;padding:4px 8px;border-radius:6px;margin-left:12px}
+.block .bhead .dl:hover{color:var(--fg);background:rgba(255,255,255,.08)}
 .block.imgblock .bhead .del{margin-left:12px}
 .block.grouped{border-color:#3a5bd0}
 .block.grouped::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);border-radius:3px 0 0 3px}
@@ -1033,6 +1035,36 @@ function hydrateVideoBlocks(root){
   });
 }
 
+/* baixa o arquivo original de um bloco de imagem (asset do site, data: ou IndexedDB) */
+async function downloadBlockImage(b){
+  try {
+    let blob, name = '';
+    if (b.mediaId){
+      blob = await getMediaBlob(b.mediaId);
+      name = 'media-' + b.mediaId;
+    } else if (b.src){
+      if (!b.src.startsWith('data:')) name = b.src.split('?')[0].split('/').slice(-2).join('-');
+      else name = 'imagem-' + (b.id || 'cms');
+      const r = await fetch(b.src);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      blob = await r.blob();
+    }
+    if (!blob) throw new Error('imagem não encontrada');
+    if (!/\.[a-z0-9]{2,5}$/i.test(name)){
+      const ext = ((blob.type.split('/')[1] || 'webp').split('+')[0]).replace('jpeg', 'jpg');
+      name += '.' + ext;
+    }
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name;
+    a.click(); URL.revokeObjectURL(a.href);
+    toast('Baixado: ' + name);
+  } catch (e){
+    // sem CORS (imagem externa) o fetch falha — abre numa aba pra salvar manualmente
+    if (b.src && !b.src.startsWith('data:')) { window.open(b.src, '_blank'); return; }
+    toast('Falha ao baixar: ' + (e.message || e));
+  }
+}
+
 function renderBlock(b){
   const el = document.createElement('div');
   el.className = 'block';
@@ -1071,6 +1103,10 @@ function renderBlock(b){
       renderBlocks();
     });
     head.insertBefore(sel, del);
+    const dl = document.createElement('button');
+    dl.className = 'dl'; dl.textContent = 'Baixar'; dl.title = 'Baixar o arquivo original desta imagem';
+    dl.addEventListener('click', () => downloadBlockImage(b));
+    head.insertBefore(dl, del);
   }
   el.appendChild(head);
 
