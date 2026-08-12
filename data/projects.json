@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "revision": 1786549929711,
+  "revision": 1786550565693,
   "generatedFrom": "cms",
   "count": 15,
   "projects": [
@@ -3072,12 +3072,6 @@
       "src": "assets/work/233337759/07.webp",
       "title": "viva la vegan",
       "caseId": "233337759"
-    },
-    {
-      "id": "c20",
-      "src": "assets/work/250632349/08.webp",
-      "title": "Lerdo · pink neon",
-      "caseId": "250632349"
     },
     {
       "id": "c21",
