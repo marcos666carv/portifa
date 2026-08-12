@@ -1277,6 +1277,9 @@ document.getElementById('exportBtn').addEventListener('click', () => {
    Contents: write on the portifa repo, kept in this browser's localStorage);
    Vercel then auto-deploys. Works from any origin (localhost or the live CMS). */
 const GH = { owner: 'marcos666carv', repo: 'portifa', path: 'data/projects.json', branch: 'main', key: 'gh-token' };
+/* rodando no servidor local (cms-server.py)? então Publicar salva o arquivo local
+   e o próprio servidor commita e dá push — sem token, e o site/ na pasta nunca fica pra trás */
+const IS_LOCAL_SERVER = (location.hostname === '127.0.0.1' || location.hostname === 'localhost');
 function utf8ToBase64(str){ return btoa(unescape(encodeURIComponent(str))); }
 function ghToken(force){
   let t = force ? '' : (localStorage.getItem(GH.key) || '');
@@ -1305,16 +1308,35 @@ document.getElementById('prLink').addEventListener('click', (e) => {
 
 async function publishToSite(){
   const btn = document.getElementById('publishBtn');
-  const token = ghToken();
-  if (!token){ showPub('err', 'Publicação cancelada — nenhum token informado.'); return; }
-  const api = `https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}`;
-  const headers = { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
   migrateAll();
   const rev = Date.now();                                 // revision stamp: lets other browsers detect the site moved ahead
   const payload = { version: state.version || 1, revision: rev, generatedFrom: 'cms', count: state.projects.length,
                     projects: state.projects, montage: state.montage || [], craft: state.craft || [] };
   const json = JSON.stringify(payload, null, 2);
   if (json.length > 8_000_000){ showPub('err', 'Muito grande (' + Math.round(json.length/1e6) + 'MB) — imagens enviadas viram base64. Reduza antes de publicar.'); return; }
+
+  if (IS_LOCAL_SERVER){                                   // caminho local: o servidor grava o arquivo, commita e dá push
+    const label = btn.innerHTML; btn.classList.add('busy'); btn.innerHTML = 'Publicando…';
+    showPub('busy', 'Salvando o arquivo local e enviando pro site…');
+    try {
+      const r = await fetch('/api/publish', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: json });
+      const pj = await r.json().catch(() => ({}));
+      if (!r.ok || !pj.ok) throw new Error(pj.error || ('HTTP ' + r.status + ' — o servidor local é o cms-server.py? (python3 cms-server.py)'));
+      try { localStorage.setItem(BASE_REV, String(rev)); } catch(e){}
+      showPub('ok', 'Publicado ✓ ' + (pj.commit ? '(commit ' + pj.commit.slice(0,7) + '). ' : '(' + (pj.note || 'sem mudanças') + '). ') + 'Arquivo local salvo; o site atualiza em ~1 min.', { href: 'https://marcoscarvalho.work', text: 'Abrir o site →' });
+      toast('Publicado ✓');
+    } catch (err){
+      showPub('err', 'Falha ao publicar: ' + (err.message || err));
+    } finally {
+      btn.classList.remove('busy'); btn.innerHTML = label;
+    }
+    return;
+  }
+
+  const token = ghToken();
+  if (!token){ showPub('err', 'Publicação cancelada — nenhum token informado.'); return; }
+  const api = `https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${GH.path}`;
+  const headers = { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
   const content = utf8ToBase64(json);
   const label = btn.innerHTML; btn.classList.add('busy'); btn.innerHTML = 'Publicando…';
   showPub('busy', 'Publicando no repositório…');
