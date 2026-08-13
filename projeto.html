@@ -136,15 +136,13 @@ img{max-width:100%;display:block}
 /* left rail: chapter anchors + active state */
 .chnav{position:fixed;top:50%;left:32px;transform:translateY(-50%);z-index:40;
   display:flex;flex-direction:column;gap:16px;max-width:190px}
-.chnav a{display:flex;align-items:center;gap:11px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+.chnav a{display:flex;align-items:center;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
   color:var(--muted);text-decoration:none;transition:color .3s ease}
-.chnav a::before{content:"";width:16px;height:1px;flex:none;background:currentColor;transition:width .3s ease}
 .chnav a .ct{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chnav a:hover{color:var(--fg)}
 .chnav a.active{color:var(--fg)}
-.chnav a.active::before{width:34px}
 @media (max-width:1340px){.chnav{display:none}}
-@media (prefers-reduced-motion:reduce){.chnav a,.chnav a::before{transition:none}}
+@media (prefers-reduced-motion:reduce){.chnav a{transition:none}}
 
 /* lightbox (chapter galleries) */
 #lightbox{position:fixed;inset:0;z-index:400;display:none;align-items:center;justify-content:center;
