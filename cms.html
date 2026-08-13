@@ -626,6 +626,57 @@ function fileToScaledDataURL(file, maxDim = 1400, quality = 0.85){
   });
 }
 
+/* reencoda uma imagem data: (base64) menor — webp, com teto de dimensão.
+   GIFs ficam como estão (canvas achataria a animação). Devolve {src,w,h}. */
+function shrinkDataUrl(src, maxDim, quality){
+  return new Promise(resolve => {
+    const keep = () => resolve({ src, w: null, h: null });
+    if (!src || !src.startsWith('data:image/') || src.startsWith('data:image/gif')) return keep();
+    const img = new Image();
+    img.onerror = keep;
+    img.onload = () => {
+      let w = img.naturalWidth, h = img.naturalHeight;
+      if (Math.max(w, h) > maxDim){ const s = maxDim / Math.max(w, h); w = Math.round(w * s); h = Math.round(h * s); }
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      let out = c.toDataURL('image/webp', quality);
+      if (!out.startsWith('data:image/webp')) out = c.toDataURL('image/jpeg', quality);
+      if (out.length >= src.length) return keep();      // só troca se realmente encolher
+      resolve({ src: out, w, h });
+    };
+    img.src = src;
+  });
+}
+
+/* passa por todo o rascunho reduzindo imagens embutidas (publicação automática:
+   "reduza automaticamente quando for assim") */
+async function shrinkEmbeddedImages(maxDim, quality){
+  let changed = 0;
+  const conv = async (obj, key, isBlock) => {
+    const v = obj[key];
+    if (typeof v !== 'string' || !v.startsWith('data:image/')) return;
+    const r = await shrinkDataUrl(v, maxDim, quality);
+    if (r.src !== v){
+      obj[key] = r.src; changed++;
+      if (isBlock && r.w && r.h){ obj.w = r.w; obj.h = r.h; }
+    }
+  };
+  for (const p of state.projects){
+    await conv(p, 'cover'); await conv(p, 'firstImage');
+    for (let i = 0; i < (p.hoverImages || []).length; i++) await conv(p.hoverImages, i);
+    for (const b of p.blocks || []) await conv(b, 'src', true);
+    for (const sp of p.subprojects || []){
+      for (let i = 0; i < (sp.hoverImages || []).length; i++) await conv(sp.hoverImages, i);
+      for (const b of sp.blocks || []) await conv(b, 'src', true);
+    }
+  }
+  for (const m of state.montage || []) await conv(m, 'src');
+  for (const c of state.craft || []) await conv(c, 'src');
+  if (changed) save();
+  return changed;
+}
+
 /* ============ password gate (light client-side deterrent, NOT real security:
    the data lives in localStorage and is readable via devtools) ============ */
 async function sha(s){
@@ -1348,8 +1399,18 @@ async function publishToSite(){
   const rev = Date.now();                                 // revision stamp: lets other browsers detect the site moved ahead
   const payload = { version: state.version || 1, revision: rev, generatedFrom: 'cms', count: state.projects.length,
                     projects: state.projects, montage: state.montage || [], craft: state.craft || [] };
-  const json = JSON.stringify(payload, null, 2);
-  if (json.length > 8_000_000){ showPub('err', 'Muito grande (' + Math.round(json.length/1e6) + 'MB) — imagens enviadas viram base64. Reduza antes de publicar.'); return; }
+  let json = JSON.stringify(payload, null, 2);
+  if (json.length > 8_000_000){
+    // rascunho estourou o limite: reduz as imagens embutidas automaticamente e tenta de novo
+    showPub('busy', 'Rascunho grande (' + Math.round(json.length/1e6) + 'MB) — reduzindo imagens automaticamente…');
+    for (const [maxDim, quality] of [[1600, .82], [1100, .7]]){
+      await shrinkEmbeddedImages(maxDim, quality);
+      payload.projects = state.projects; payload.montage = state.montage || []; payload.craft = state.craft || [];
+      json = JSON.stringify(payload, null, 2);
+      if (json.length <= 8_000_000) break;
+    }
+    if (json.length > 8_000_000){ showPub('err', 'Ainda muito grande (' + Math.round(json.length/1e6) + 'MB) mesmo reduzindo — algum vídeo/GIF pesado embutido? Remova-o e tente de novo.'); return; }
+  }
 
   if (IS_LOCAL_SERVER){                                   // caminho local: o servidor grava o arquivo, commita e dá push
     const label = btn.innerHTML; btn.classList.add('busy'); btn.innerHTML = 'Publicando…';
