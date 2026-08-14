@@ -1460,11 +1460,28 @@ async function publishToSite(){
     btn.classList.remove('busy'); btn.innerHTML = label;
   }
 }
-document.getElementById('publishBtn').addEventListener('click', (e) => {
-  if (e.shiftKey){ ghToken(true); showPub('ok', 'Token atualizado neste navegador.'); setTimeout(hidePub, 2500); return; }
-  if (!state.projects.length){ showPub('err', 'Nada pra publicar — carregue os projetos primeiro (Puxar do site).'); return; }
-  if (confirm('Publicar o estado atual direto no site?\nIsso sobrescreve o data/projects.json publicado.')) publishToSite();
-});
+/* confirmação sem confirm(): navegadores podem bloquear diálogos da página
+   (aí o clique morre sem feedback nenhum). Primeiro clique arma o botão,
+   segundo clique publica; 5s sem confirmar, desarma. */
+(() => {
+  const btn = document.getElementById('publishBtn');
+  const originalLabel = btn.innerHTML;
+  let armTimer = null;
+  const disarm = () => { clearTimeout(armTimer); btn.dataset.armed = ''; btn.innerHTML = originalLabel; };
+  btn.addEventListener('click', (e) => {
+    if (e.shiftKey){ ghToken(true); showPub('ok', 'Token atualizado neste navegador.'); setTimeout(hidePub, 2500); return; }
+    if (!state.projects.length){ showPub('err', 'Nada pra publicar — carregue os projetos primeiro (Puxar do site).'); return; }
+    if (btn.dataset.armed !== '1'){
+      btn.dataset.armed = '1';
+      btn.innerHTML = 'Confirmar publicação?';
+      showPub('warn', 'Isso sobrescreve o conteúdo publicado no site. Clique de novo em "Confirmar publicação?" pra seguir.');
+      armTimer = setTimeout(() => { disarm(); hidePub(); }, 5000);
+      return;
+    }
+    disarm(); hidePub();
+    publishToSite();
+  });
+})();
 
 const importInput = Object.assign(document.createElement('input'), { type:'file', accept:'application/json' });
 document.getElementById('importBtn').addEventListener('click', () => { importInput.value = ''; importInput.click(); });
