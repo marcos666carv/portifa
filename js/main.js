@@ -629,12 +629,26 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
   }
   const cursorEl = document.getElementById('cursor');
 
+  /* hover das linhas de work vindo do CMS: preenche row._hoverImages (o handler
+     de thumbnail lê isso primeiro). Cases do Behance mantêm o data-hover baked
+     quando o CMS só tem a cover padrão — senão perderiam o crossfade de 2 frames. */
+  function hydrateRowHovers(projects){
+    document.querySelectorAll('.row[data-thumb]').forEach(row => {
+      const p = projects.find(x => String(x.id) === row.dataset.thumb);
+      if (!p) return;
+      const imgs = (p.hoverImages || []).filter(Boolean);
+      const onlyDefaultCover = imgs.length === 1 && p.cover && imgs[0] === p.cover;
+      if (imgs.length && !(row.dataset.hover && onlyDefaultCover)) row._hoverImages = imgs;
+    });
+  }
+
   fetch('data/projects.json', { cache: 'no-cache' })
     .then(r => r.ok ? r.json() : null)
     .then(d => {
       if (!d) return;
       if (Array.isArray(d.montage) && d.montage.length) buildMontage(d.montage);
       if (Array.isArray(d.craft) && d.craft.length) buildCraft(d.craft);
+      if (Array.isArray(d.projects) && d.projects.length) hydrateRowHovers(d.projects);
     })
     .catch(() => {});
 })();

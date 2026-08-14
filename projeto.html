@@ -431,8 +431,10 @@ function render(p){
   document.title = (p.title || 'Case') + ' — Marcos Carvalho';
   // hero image = the project's first full-res image; it then leads the body,
   // so we skip that one block below to avoid showing it twice.
-  const heroImg = p.firstImage || (p.hoverImages && p.hoverImages[0]) || p.hoverImage
-                  || (p.blocks.find(b => b.type === 'image' && b.src) || {}).src;
+  // cases internos não abrem com imagem depois do título (os hoverImages deles
+  // são só pro hover da home); Behance mantém o hero de sempre.
+  const heroImg = p.firstImage || (p.source !== 'internal' && ((p.hoverImages && p.hoverImages[0]) || p.hoverImage
+                  || (p.blocks.find(b => b.type === 'image' && b.src) || {}).src)) || null;
   const frag = document.createDocumentFragment();
 
   const tools = (p.tools && p.tools.length) ? p.tools.join(' · ') : '';
