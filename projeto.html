@@ -45,8 +45,6 @@ img{max-width:100%;display:block}
 .hero .casemeta .behance:hover{border-color:var(--fg)}
 
 /* hero figure */
-.herofig{margin:2vh 0 0}
-.herofig img{width:100%;height:min(72vh,760px);object-fit:cover}
 
 /* generic block flow */
 .blocks{max-width:960px;margin:0 auto;padding:3vh 0 8vh}
@@ -133,8 +131,14 @@ img{max-width:100%;display:block}
 /* reveal without movement for image containers (they fade, never slide/zoom) */
 .chgallery-wrap.rv,.b-row.rv{transform:none}
 
-/* left rail: chapter anchors + active state */
-.chnav{position:fixed;top:50%;left:32px;transform:translateY(-50%);z-index:40;
+/* left rail: chapter anchors + active state — vive DENTRO de .chapters:
+   nasce alinhado ao primeiro capítulo (não flutua sobre o hero) e gruda
+   no topo enquanto os capítulos passam; some junto com a seção */
+.chapters{position:relative}
+/* height:0 + padding-top:11vh (mesmo padding do .chapter) + margin negativa =
+   os links nascem na linha do título do 1º capítulo sem deslocar as seções */
+.chnav{position:sticky;top:0;margin-left:32px;z-index:40;height:0;overflow:visible;
+  padding-top:11vh;margin-bottom:-11vh;
   display:flex;flex-direction:column;gap:16px;max-width:190px}
 .chnav a{display:flex;align-items:center;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
   color:var(--muted);text-decoration:none;transition:color .3s ease}
@@ -429,12 +433,8 @@ function renderBlocksInto(container, blocks){
 /* ---------- render the whole case ---------- */
 function render(p){
   document.title = (p.title || 'Case') + ' — Marcos Carvalho';
-  // hero image = the project's first full-res image; it then leads the body,
-  // so we skip that one block below to avoid showing it twice.
-  // cases internos não abrem com imagem depois do título (os hoverImages deles
-  // são só pro hover da home); Behance mantém o hero de sempre.
-  const heroImg = p.firstImage || (p.source !== 'internal' && ((p.hoverImages && p.hoverImages[0]) || p.hoverImage
-                  || (p.blocks.find(b => b.type === 'image' && b.src) || {}).src)) || null;
+  // nenhum case abre com imagem depois do título (decisão de ago/2026):
+  // o conteúdo visual vive dentro do case; hoverImages são só pro hover da home.
   const frag = document.createDocumentFragment();
 
   const tools = (p.tools && p.tools.length) ? p.tools.join(' · ') : '';
@@ -452,24 +452,11 @@ function render(p){
   </div>`;
   frag.appendChild(hero);
 
-  // hero figure
-  if (heroImg){
-    const hf = document.createElement('figure');
-    hf.className = 'herofig rv';
-    hf.innerHTML = `<img src="${heroImg}" alt="${esc(p.title || '')}" decoding="async">`;
-    frag.appendChild(hf);
-  }
-
-  // overview blocks (project-level content) — drop the one image already used as hero
+  // overview blocks (project-level content) — todas as imagens ficam no corpo
   if (p.blocks && p.blocks.length){
     const ov = document.createElement('section');
     ov.className = 'blocks wrap';
-    let skipped = false;
-    const body = p.blocks.filter(b => {
-      if (!skipped && b.type === 'image' && b.src === heroImg){ skipped = true; return false; }
-      return true;
-    });
-    renderBlocksInto(ov, body);
+    renderBlocksInto(ov, p.blocks);
     frag.appendChild(ov);
   }
 
@@ -540,7 +527,7 @@ function render(p){
       nav.className = 'chnav';
       nav.innerHTML = subs.map((s, i) =>
         `<a href="#ch-${i}" data-ch="${i}"><span class="ct">${esc(s.title || '')}</span></a>`).join('');
-      frag.appendChild(nav);
+      chs.insertBefore(nav, chs.firstChild);   // dentro da seção: alinha ao 1º capítulo e acompanha o scroll
     }
   }
 
