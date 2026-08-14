@@ -572,6 +572,21 @@ function initChNav(){
   const links = [...nav.querySelectorAll('a')];
   const secs = links.map(a => document.getElementById(a.getAttribute('href').slice(1)));
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* alinha o primeiro link exatamente na linha do título do 1º capítulo.
+     usa offsetTop (layout puro) pra não ser enganado pelo translate do reveal */
+  const alignRail = () => {
+    const chs = nav.closest('.chapters');
+    const h2 = secs[0] && secs[0].querySelector('h2');
+    if (!chs || !h2) return;
+    let off = 0, el = h2;
+    while (el && el !== chs){ off += el.offsetTop; el = el.offsetParent; }
+    nav.style.paddingTop = off + 'px';
+    nav.style.marginBottom = -off + 'px';
+  };
+  alignRail();
+  addEventListener('resize', alignRail);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(alignRail);
   const sync = () => {
     const mid = innerHeight * 0.4;
     let active = 0;
