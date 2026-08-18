@@ -636,7 +636,10 @@ function shrinkDataUrl(src, maxDim, quality){
     img.onerror = keep;
     img.onload = () => {
       let w = img.naturalWidth, h = img.naturalHeight;
-      if (Math.max(w, h) > maxDim){ const s = maxDim / Math.max(w, h); w = Math.round(w * s); h = Math.round(h * s); }
+      /* limita a LARGURA em maxDim e a altura em 4×maxDim — usar o lado maior
+         destruía imagens muito compridas (uma tira 1:14 virava 78px de largura) */
+      const s = Math.min(1, maxDim / w, (maxDim * 4) / h);
+      if (s < 1){ w = Math.round(w * s); h = Math.round(h * s); }
       const c = document.createElement('canvas');
       c.width = w; c.height = h;
       c.getContext('2d').drawImage(img, 0, 0, w, h);
@@ -1416,7 +1419,9 @@ async function publishToSite(){
     const label = btn.innerHTML; btn.classList.add('busy'); btn.innerHTML = 'Publicando…';
     showPub('busy', 'Salvando o arquivo local e enviando pro site…');
     try {
-      const r = await fetch('/api/publish', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: json });
+      const r = await fetch('/api/publish', { method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Base-Revision': String(Number(localStorage.getItem(BASE_REV) || 0)) },
+        body: json });
       const pj = await r.json().catch(() => ({}));
       if (!r.ok || !pj.ok) throw new Error(pj.error || ('HTTP ' + r.status + ' — o servidor local é o cms-server.py? (python3 cms-server.py)'));
       try { localStorage.setItem(BASE_REV, String(rev)); } catch(e){}
