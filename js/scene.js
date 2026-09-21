@@ -123,7 +123,10 @@ let loadedCount = 0;
 SYMBOLS.forEach((name, i) => loader.load(`assets/cerol/${name}.svg`, d => {
   addForm(d, i);
   loadedCount++;
-  if (loadedCount === SYMBOLS.length) window.__meshesReady = true;
+  if (loadedCount === SYMBOLS.length) {
+    window.__meshesReady = true;
+    if (window.__alignTunnel) window.__alignTunnel();
+  }
 }));
 /* safety net: never let the loader hang forever if an asset fails */
 setTimeout(() => { window.__meshesReady = true; }, 4000);
@@ -336,11 +339,47 @@ initScrollTrigger();
    and park the mark a few units ahead so it fills the frame exactly when
    its window is on screen. Re-run on resize and after fonts settle. */
 let aligned = false;
+const LEAD = 6.5;   // units the mark sits in front of the camera at its peak
+
 function alignTunnel() {
-  aligned = true; // Disabled to keep standardized GAP distance
+  const inters = [...document.querySelectorAll('.inter')];
+  const max = (document.documentElement.scrollHeight || 0) - innerHeight;
+  if (max <= 0 || !forms.length) return;   // not laid out yet: try again next frame
+
+  inters.forEach((el, i) => {
+    const m = forms[i + 1];                // forms[0] is the hero mark
+    if (!m) return;
+    /* the scroll position at which this window sits in the middle of the
+       screen, as the same 0..1 the camera travel runs on */
+    const centre = el.offsetTop + el.offsetHeight / 2 - innerHeight / 2;
+    const p = Math.min(1, Math.max(0, centre / max));
+    m.position.z = (5 - p * TRAVEL) - LEAD;
+  });
+
+  /* More marks than windows: the home lost an interstice, and a mark with no
+     window to cross drifts past whatever happens to be transparent at that
+     moment — which is how one of them showed up cropped against the wrong
+     section. Park the surplus past the end of the travel. */
+  for (let i = inters.length + 1; i < forms.length; i++) {
+    if (forms[i]) forms[i].position.z = (5 - TRAVEL) - 40;
+  }
+  aligned = true;
 }
-addEventListener('resize', () => { aligned = false; });
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { aligned = false; });
+
+/* Anything that changes the page's height moves the windows with it.
+   Re-aligned here and not only from the render loop: the loop is the wrong
+   place to own this, and a throttled or suspended rAF would otherwise leave
+   the marks wherever they were built. */
+function realign() {
+  aligned = false;
+  if (window.__meshesReady) alignTunnel();
+}
+addEventListener('resize', realign);
+addEventListener('load', realign);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(realign);
+const hookST = () => { if (window.ScrollTrigger) ScrollTrigger.addEventListener('refresh', realign); };
+hookST(); addEventListener('DOMContentLoaded', hookST);
+window.__alignTunnel = realign;
 
 /* ---- mouse parallax ---- */
 let mx = 0, my = 0;
