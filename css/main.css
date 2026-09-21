@@ -209,8 +209,15 @@ section{position:relative}
 /* ---- reveal primitives (JS toggles .is-in) ---- */
 .rv{opacity:0;transform:translateY(32px);transition:opacity .9s cubic-bezier(.16,.84,.36,1), transform .9s cubic-bezier(.16,.84,.36,1)}
 .rv.is-in{opacity:1;transform:translateY(0)}
-.rv-line{overflow:hidden}
-.rv-line > *{display:block;transform:translateY(110%);transition:transform .9s cubic-bezier(.16,.84,.36,1)}
+/* The mask clips at its own edge, and these headings run at line-height .9
+   to .98 — tight enough that p, g and y hang below the line box and lost
+   their tails ("shipped" came out with its descenders sliced off).
+   The padding grows the masked box downward so the tails fall inside it; the
+   negative margin on the mask keeps the element where it was in the flow.
+   The reveal is untouched: the line still starts a full box-height below,
+   and that box is now the taller one. */
+.rv-line{overflow:hidden;margin-bottom:-.18em}
+.rv-line > *{display:block;padding-bottom:.18em;transform:translateY(110%);transition:transform .9s cubic-bezier(.16,.84,.36,1)}
 .rv-line.is-in > *{transform:translateY(0)}
 
 /* label with growing hairline */
