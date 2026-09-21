@@ -761,17 +761,6 @@ section{position:relative}
 .brandart{padding-top:13vh;padding-bottom:4vh}
 .brandart .row .t{font-size:clamp(21px,3.1vw,42px)}
 
-/* ---- about: the studio hand off ---- */
-.abt{min-width:0}
-.abt-link{
-  display:inline-flex;align-items:center;gap:12px;margin-top:clamp(24px,3vh,40px);
-  font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--gray-th);
-  border-bottom:1px solid var(--line-th);padding-bottom:8px;
-  transition:color .3s ease, border-color .3s ease;
-}
-.abt-link:hover{color:var(--fg);border-color:var(--fg)}
-.abt-link .arrow{transition:transform .3s ease}
-.abt-link:hover .arrow{transform:translate(3px,-3px)}
 
 /* ---- contact ---- */
 .contact{padding:14vh 32px 70px;border-top:1px solid var(--line-th)}
