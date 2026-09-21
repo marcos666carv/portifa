@@ -1337,6 +1337,246 @@
       "subprojects": []
     },
     {
+      "id": "250632349",
+      "title": "Lerdo · pink neon",
+      "meta": "Founder · Apparel",
+      "eyebrow": "Apparel design · Lerdo · 2026",
+      "summary": "Apparel and sportswear design for Lerdo, built around a pink neon visual identity.",
+      "secondary": true,
+      "visible": true,
+      "source": "behance",
+      "behanceUrl": "https://www.behance.net/gallery/250632349/lerdo-pink-neon",
+      "tools": [
+        "Adobe Photoshop",
+        "Adobe InDesign",
+        "Adobe Illustrator"
+      ],
+      "cover": "assets/work/250632349/cover.webp",
+      "hoverImages": [
+        "assets/work/250632349/cover.webp"
+      ],
+      "firstImage": "assets/work/250632349/01.webp",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "assets/work/250632349/01.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338,
+          "id": "b1qhc4vn4mtzc"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/02.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338,
+          "id": "bj7gwhrwqc5am"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/03.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338,
+          "id": "b0npzo28z3yb7"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/04.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338,
+          "id": "bhltuco5h76a4"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/05.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 750,
+          "id": "b8tx3illmvmrc"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/06.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 750,
+          "id": "bwzn5lishqzfm"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/07.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338,
+          "id": "bexx556sl8eqy"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/08.webp",
+          "caption": "",
+          "alt": "",
+          "w": 2000,
+          "h": 2500,
+          "id": "bkajse671itu2"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/09.webp",
+          "caption": "",
+          "alt": "",
+          "w": 2000,
+          "h": 2500,
+          "id": "bba7j3covlp7d"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/10.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338,
+          "id": "btdjeymdrf35c"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/11.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338,
+          "id": "be1tyhtjp2ho6"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/12.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338,
+          "id": "bdfuoog3n6fo1"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/13.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338,
+          "id": "blzbrw6mvxmki"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/14.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338,
+          "id": "bwq2lz31xchpa"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/15.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338,
+          "id": "bmq6qkcf6oygb"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/16.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338,
+          "id": "bo5kzdym897xf"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/17.webp",
+          "caption": "",
+          "alt": "",
+          "w": 1999,
+          "h": 2500,
+          "id": "bhjddf5w64ghz"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/18.webp",
+          "caption": "",
+          "alt": "",
+          "w": 1999,
+          "h": 2500,
+          "id": "b6evrdg1gx6x2"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/19.webp",
+          "caption": "",
+          "alt": "",
+          "w": 2000,
+          "h": 2500,
+          "id": "bl0e63ej5lv4r"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/20.webp",
+          "caption": "",
+          "alt": "",
+          "w": 2000,
+          "h": 2500,
+          "id": "bmkbaemmpg5j7"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/21.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338,
+          "id": "b0fo0a6oagvjh"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/22.webp",
+          "caption": "",
+          "alt": "",
+          "w": 600,
+          "h": 338,
+          "id": "b80jqff4atr9u"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/23.webp",
+          "caption": "",
+          "alt": "",
+          "w": 562,
+          "h": 820,
+          "id": "b0ef58j7ty5pb"
+        },
+        {
+          "type": "image",
+          "src": "assets/work/250632349/24.webp",
+          "caption": "",
+          "alt": "",
+          "w": 212,
+          "h": 106,
+          "id": "b76qlehamt3cc"
+        }
+      ],
+      "subprojects": []
+    },
+    {
       "id": "225576979",
       "title": "void · floating spa",
       "meta": "Branding · Visual identity",
@@ -2130,246 +2370,6 @@
           "w": 600,
           "h": 338,
           "id": "bc6udjppd1qpr"
-        }
-      ],
-      "subprojects": []
-    },
-    {
-      "id": "250632349",
-      "title": "Lerdo · pink neon",
-      "meta": "Founder · Apparel",
-      "eyebrow": "Apparel design · Lerdo · 2026",
-      "summary": "Apparel and sportswear design for Lerdo, built around a pink neon visual identity.",
-      "secondary": true,
-      "visible": true,
-      "source": "behance",
-      "behanceUrl": "https://www.behance.net/gallery/250632349/lerdo-pink-neon",
-      "tools": [
-        "Adobe Photoshop",
-        "Adobe InDesign",
-        "Adobe Illustrator"
-      ],
-      "cover": "assets/work/250632349/cover.webp",
-      "hoverImages": [
-        "assets/work/250632349/cover.webp"
-      ],
-      "firstImage": "assets/work/250632349/01.webp",
-      "blocks": [
-        {
-          "type": "image",
-          "src": "assets/work/250632349/01.webp",
-          "caption": "",
-          "alt": "",
-          "w": 600,
-          "h": 338,
-          "id": "b1qhc4vn4mtzc"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/02.webp",
-          "caption": "",
-          "alt": "",
-          "w": 600,
-          "h": 338,
-          "id": "bj7gwhrwqc5am"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/03.webp",
-          "caption": "",
-          "alt": "",
-          "w": 600,
-          "h": 338,
-          "id": "b0npzo28z3yb7"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/04.webp",
-          "caption": "",
-          "alt": "",
-          "w": 600,
-          "h": 338,
-          "id": "bhltuco5h76a4"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/05.webp",
-          "caption": "",
-          "alt": "",
-          "w": 600,
-          "h": 750,
-          "id": "b8tx3illmvmrc"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/06.webp",
-          "caption": "",
-          "alt": "",
-          "w": 600,
-          "h": 750,
-          "id": "bwzn5lishqzfm"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/07.webp",
-          "caption": "",
-          "alt": "",
-          "w": 600,
-          "h": 338,
-          "id": "bexx556sl8eqy"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/08.webp",
-          "caption": "",
-          "alt": "",
-          "w": 2000,
-          "h": 2500,
-          "id": "bkajse671itu2"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/09.webp",
-          "caption": "",
-          "alt": "",
-          "w": 2000,
-          "h": 2500,
-          "id": "bba7j3covlp7d"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/10.webp",
-          "caption": "",
-          "alt": "",
-          "w": 600,
-          "h": 338,
-          "id": "btdjeymdrf35c"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/11.webp",
-          "caption": "",
-          "alt": "",
-          "w": 600,
-          "h": 338,
-          "id": "be1tyhtjp2ho6"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/12.webp",
-          "caption": "",
-          "alt": "",
-          "w": 600,
-          "h": 338,
-          "id": "bdfuoog3n6fo1"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/13.webp",
-          "caption": "",
-          "alt": "",
-          "w": 600,
-          "h": 338,
-          "id": "blzbrw6mvxmki"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/14.webp",
-          "caption": "",
-          "alt": "",
-          "w": 600,
-          "h": 338,
-          "id": "bwq2lz31xchpa"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/15.webp",
-          "caption": "",
-          "alt": "",
-          "w": 600,
-          "h": 338,
-          "id": "bmq6qkcf6oygb"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/16.webp",
-          "caption": "",
-          "alt": "",
-          "w": 600,
-          "h": 338,
-          "id": "bo5kzdym897xf"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/17.webp",
-          "caption": "",
-          "alt": "",
-          "w": 1999,
-          "h": 2500,
-          "id": "bhjddf5w64ghz"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/18.webp",
-          "caption": "",
-          "alt": "",
-          "w": 1999,
-          "h": 2500,
-          "id": "b6evrdg1gx6x2"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/19.webp",
-          "caption": "",
-          "alt": "",
-          "w": 2000,
-          "h": 2500,
-          "id": "bl0e63ej5lv4r"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/20.webp",
-          "caption": "",
-          "alt": "",
-          "w": 2000,
-          "h": 2500,
-          "id": "bmkbaemmpg5j7"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/21.webp",
-          "caption": "",
-          "alt": "",
-          "w": 600,
-          "h": 338,
-          "id": "b0fo0a6oagvjh"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/22.webp",
-          "caption": "",
-          "alt": "",
-          "w": 600,
-          "h": 338,
-          "id": "b80jqff4atr9u"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/23.webp",
-          "caption": "",
-          "alt": "",
-          "w": 562,
-          "h": 820,
-          "id": "b0ef58j7ty5pb"
-        },
-        {
-          "type": "image",
-          "src": "assets/work/250632349/24.webp",
-          "caption": "",
-          "alt": "",
-          "w": 212,
-          "h": 106,
-          "id": "b76qlehamt3cc"
         }
       ],
       "subprojects": []
@@ -3171,6 +3171,14 @@
     }
   ],
   "craft": [
+    {
+      "id": "phc-capa",
+      "src": "assets/work/craft/produtos-para-humanos.mp4",
+      "poster": "assets/work/craft/produtos-para-humanos.webp",
+      "title": "Produtos para humanos — capa",
+      "caseId": "",
+      "big": true
+    },
     {
       "id": "c1",
       "src": "assets/work/225576979/01.webp",

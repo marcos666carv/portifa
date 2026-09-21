@@ -516,13 +516,35 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
   const tiles = () => [...wall.querySelectorAll('.tile')];
   let idx = -1;
 
+  /* a tile can hold a looping video now, so the stage swaps element type */
+  const stage = img.parentElement;
+  let vid = null;
+  const isVid = (u) => /\.(mp4|webm)(\?|$)/i.test(u || '');
+
   const show = (i) => {
     const ts = tiles(); if (!ts.length) return;
     idx = (i + ts.length) % ts.length;
     const t = ts[idx];
-    img.src = t.dataset.full || t.querySelector('img')?.src || '';
-    img.alt = t.dataset.title || '';
+    const src = t.dataset.full || t.querySelector('img,video')?.src || '';
     cap.textContent = t.dataset.title || '';
+    if (isVid(src)) {
+      img.style.display = 'none'; img.src = '';
+      if (!vid) {
+        vid = document.createElement('video');
+        vid.id = 'lb-vid';
+        vid.autoplay = vid.muted = vid.loop = vid.playsInline = true;
+        vid.controls = false;
+        stage.insertBefore(vid, cap);
+      }
+      vid.style.display = '';
+      vid.src = src;
+      vid.play().catch(() => {});
+    } else {
+      if (vid) { vid.pause(); vid.removeAttribute('src'); vid.load(); vid.style.display = 'none'; }
+      img.style.display = '';
+      img.src = src;
+      img.alt = t.dataset.title || '';
+    }
   };
   const open = (i) => {
     show(i);
@@ -537,6 +559,7 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
     if (window.__lenis) window.__lenis.start();
     document.documentElement.style.overflow = '';
     img.src = '';
+    if (vid) { vid.pause(); vid.removeAttribute('src'); vid.load(); }
   };
 
   wall.addEventListener('click', (e) => {
@@ -758,6 +781,17 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
   });
 
   addEventListener('load', () => ScrollTrigger.refresh());
+
+  /* a looping tile should not decode while the strip is off screen */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      wall.querySelectorAll('video').forEach(v => {
+        if (e.isIntersecting) v.play().catch(() => {});
+        else v.pause();
+      });
+    });
+  }, { rootMargin: '200px' });
+  io.observe(section);
 })();
 
 /* ============ HOME CONTENT FROM THE CMS (montage + craft wall) ============
@@ -780,9 +814,18 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
   function buildCraft(tiles) {
     const wall = document.getElementById('wall');
     if (!wall || !tiles.length) return;
-    wall.innerHTML = tiles.map(t =>
-      `<button class="tile" data-full="${esc(t.src)}" data-title="${esc(t.title)}" data-id="${esc(t.caseId)}">` +
-      `<img src="${esc(t.src)}" loading="lazy" decoding="async" alt="${esc(t.title)}"></button>`).join('');
+    /* t.big → the tile claims a 2x2 block of the strip (see .tile.big).
+       A .mp4/.webm src plays as a muted loop instead of an <img>: the source
+       artwork was an 8MB GIF, and h264 carries the same 13s at 486KB. */
+    const isVid = (u) => /\.(mp4|webm)(\?|$)/i.test(u || '');
+    wall.innerHTML = tiles.map(t => {
+      const media = isVid(t.src)
+        ? `<video src="${esc(t.src)}"${t.poster ? ` poster="${esc(t.poster)}"` : ''}` +
+          ` autoplay muted loop playsinline preload="metadata"></video>`
+        : `<img src="${esc(t.src)}" loading="lazy" decoding="async" alt="${esc(t.title)}">`;
+      return `<button class="tile${t.big ? ' big' : ''}" data-full="${esc(t.src)}"` +
+             ` data-title="${esc(t.title)}" data-id="${esc(t.caseId)}">${media}</button>`;
+    }).join('');
     // re-seat the fresh tiles on the sphere + cursor treatment
     if (window.__initCraftSphere) window.__initCraftSphere();
     gsap.utils.toArray('#wall .tile').forEach(el => {

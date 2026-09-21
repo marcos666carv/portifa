@@ -477,7 +477,7 @@ a{color:var(--accent)}
       <button class="btn" id="craftUpload"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5-5 5 5"/><path d="M12 15V3"/></svg> Enviar imagens</button>
       <button class="btn" id="craftFromCases"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 15l5-5 4 4 3-3 6 6"/></svg> Escolher dos cases</button>
     </div>
-    <p class="cfghint">Arraste para reordenar — a faixa lê nesta ordem, em duas fileiras que correm para o lado. Clicar em um tile na página abre a imagem grande (lightbox).</p>
+    <p class="cfghint">Arraste para reordenar — a faixa lê nesta ordem, em duas fileiras que correm para o lado. Marque <b>grande</b> para a peça ocupar o espaço de quatro. Clicar em um tile na página abre a imagem grande (lightbox).</p>
   </div>
   <div class="dfoot">
     <span class="saved"><span class="dot"></span> Salvo automaticamente</span>
@@ -1562,9 +1562,15 @@ function renderGal(name){
     t.innerHTML = `<img src="${it.src}" alt="">` +
       `<span class="ord">${i + 1}</span>` +
       `<button class="rm" title="Remover">✕</button>` +
-      (name === 'montage' ? `<label class="sym"><input type="checkbox" ${it.sym ? 'checked' : ''}> logo</label>` : '');
+      (name === 'montage'
+        ? `<label class="sym"><input type="checkbox" ${it.sym ? 'checked' : ''}> logo</label>`
+        : `<label class="sym"><input type="checkbox" ${it.big ? 'checked' : ''}> grande</label>`);
     t.querySelector('.rm').addEventListener('click', e => { e.stopPropagation(); state[name] = arr.filter(x => x.id !== it.id); save(); renderGal(name); });
-    if (name === 'montage') t.querySelector('.sym input').addEventListener('change', e => { it.sym = e.target.checked; save(); });
+    t.querySelector('.sym input').addEventListener('change', e => {
+      if (name === 'montage') it.sym = e.target.checked;
+      else it.big = e.target.checked;   // ocupa 2x2 na faixa
+      save();
+    });
     t.addEventListener('dragstart', () => { galDragId = it.id; t.classList.add('dragging'); });
     t.addEventListener('dragend', () => { galDragId = null; host.querySelectorAll('.stile').forEach(x => x.classList.remove('dragging','over')); });
     t.addEventListener('dragover', e => { e.preventDefault(); t.classList.add('over'); });
