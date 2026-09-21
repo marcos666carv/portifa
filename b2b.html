@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Marcos Carvalho — B2B Product Design</title>
+<meta name="description" content="Fourteen years designing B2B products: martech, fintech, sales SaaS and enterprise data. Design, growth and AI in one seat. Solvefy, Remessa Online, Leads2b, Nissan, dLocal, Huge." />
+<meta property="og:title" content="Marcos Carvalho — B2B Product Design" />
+<meta property="og:description" content="Fourteen years designing B2B products: martech, fintech, sales SaaS and enterprise data. Design, growth and AI in one seat." />
+<meta property="og:url" content="https://marcoscarvalho.work/b2b" />
+<link rel="canonical" href="https://marcoscarvalho.work/b2b" />
+<link rel="icon" href="assets/cerol/void.svg" />
+<link rel="preload" as="font" href="fonts/Pacaembu-Regular.otf" type="font/otf" crossorigin>
+<link rel="preload" as="font" href="fonts/Pacaembu-Bold.otf" type="font/otf" crossorigin>
+<style>
+/* ============================================================
+   B2B one page — linguagem D1 Manchete / V1 Redação
+   ============================================================ */
+@font-face{font-family:"Pacaembu";src:url("fonts/Pacaembu-Regular.otf") format("opentype");font-weight:400;font-display:swap}
+@font-face{font-family:"Pacaembu";src:url("fonts/Pacaembu-Medium.otf") format("opentype");font-weight:500;font-display:swap}
+@font-face{font-family:"Pacaembu";src:url("fonts/Pacaembu-Bold.otf") format("opentype");font-weight:700;font-display:swap}
+@font-face{font-family:"Pacaembu";src:url("fonts/Pacaembu-Black.otf") format("opentype");font-weight:900;font-display:swap}
+@font-face{font-family:"Jakob";src:url("fonts/dTJakob_Th.otf") format("opentype");font-weight:200;font-display:swap}
+@font-face{font-family:"Jakob";src:url("fonts/dTJakob_Rg.otf") format("opentype");font-weight:400;font-display:swap}
+
+:root{
+  --blk:#050505;
+  --wht:#f5f4f0;
+  --gray:#6a6a66;
+  --red:#E0232F;
+  --rule:rgba(5,5,5,.12);
+  --rule-strong:rgba(5,5,5,.25);
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--wht);
+  color:var(--blk);
+  font-family:"Pacaembu","Jakob",sans-serif;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+::selection{background:var(--blk);color:var(--wht)}
+a:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+
+/* ---------- Visible 12-column grid (fixed, spans viewport) ---------- */
+.rules{position:fixed;inset:0;z-index:0;pointer-events:none}
+.rule{
+  position:absolute;top:0;bottom:0;width:1px;background:var(--rule);
+  left:calc(var(--i) * 100% / 12);
+  transform:scaleY(0);transform-origin:top;
+  transition:transform 700ms var(--ease);
+  transition-delay:calc(var(--i) * 60ms);
+}
+.rule:last-child{left:auto;right:0}
+html.in .rule{transform:scaleY(1)}
+.rule i{
+  position:absolute;top:10px;left:6px;
+  font-family:"Jakob",sans-serif;font-style:normal;font-size:9px;letter-spacing:.08em;
+  color:var(--red);opacity:0;
+  transition:opacity 500ms var(--ease);
+  transition-delay:calc(900ms + var(--i) * 40ms);
+}
+html.in .rule i{opacity:1}
+
+/* réguas somem uma a uma quando a seção 02 chega (e voltam ao subir de volta ao hero) */
+html.rules-off .rule{
+  transform:scaleY(0);transform-origin:bottom;
+  transition-delay:calc(var(--i) * 60ms);
+}
+
+/* ---------- Page layer ---------- */
+.page{position:relative;z-index:1}
+
+/* ---------- Topbar ---------- */
+.topbar{
+  display:flex;justify-content:space-between;align-items:baseline;gap:18px;
+  margin-left:calc(100% / 12);margin-right:calc(100% / 12);
+  padding-left:14px;padding-right:14px;
+  opacity:0;transition:opacity 600ms var(--ease) 300ms;
+}
+html.in .topbar{opacity:1}
+.topbar .brand{font-family:"Pacaembu",sans-serif;font-weight:700;font-size:13px;letter-spacing:.01em;white-space:nowrap}
+.topbar .brand span{
+  font-family:"Jakob",sans-serif;font-weight:400;font-size:10px;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--gray);margin-left:12px;
+}
+.topbar .links{display:flex;gap:24px;font-family:"Jakob",sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.topbar .links a{border-bottom:1px solid transparent}
+.topbar .links a:hover{border-bottom-color:var(--blk)}
+
+/* ---------- Hero ---------- */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  padding:34px 0 10vh;
+}
+.eyebrow{
+  margin-left:calc(100% / 12);padding-left:14px;margin-top:8vh;
+  font-family:"Jakob",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--blk);display:flex;gap:14px;align-items:baseline;
+  opacity:0;transition:opacity 600ms var(--ease) 400ms;
+}
+html.in .eyebrow{opacity:1}
+.eyebrow .mk{color:var(--red);letter-spacing:0}
+
+h1{
+  margin-top:7vh;
+  font-size:clamp(44px,10.5vw,168px);
+  line-height:.88;
+}
+h1 .ln{
+  display:block;white-space:nowrap;
+  margin-left:calc(var(--c) * 100% / 12);
+  clip-path:inset(0 -3% 100% -3%);
+  transition:clip-path 650ms var(--ease);
+  transition-delay:calc(700ms + var(--l) * 90ms);
+}
+html.in h1 .ln{clip-path:inset(0 -3% -10% -3%)}
+h1 .blk9{font-family:"Pacaembu",sans-serif;font-weight:900;letter-spacing:-.03em}
+h1 .thin{font-family:"Jakob",sans-serif;font-weight:200;letter-spacing:-.015em}
+
+.hero-low{
+  margin-top:9vh;display:flex;align-items:flex-start;
+  opacity:0;transform:translateY(12px);
+  transition:opacity 700ms var(--ease) 1400ms,transform 700ms var(--ease) 1400ms;
+}
+html.in .hero-low{opacity:1;transform:none}
+.who{
+  margin-left:calc(100% / 12);padding-left:14px;width:calc(4 * 100% / 12);
+  font-family:"Jakob",sans-serif;font-size:12px;line-height:1.7;color:var(--gray);
+  margin-top:64px;
+}
+.who .mk{color:var(--red);margin-right:10px;font-style:normal}
+.who b{font-family:"Pacaembu",sans-serif;font-weight:500;color:var(--blk);font-size:13px;letter-spacing:.01em}
+.sub{
+  margin-left:calc(2 * 100% / 12);padding-left:14px;width:calc(4 * 100% / 12);
+  font-family:"Jakob",sans-serif;font-size:15px;line-height:1.65;color:var(--blk);
+}
+
+/* ---------- Section label (shared) ---------- */
+.sec-label{
+  margin-left:calc(100% / 12);padding-left:14px;
+  font-family:"Jakob",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  display:flex;gap:14px;align-items:baseline;margin-bottom:9vh;
+}
+.sec-label .mk{color:var(--red);letter-spacing:0}
+
+/* ---------- Clients ---------- */
+.clients{padding:16vh 0 14vh}
+.cols{display:grid;grid-template-columns:repeat(12,1fr)}
+.colA{grid-column:2 / 7}
+.colB{grid-column:8 / 12;margin-top:19vh}
+.client{border-top:1px solid var(--rule-strong);padding:16px 0 30px;position:relative}
+.client .idx{
+  position:absolute;top:16px;right:0;
+  font-family:"Jakob",sans-serif;font-size:9px;letter-spacing:.08em;color:var(--red);
+}
+.client .cat{
+  font-family:"Jakob",sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gray);display:block;margin-bottom:10px;
+}
+.client .name{
+  font-family:"Pacaembu",sans-serif;font-weight:700;
+  font-size:clamp(21px,2.2vw,34px);line-height:1.05;letter-spacing:-.01em;
+}
+.note{
+  grid-column:4 / 9;margin-top:14vh;
+  font-family:"Jakob",sans-serif;font-size:12px;line-height:1.7;color:var(--gray);
+  border-top:1px solid var(--rule-strong);padding-top:16px;
+}
+.note a{border-bottom:1px solid var(--rule-strong)}
+
+/* ---------- Trajectory ---------- */
+.traj{padding:6vh 0 16vh}
+.tgrid{display:grid;grid-template-columns:repeat(12,1fr)}
+.titem{
+  grid-column:2 / 12;display:grid;grid-template-columns:repeat(10,1fr);
+  border-top:1px solid var(--rule-strong);padding:18px 0 34px;position:relative;
+}
+.titem .idx{
+  position:absolute;top:18px;right:0;
+  font-family:"Jakob",sans-serif;font-size:9px;letter-spacing:.08em;color:var(--red);
+}
+.titem .yr{
+  grid-column:1 / 2;
+  font-family:"Jakob",sans-serif;font-weight:400;font-size:12px;letter-spacing:.06em;
+  color:var(--blk);padding-top:5px;white-space:nowrap;
+}
+.titem .role{grid-column:2 / 6;padding-right:34px}
+.titem .role .nm{
+  display:block;
+  font-family:"Pacaembu",sans-serif;font-weight:700;
+  font-size:clamp(18px,1.7vw,26px);line-height:1.15;letter-spacing:-.01em;
+}
+.titem .role .rl{
+  display:block;margin-top:8px;
+  font-family:"Jakob",sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);
+}
+.titem .why{
+  grid-column:6 / 10;
+  font-family:"Jakob",sans-serif;font-size:13.5px;line-height:1.65;color:var(--gray);
+  padding-top:5px;
+}
+
+/* ---------- Strengths ---------- */
+.strengths{padding:6vh 0 16vh}
+.sgrid{display:grid;grid-template-columns:repeat(12,1fr)}
+.str{
+  grid-column:2 / 12;display:grid;grid-template-columns:repeat(10,1fr);
+  gap:26px 0;border-top:1px solid var(--rule-strong);
+  padding:26px 0 8vh;position:relative;
+}
+.str .no{
+  position:absolute;top:26px;right:0;
+  font-family:"Jakob",sans-serif;font-weight:200;font-size:26px;line-height:1;color:var(--red);
+}
+.str .lead{grid-column:1 / 5;padding-right:44px}
+.str h3{
+  font-family:"Pacaembu",sans-serif;font-weight:700;
+  font-size:clamp(24px,2.8vw,40px);letter-spacing:-.015em;line-height:1.05;margin-bottom:16px;
+}
+.str .claim{font-family:"Jakob",sans-serif;font-size:13.5px;line-height:1.65;color:var(--gray);max-width:44ch}
+.str .sys{grid-column:5 / 10}
+.str .syslbl{
+  font-family:"Jakob",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gray);margin-bottom:18px;
+}
+.step{
+  display:grid;grid-template-columns:26px 1fr;gap:14px;align-items:baseline;
+  padding:12px 0;border-top:1px solid var(--rule);
+}
+.step:first-of-type{border-top:0}
+.step .k{font-family:"Jakob",sans-serif;font-size:10px;letter-spacing:.08em;color:var(--red)}
+.step .t{font-family:"Jakob",sans-serif;font-size:13.5px;line-height:1.6;color:var(--gray)}
+.step .t b{font-family:"Pacaembu",sans-serif;font-weight:500;color:var(--blk)}
+.proof{margin-top:28px}
+.pf{
+  display:flex;gap:14px;align-items:baseline;
+  border-top:1px solid var(--rule-strong);padding:10px 0;
+}
+.pf .mk{font-family:"Jakob",sans-serif;font-style:normal;font-size:10px;color:var(--red)}
+.pf b{font-family:"Pacaembu",sans-serif;font-weight:700;font-size:15px;letter-spacing:-.01em}
+.pf .lb{font-family:"Jakob",sans-serif;font-size:12px;color:var(--gray)}
+
+/* ---------- Inside every project ---------- */
+.how{padding:6vh 0 16vh}
+.how h2{
+  margin-left:calc(100% / 12);padding-left:14px;width:calc(8 * 100% / 12);
+  font-family:"Pacaembu",sans-serif;font-weight:700;
+  font-size:clamp(26px,3.6vw,52px);letter-spacing:-.015em;line-height:1.05;
+  margin-bottom:9vh;
+}
+.howgrid{
+  margin-left:calc(1 * 100% / 12);width:calc(10 * 100% / 12);
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--rule-strong);
+  border-top:1px solid var(--rule-strong);border-bottom:1px solid var(--rule-strong);
+}
+.howcell{background:var(--wht);padding:clamp(22px,2.8vw,36px) clamp(18px,2.2vw,28px)}
+.howcell h3{font-family:"Pacaembu",sans-serif;font-weight:700;font-size:19px;margin:18px 0 12px}
+.howcell p{font-family:"Jakob",sans-serif;font-size:13.5px;line-height:1.65;color:var(--gray)}
+.howcell p+p{margin-top:10px}
+.howcell .fig{width:52px;height:52px;color:var(--blk)}
+.howcell .fig svg{width:100%;height:100%}
+
+/* ---------- The B2B work ---------- */
+.work{padding:6vh 0 16vh}
+.case{
+  margin-left:calc(1 * 100% / 12);width:calc(10 * 100% / 12);
+  border-top:1px solid var(--rule-strong);
+  padding:26px 0 10vh;position:relative;
+}
+.case .idx{
+  position:absolute;top:26px;right:0;
+  font-family:"Jakob",sans-serif;font-size:9px;letter-spacing:.08em;color:var(--red);
+}
+.case .head{display:flex;flex-wrap:wrap;gap:14px 28px;align-items:baseline}
+.case h3{
+  font-family:"Pacaembu",sans-serif;font-weight:900;
+  font-size:clamp(30px,4.6vw,64px);letter-spacing:-.03em;line-height:1;
+}
+.case .tag{
+  font-family:"Jakob",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);
+}
+.case .sum{
+  max-width:66ch;font-family:"Jakob",sans-serif;font-size:15px;line-height:1.65;color:var(--gray);
+  margin:18px 0 0;
+}
+.case .open{
+  display:inline-flex;align-items:center;gap:8px;margin-top:34px;
+  font-family:"Jakob",sans-serif;font-size:12.5px;letter-spacing:.08em;
+  border-bottom:1px solid var(--blk);padding-bottom:3px;
+}
+.chapgrid{
+  margin-top:6vh;display:grid;grid-template-columns:repeat(2,1fr);
+  gap:1px;background:var(--rule-strong);
+  border-top:1px solid var(--rule-strong);border-bottom:1px solid var(--rule-strong);
+}
+.chapgrid.cols3{grid-template-columns:repeat(3,1fr)}
+.chap{
+  background:var(--wht);
+  padding:clamp(18px,2.4vw,28px) clamp(16px,2vw,24px);
+  display:flex;flex-direction:column;gap:12px;
+}
+.chap .thumb{
+  aspect-ratio:16/9;overflow:hidden;border:1px solid var(--blk);margin:0 0 6px;position:relative;
+}
+.chap .thumb img{
+  width:100%;height:100%;object-fit:cover;
+}
+.chap .st{font-family:"Jakob",sans-serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gray)}
+.chap h4{font-family:"Pacaembu",sans-serif;font-weight:700;font-size:18px;letter-spacing:-.01em}
+.chap p{font-family:"Jakob",sans-serif;font-size:13.5px;line-height:1.6;color:var(--gray);flex:1}
+.stats{margin-top:4px}
+.stat{
+  display:flex;gap:12px;align-items:baseline;
+  border-top:1px solid var(--rule);padding:8px 0 7px;
+}
+.stat .mk{font-family:"Jakob",sans-serif;font-style:normal;font-size:10px;color:var(--red)}
+.stat b{font-family:"Pacaembu",sans-serif;font-weight:700;font-size:13px;letter-spacing:-.01em;white-space:nowrap}
+.stat .lb{font-family:"Jakob",sans-serif;font-size:12px;color:var(--gray)}
+.media{margin-top:6vh;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.media img{
+  width:100%;height:100%;object-fit:cover;aspect-ratio:16/9;
+  border:1px solid var(--blk);
+}
+
+/* ---------- Contact ---------- */
+.foot{padding:12vh 0 10vh}
+.foot-inner{margin-left:calc(2 * 100% / 12);padding-left:14px;width:calc(8 * 100% / 12)}
+.cta{
+  font-family:"Pacaembu",sans-serif;font-weight:900;
+  font-size:clamp(30px,4.4vw,64px);line-height:1.04;letter-spacing:-.02em;
+}
+.cta a{
+  font-family:"Jakob",sans-serif;font-weight:400;letter-spacing:-.015em;
+  border-bottom:3px solid var(--blk);
+}
+.meta{
+  margin-left:calc(1 * 100% / 12);width:calc(10 * 100% / 12);
+  padding-left:14px;margin-top:10vh;
+  display:flex;flex-wrap:wrap;gap:12px 34px;justify-content:space-between;
+  font-family:"Jakob",sans-serif;font-size:11px;letter-spacing:.1em;color:var(--gray);
+  border-top:1px solid var(--rule-strong);padding-top:16px;
+}
+.meta a{border-bottom:1px solid var(--rule-strong)}
+
+/* ---------- on-scroll reveal (per section) ---------- */
+.rv{
+  opacity:0;transform:translateY(20px);
+  transition:opacity 600ms var(--ease),transform 600ms var(--ease);
+  transition-delay:var(--d,0ms);
+}
+[data-sec].on .rv{opacity:1;transform:none}
+
+/* ---------- Mobile ---------- */
+@media (max-width:767px){
+  .rule:nth-child(even){display:none}
+  .rule i{display:none}
+  .topbar{margin-left:14px;margin-right:14px;padding-left:0;padding-right:0;flex-wrap:wrap}
+  .topbar .links{gap:16px}
+  h1{font-size:13vw;margin-top:7vh}
+  h1 .ln{margin-left:calc(var(--c) * 100% / 30)}
+  .eyebrow{margin-left:14px;padding-left:0;flex-wrap:wrap;margin-top:9vh}
+  .hero-low{flex-direction:column;margin-top:7vh;gap:44px}
+  .sub{margin-left:14px;padding-left:0;width:auto;max-width:38ch}
+  .who{margin-left:14px;padding-left:0;width:auto;margin-top:0;order:2}
+  .sec-label{margin-left:14px;padding-left:0;margin-bottom:7vh}
+  .cols{display:block;padding:0 14px}
+  .colB{margin-top:0}
+  .colB .client:first-child{border-top:none}
+  .note{margin-top:10vh}
+  .tgrid{display:block;padding:0 14px}
+  .titem{display:block;padding:16px 0 30px}
+  .titem .role{padding-right:0;margin:6px 0 10px}
+  .titem .yr{padding-top:0}
+  .titem .why{padding-top:0}
+  .sgrid{display:block;padding:0 14px}
+  .str{display:block;padding:20px 0 8vh}
+  .str .no{top:20px}
+  .str .lead{padding-right:0;margin-bottom:34px}
+  .str .claim{max-width:none}
+  .how h2{margin-left:14px;padding-left:0;width:auto}
+  .howgrid{margin-left:14px;margin-right:14px;width:auto;grid-template-columns:1fr}
+  .howcell{padding-left:0;padding-right:0}
+  .case{margin-left:14px;margin-right:14px;width:auto}
+  .chapgrid,.chapgrid.cols3{grid-template-columns:1fr}
+  .chap{padding-left:0;padding-right:0}
+  .media{grid-template-columns:1fr;gap:14px}
+  .foot-inner{margin-left:14px;padding-left:0;width:auto}
+  .meta{margin-left:14px;margin-right:14px;width:auto;padding-left:0}
+}
+@media (min-width:768px) and (max-width:1079px){
+  .chapgrid.cols3{grid-template-columns:repeat(2,1fr)}
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rule,.rule i,h1 .ln,.eyebrow,.topbar,.hero-low,.rv{
+    transition:none !important;
+    transform:none !important;
+    opacity:1 !important;
+    clip-path:none !important;
+  }
+  html.rules-off .rule{transform:scaleY(0) !important}
+}
+</style>
+</head>
+<body>
+
+<!-- visible 12-col grid -->
+<div class="rules" aria-hidden="true">
+  <span class="rule" style="--i:0"></span>
+  <span class="rule" style="--i:1"></span>
+  <span class="rule" style="--i:2"></span>
+  <span class="rule" style="--i:3"></span>
+  <span class="rule" style="--i:4"></span>
+  <span class="rule" style="--i:5"></span>
+  <span class="rule" style="--i:6"></span>
+  <span class="rule" style="--i:7"></span>
+  <span class="rule" style="--i:8"></span>
+  <span class="rule" style="--i:9"></span>
+  <span class="rule" style="--i:10"></span>
+  <span class="rule" style="--i:11"></span>
+  <span class="rule" style="--i:12"></span>
+</div>
+
+<div class="page">
+
+  <!-- HERO · seção 01 -->
+  <header class="hero" data-sec="01">
+    <nav class="topbar">
+      <div class="brand">Marcos Carvalho<span>B2B</span></div>
+      <div class="links">
+        <a href="index.html">Full portfolio ↗</a>
+        <a href="#work">Work</a>
+        <a href="mailto:marcos@cerol.co">Contact</a>
+      </div>
+    </nav>
+
+    <p class="eyebrow"><span class="mk">01</span>Product Design Lead · AI native · Brazil · Remote worldwide</p>
+
+    <h1>
+      <span class="ln blk9" style="--c:1;--l:0">B2B is not</span>
+      <span class="ln thin" style="--c:0;--l:1">a niche I visit.</span>
+      <span class="ln blk9" style="--c:4;--l:2">It is where</span>
+      <span class="ln thin" style="--c:3;--l:3">I have worked</span>
+      <span class="ln blk9" style="--c:2;--l:4">for 14 years.</span>
+    </h1>
+
+    <div class="hero-low">
+      <p class="who"><i class="mk">↳</i><b>Solvefy · Remessa Online · Leads2b · Nissan · dLocal · Huge · Caixa</b></p>
+      <p class="sub">Martech serving 20k+ companies. Cross border payments fintech. Sales engagement SaaS. Enterprise data tools for automakers and banks. I design the products businesses run on — and I have led design, growth and AI through all of it.</p>
+    </div>
+  </header>
+
+  <!-- COMPANIES & PROJECTS · seção 02 -->
+  <section class="clients" id="clients" data-sec="02">
+    <p class="sec-label rv" style="--d:0ms"><span class="mk">02</span>B2B companies &amp; projects</p>
+
+    <div class="cols">
+      <div class="colA">
+        <div class="client rv" style="--d:50ms"><span class="idx">01</span><span class="cat">Martech ecosystem · 20k+ companies</span><span class="name">Solvefy</span></div>
+        <div class="client rv" style="--d:100ms"><span class="idx">02</span><span class="cat">Cross border payments fintech</span><span class="name">Remessa Online</span></div>
+        <div class="client rv" style="--d:150ms"><span class="idx">03</span><span class="cat">Sales engagement SaaS</span><span class="name">Leads2b</span></div>
+        <div class="client rv" style="--d:200ms"><span class="idx">04</span><span class="cat">Customer care panel · Enterprise data</span><span class="name">Nissan</span></div>
+        <div class="client rv" style="--d:250ms"><span class="idx">05</span><span class="cat">Global payments · CONNECT event brand</span><span class="name">dLocal</span></div>
+        <div class="client rv" style="--d:300ms"><span class="idx">06</span><span class="cat">Worldwide agency intranet</span><span class="name">Huge · NY</span></div>
+      </div>
+      <div class="colB">
+        <div class="client rv" style="--d:350ms"><span class="idx">07</span><span class="cat">Car trade experience</span><span class="name">Renault</span></div>
+        <div class="client rv" style="--d:400ms"><span class="idx">08</span><span class="cat">Banking · via Mirum JWT</span><span class="name">Caixa</span></div>
+        <div class="client rv" style="--d:450ms"><span class="idx">09</span><span class="cat">Franchisee communication</span><span class="name">Óticas Carol</span></div>
+        <div class="client rv" style="--d:500ms"><span class="idx">10</span><span class="cat">Retail · Internal tools</span><span class="name">Riachuelo</span></div>
+        <div class="client rv" style="--d:550ms"><span class="idx">11</span><span class="cat">Global campaigns · via Mirum JWT</span><span class="name">Johnson &amp; Johnson</span></div>
+        <div class="client rv" style="--d:600ms"><span class="idx">12</span><span class="cat">Banking · via Mirum JWT</span><span class="name">HSBC</span></div>
+      </div>
+      <p class="note rv" style="--d:650ms">Every logo above is a business selling to businesses, or an internal tool a business runs on. The consumer facing craft lives in the <a href="index.html">full portfolio</a> — this page is the B2B spine.</p>
+    </div>
+  </section>
+
+  <!-- TRAJECTORY · seção 03 -->
+  <section class="traj" id="trajectory" data-sec="03">
+    <p class="sec-label rv" style="--d:0ms"><span class="mk">03</span>Why the trajectory backs it</p>
+
+    <div class="tgrid">
+      <div class="titem rv" style="--d:50ms">
+        <span class="idx">01</span>
+        <span class="yr">2024 – 2026</span>
+        <span class="role"><span class="nm">Solvefy</span><span class="rl">Staff Product Designer · Product Design Lead</span></span>
+        <span class="why">B2B communication and martech ecosystem — CPaaS, Ads, Cloud and Agents (AI orchestration) — serving more than 20k companies, 57 billion messages delivered. I owned design and growth at once: led a team of 7, coordinated the rebrand of a 20 year old company into a technology ecosystem, and reorganized a four product portfolio under one design system. NPS climbed.</span>
+      </div>
+      <div class="titem rv" style="--d:100ms">
+        <span class="idx">02</span>
+        <span class="yr">2022</span>
+        <span class="role"><span class="nm">Remessa Online</span><span class="rl">Product Design Lead · Growth</span></span>
+        <span class="why">One of Brazil's biggest cross border payments fintechs. A team of five and a mandate past the logged in product: channels, acquisition and the website. Took eight conversion simulators down to three — and aligned design and marketing on one language for a business audience.</span>
+      </div>
+      <div class="titem rv" style="--d:150ms">
+        <span class="idx">03</span>
+        <span class="yr">2021 – 2022</span>
+        <span class="role"><span class="nm">Leads2b</span><span class="rl">Product Design Lead</span></span>
+        <span class="why">B2B sales engagement SaaS. Led a team of 5 through a heavy redesign roadmap built around the product's real object — the cadence. Churn stabilized, and the structural division I made still guides the product today, four years on.</span>
+      </div>
+      <div class="titem rv" style="--d:200ms">
+        <span class="idx">04</span>
+        <span class="yr">2019 – 2021</span>
+        <span class="role"><span class="nm">Marketdata</span><span class="rl">Senior Product Designer</span></span>
+        <span class="why">Hired to get the digital product practice off the ground. Designed data heavy enterprise products: Nissan's Customer Care Panel, Renault's car trade experience, Óticas Carol's franchisee channel, Riachuelo, plus internal tools like an employee intranet.</span>
+      </div>
+      <div class="titem rv" style="--d:250ms">
+        <span class="idx">05</span>
+        <span class="yr">2018 – 2025</span>
+        <span class="role"><span class="nm">CEROL</span><span class="rl">Founder &amp; Design Director</span></span>
+        <span class="why">My own design company. B2B engagements end to end — dLocal's CONNECT, a worldwide event brand for a global payments company, and VOID, taken from business research to brand, organization system and CRM.</span>
+      </div>
+      <div class="titem rv" style="--d:300ms">
+        <span class="idx">06</span>
+        <span class="yr">2015</span>
+        <span class="role"><span class="nm">Huge · Brooklyn</span><span class="rl">UX Designer · UX School</span></span>
+        <span class="why">A summer at one of the world's biggest design and technology agencies. Designed a smarter worldwide intranet plus a chatbot to reach it from outside the office, and refined work for clients like Fast Company.</span>
+      </div>
+      <div class="titem rv" style="--d:350ms">
+        <span class="idx">07</span>
+        <span class="yr">2011 – 2013</span>
+        <span class="role"><span class="nm">Mirum Agency · JWT</span><span class="rl">UI Designer</span></span>
+        <span class="why">Where the enterprise muscle started: UI and campaigns for Coca-Cola, Johnson &amp; Johnson global, HSBC, Caixa, Nextel and Magazine Luiza.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- THREE STRENGTHS · seção 04 -->
+  <section class="strengths" id="strengths" data-sec="04">
+    <p class="sec-label rv" style="--d:0ms"><span class="mk">04</span>Three strengths — and how each one unfolds through a project</p>
+
+    <div class="sgrid">
+
+      <div class="str rv" style="--d:50ms">
+        <span class="no">01</span>
+        <div class="lead">
+          <h3>I find the product's real object.</h3>
+          <p class="claim">Under every B2B interface there is one thing the business actually runs on. At Leads2b it was the cadence, not the screens. At Remessa Online it was the one question every visitor arrives with: how much do I actually receive?</p>
+        </div>
+        <div class="sys">
+          <div class="syslbl">How it unfolds in a project</div>
+          <div class="step"><span class="k">1</span><span class="t"><b>Research first.</b> Interviews, churn data and support tickets until the real object surfaces — not the assumed one.</span></div>
+          <div class="step"><span class="k">2</span><span class="t"><b>Rebuild the architecture around it.</b> Information architecture, flows and naming reorganize around the object, not around org charts.</span></div>
+          <div class="step"><span class="k">3</span><span class="t"><b>Name the constraints out loud.</b> Remessa went eight simulators to three, not one — the limit was technical, and we said so.</span></div>
+          <div class="step"><span class="k">4</span><span class="t"><b>The structure outlives the designer.</b> Anyone can open Leads2b today and see the division still shipping, four years on.</span></div>
+          <div class="proof">
+            <div class="pf"><i class="mk">↳</i><b>8 → 3</b><span class="lb">simulators consolidated</span></div>
+            <div class="pf"><i class="mk">↳</i><b>4 years</b><span class="lb">the structure still guides Leads2b</span></div>
+            <div class="pf"><i class="mk">↳</i><b>Churn</b><span class="lb">stabilized while it settled in</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="str rv" style="--d:100ms">
+        <span class="no">02</span>
+        <div class="lead">
+          <h3>Design and growth in one seat.</h3>
+          <p class="claim">I do not hand the business problem to someone else after the mockups. At Solvefy and Remessa Online I ran design and growth together, so every design decision had a revenue question attached.</p>
+        </div>
+        <div class="sys">
+          <div class="syslbl">How it unfolds in a project</div>
+          <div class="step"><span class="k">1</span><span class="t"><b>Ground decisions in pain, not opinion.</b> I brought churn research into how Solvefy designed and shipped.</span></div>
+          <div class="step"><span class="k">2</span><span class="t"><b>Design where the money moves.</b> Portfolio reorganization, navigation and campaign dispatch — the flows customers pay through.</span></div>
+          <div class="step"><span class="k">3</span><span class="t"><b>Arm the commercial team.</b> Sales playbooks and two live events gave sales a clear path to sell the new ecosystem.</span></div>
+          <div class="step"><span class="k">4</span><span class="t"><b>Measure in business terms.</b> Clients retained, revenue kept, NPS moved — not screens delivered.</span></div>
+          <div class="proof">
+            <div class="pf"><i class="mk">↳</i><b>18%</b><span class="lb">of revenue kept</span></div>
+            <div class="pf"><i class="mk">↳</i><b>3</b><span class="lb">large clients brought back</span></div>
+            <div class="pf"><i class="mk">↳</i><b>NPS ↑</b><span class="lb">after the portfolio reorganization</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="str rv" style="--d:150ms">
+        <span class="no">03</span>
+        <div class="lead">
+          <h3>AI in the process and in the product.</h3>
+          <p class="claim">Claude Code, MCPs and custom agents in my daily workflow since July 2025. Not a slide about AI — shipped workflows the whole team ran on, and a product I designed and built end to end myself.</p>
+        </div>
+        <div class="sys">
+          <div class="syslbl">How it unfolds in a project</div>
+          <div class="step"><span class="k">1</span><span class="t"><b>Start with the team's bottleneck.</b> AI driven design workflows shortened delivery cycles for the whole design team at Solvefy.</span></div>
+          <div class="step"><span class="k">2</span><span class="t"><b>Then build product with it.</b> An internal leads engine, designed and built end to end — workspaces per ICP, in the sales team's hands.</span></div>
+          <div class="step"><span class="k">3</span><span class="t"><b>Tie it to an OKR, not a demo.</b> The engine had a monthly target of 200 + 100 qualified leads. Its first day of use cleared the month's target.</span></div>
+          <div class="step"><span class="k">4</span><span class="t"><b>Ship alongside the company's AI bet.</b> All of it while Solvefy launched Agents, its AI orchestration product.</span></div>
+          <div class="proof">
+            <div class="pf"><i class="mk">↳</i><b>Day 1</b><span class="lb">monthly lead target beaten</span></div>
+            <div class="pf"><i class="mk">↳</i><b>200 + 100</b><span class="lb">leads per month, the bar it cleared</span></div>
+            <div class="pf"><i class="mk">↳</i><b>Since 2025</b><span class="lb">Claude Code, MCPs, agents daily</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- INSIDE EVERY PROJECT · seção 05 -->
+  <section class="how" id="how" data-sec="05">
+    <p class="sec-label rv" style="--d:0ms"><span class="mk">05</span>Inside every project</p>
+    <h2 class="rv" style="--d:50ms">Craft is the delivery, not the decoration. Teams are the multiplier. AI is the medium.</h2>
+    <div class="howgrid rv" style="--d:100ms">
+      <div class="howcell">
+        <div class="fig" aria-hidden="true"><svg viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <path d="M12 70C22 34 34 24 44 40s10 26 20 20 14-24 20-38"/>
+          <circle cx="28" cy="40" r="3.4"/><circle cx="52" cy="56" r="3.4"/><circle cx="74" cy="35" r="3.4"/>
+        </svg></div>
+        <h3>Craft</h3>
+        <p>High fidelity is the floor, not the ceiling. The dLocal CONNECT event brand shipped worldwide; Solvefy's design system pulled four products and every touchpoint under one language; Nissan's care panel turned a dozen scattered views into one tool support actually uses.</p>
+        <p>The same hands ship product, brands and album covers — range keeps the product thinking sharp.</p>
+      </div>
+      <div class="howcell">
+        <div class="fig" aria-hidden="true"><svg viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="1.6">
+          <circle cx="35" cy="34" r="10"/><circle cx="63" cy="34" r="10"/>
+          <path d="M18 74c0-10 8-17 17-17s17 7 17 17M46 74c0-10 8-17 17-17s17 7 17 17" stroke-linecap="round"/>
+        </svg></div>
+        <h3>Team</h3>
+        <p>Product Design Lead three times over. A team of 7 at Solvefy — design, motion and content in one cross functional squad — and a team of 5 at Leads2b where content was treated as product, because a cadence is made of words.</p>
+        <p>I seeded a Winning by Design culture and knowledge sharing rituals, so design and growth pulled toward the same business outcomes. I hire, mentor and leave a culture behind.</p>
+      </div>
+      <div class="howcell">
+        <div class="fig" aria-hidden="true"><svg viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <path d="M48 48 48 18M48 48 76 64M48 48 20 64"/>
+          <circle cx="48" cy="48" r="7.5"/><circle cx="48" cy="18" r="4.5"/><circle cx="76" cy="64" r="4.5"/><circle cx="20" cy="64" r="4.5"/>
+        </svg></div>
+        <h3>AI</h3>
+        <p>I build with AI, not around it. Design workflows on Claude Code, MCPs and custom agents shortened delivery cycles for the whole team — and the internal leads engine I designed and built end to end beat its monthly target on day one.</p>
+        <p>Shipped while the company launched Agents, its AI orchestration product: AI in the process and in the product.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE B2B WORK · seção 06 -->
+  <section class="work" id="work" data-sec="06">
+    <p class="sec-label rv" style="--d:0ms"><span class="mk">06</span>The B2B work — each case, chapter by chapter</p>
+
+    <!-- SOLVEFY -->
+    <article class="case rv" style="--d:50ms">
+      <span class="idx">01</span>
+      <div class="head">
+        <h3>Solvefy</h3>
+        <span class="tag">Featured · Staff Product Designer / PD Lead · 2024–2026</span>
+      </div>
+      <p class="sum">A communications company two decades in the making, reborn as a technology ecosystem serving 20k+ companies. I owned design and growth through the change.</p>
+      <div class="chapgrid cols3">
+        <div class="chap"><div class="thumb"><img src="assets/work/solvefy/solv-1-03.webp" alt="Solvefy rebrand key visual — Closer. Quicker. Better." loading="lazy" decoding="async"></div><span class="st">Chapter 01</span><h4>The rebrand</h4><p>Research first: 5 disconnected brands with inconsistent messaging turned into one integrated business ecosystem — brand, communication tracks and two live events.</p><div class="stats"><div class="stat"><i class="mk">↳</i><b>5 → 1</b><span class="lb">brands</span></div><div class="stat"><i class="mk">↳</i><b>2</b><span class="lb">live events</span></div></div></div>
+        <div class="chap"><div class="thumb"><img src="assets/work/solvefy/solv-1-07.webp" alt="Solvefy brand on screen with campaign metrics" loading="lazy" decoding="async"></div><span class="st">Chapter 02</span><h4>The product</h4><p>Four products — Disparo Pro, Brasilfone, EasyCDP, Solvefy Cloud — reorganized under one portfolio and one design system. Navigation and campaign dispatch got noticeably smoother.</p><div class="stats"><div class="stat"><i class="mk">↳</i><b>4</b><span class="lb">products, one direction</span></div><div class="stat"><i class="mk">↳</i><b>NPS ↑</b></div></div></div>
+        <div class="chap"><div class="thumb"><img src="assets/work/solvefy/solv-5-04.webp" alt="Leads platform onboarding — funnel, ICP and AI structure" loading="lazy" decoding="async" style="object-position:50% 0"></div><span class="st">Chapter 03</span><h4>The AI</h4><p>AI driven design workflows shipped while the company launched Agents, its AI orchestration product. Design that ships with AI, not around it.</p><div class="stats"><div class="stat"><i class="mk">↳</i><b>AI native</b><span class="lb">process</span></div></div></div>
+        <div class="chap"><div class="thumb"><img src="assets/work/solvefy/solv-5-02.webp" alt="Leads engine overview — 14,768 leads, scoring and funnel" loading="lazy" decoding="async" style="object-position:50% 0"></div><span class="st">Chapter 04</span><h4>The leads engine</h4><p>A clear OKR: find and qualify leads fast. I designed and built the platform end to end — workspaces per ICP, in the sales team's hands.</p><div class="stats"><div class="stat"><i class="mk">↳</i><b>Day 1</b><span class="lb">target beaten</span></div><div class="stat"><i class="mk">↳</i><b>200 + 100</b><span class="lb">monthly bar</span></div></div></div>
+        <div class="chap"><div class="thumb"><img src="assets/work/solvefy/solv-1-06.webp" alt="Solvefy metric cards — open and click rates" loading="lazy" decoding="async"></div><span class="st">Chapter 05</span><h4>The research</h4><p>Research brought into how we designed and shipped: decisions grounded in real pain and churn data, not opinion. Three large clients came back.</p><div class="stats"><div class="stat"><i class="mk">↳</i><b>18%</b><span class="lb">of revenue kept</span></div><div class="stat"><i class="mk">↳</i><b>3</b><span class="lb">clients retained</span></div></div></div>
+        <div class="chap"><div class="thumb"><img src="assets/work/solvefy/solv-1-04.webp" alt="Solvefy posters — people working together" loading="lazy" decoding="async"></div><span class="st">Chapter 06</span><h4>The team</h4><p>A team of 7 — design and growth pulling toward the same business outcomes, on a Winning by Design operating culture.</p><div class="stats"><div class="stat"><i class="mk">↳</i><b>7</b><span class="lb">people, one team</span></div></div></div>
+      </div>
+      <a class="open" href="projeto.html?id=solvefy">Open the full case ↗</a>
+    </article>
+
+    <!-- REMESSA -->
+    <article class="case rv" style="--d:50ms">
+      <span class="idx">02</span>
+      <div class="head">
+        <h3>Remessa Online</h3>
+        <span class="tag">Product Design Lead · Growth · 2022</span>
+      </div>
+      <p class="sum">A team of five and a mandate past the logged in product — channels, acquisition and the website, run shoulder to shoulder with marketing.</p>
+      <div class="chapgrid">
+        <div class="chap"><div class="thumb"><img src="assets/work/remessa/rem-1-01.webp" alt="Remessa Online home — headline and conversion simulator" loading="lazy" decoding="async" style="object-position:50% 0"></div><span class="st">Chapter 01</span><h4>The question</h4><p>Everyone landing on a cross border payments site asks one thing: how much do I actually receive? We were answering it eight times.</p><div class="stats"><div class="stat"><i class="mk">↳</i><b>1</b><span class="lb">question</span></div><div class="stat"><i class="mk">↳</i><b>8</b><span class="lb">simulators answering it</span></div></div></div>
+        <div class="chap"><div class="thumb"><img src="assets/work/remessa/rem-1-01.webp" alt="Remessa Online — the many entry points answering the same question" loading="lazy" decoding="async" style="object-position:50% 100%"></div><span class="st">Chapter 02</span><h4>The diagnosis</h4><p>Eight simulators on eight different stacks. Not an inconsistency problem — a paradigm problem. You do not solve it by redesigning eight screens.</p><div class="stats"><div class="stat"><i class="mk">↳</i><b>Paradigm</b><span class="lb">, not polish</span></div></div></div>
+        <div class="chap"><div class="thumb"><img src="assets/work/remessa/rem-1-01.webp" alt="Remessa Online — the consolidated simulator" loading="lazy" decoding="async" style="transform:scale(2.1);transform-origin:86% 22%"></div><span class="st">Chapter 03</span><h4>The decision</h4><p>Eight down to three — not one, and the reason was stated plainly: technology, not design. The stacks underneath could not collapse further.</p><div class="stats"><div class="stat"><i class="mk">↳</i><b>8 → 3</b><span class="lb">simulators</span></div><div class="stat"><i class="mk">↳</i><b>Not 1</b><span class="lb">— the limit was named</span></div></div></div>
+        <div class="chap"><div class="thumb"><img src="assets/work/remessa/rem-1-01.webp" alt="Remessa Online — one language speaking to the audience" loading="lazy" decoding="async" style="transform:scale(1.9);transform-origin:6% 24%"></div><span class="st">Chapter 04</span><h4>What lasted</h4><p>The lasting part was not the count. It was design and marketing agreeing how we speak to this audience and what each product must show to convert.</p><div class="stats"><div class="stat"><i class="mk">↳</i><b>1</b><span class="lb">language across teams</span></div></div></div>
+      </div>
+      <a class="open" href="projeto.html?id=remessa">Open the full case ↗</a>
+    </article>
+
+    <!-- LEADS2B -->
+    <article class="case rv" style="--d:50ms">
+      <span class="idx">03</span>
+      <div class="head">
+        <h3>Leads2b</h3>
+        <span class="tag">Product Design Lead · Sales engagement SaaS · 2021–2022</span>
+      </div>
+      <p class="sum">The structure that outlasted me: sales engagement software redesigned around its real object — the cadence.</p>
+      <div class="chapgrid">
+        <div class="chap"><div class="thumb"><img src="assets/work/leads2b/l2b-1-01.webp" alt="Leads2b home — favorite tools and planned activities" loading="lazy" decoding="async" style="object-position:50% 0"></div><span class="st">Chapter 01</span><h4>The right object</h4><p>The core object is not a screen — it is the cadence: the sequence of touches a salesperson builds, runs and reworks. Home, flow and cadence redesigned around it.</p><div class="stats"><div class="stat"><i class="mk">↳</i><b>Cadence</b><span class="lb">as the real object</span></div></div></div>
+        <div class="chap"><div class="thumb"><img src="assets/work/leads2b/l2b-1-01.webp" alt="Leads2b — closing forecast by temperature" loading="lazy" decoding="async" style="object-position:50% 40%"></div><span class="st">Chapter 02</span><h4>The division</h4><p>The structural division still guides the product today — verifiable from outside. No number to take on faith: the proof is the shipping product.</p><div class="stats"><div class="stat"><i class="mk">↳</i><b>4 years</b><span class="lb">and holding</span></div></div></div>
+        <div class="chap"><div class="thumb"><img src="assets/work/leads2b/l2b-1-02.webp" alt="Leads2b — search and navigation across the product" loading="lazy" decoding="async" style="object-position:50% 0"></div><span class="st">Chapter 03</span><h4>The team</h4><p>Five people, mixed content and design. In a tool salespeople speak through, the words are product, not decoration.</p><div class="stats"><div class="stat"><i class="mk">↳</i><b>5</b><span class="lb">content &amp; design, one team</span></div></div></div>
+        <div class="chap"><div class="thumb"><img src="assets/work/leads2b/l2b-1-01.webp" alt="Leads2b — goal tracking" loading="lazy" decoding="async" style="object-position:50% 66%"></div><span class="st">Chapter 04</span><h4>What followed</h4><p>Churn stabilized while this settled in — and the redesigns helped the investment rounds and the push into the market.</p><div class="stats"><div class="stat"><i class="mk">↳</i><b>Churn</b><span class="lb">stabilized</span></div></div></div>
+      </div>
+      <a class="open" href="projeto.html?id=leads2b">Open the full case ↗</a>
+    </article>
+
+    <!-- NISSAN -->
+    <article class="case rv" style="--d:50ms">
+      <span class="idx">04</span>
+      <div class="head">
+        <h3>Customer Care Panel · Nissan</h3>
+        <span class="tag">Enterprise data · Marketdata · 2022</span>
+      </div>
+      <p class="sum">Customer history and data that lived in a dozen scattered views, pulled into one panel support could actually use. Product design and UI/UX for an internal enterprise tool.</p>
+      <div class="media">
+        <img src="assets/work/136071709/cover.webp" alt="Nissan Customer Care Panel — cover" loading="lazy" decoding="async">
+        <img src="assets/work/136071709/01.webp" alt="Nissan Customer Care Panel — interface" loading="lazy" decoding="async">
+      </div>
+      <a class="open" href="projeto.html?id=136071709">Open the full case ↗</a>
+    </article>
+
+    <!-- HUGE -->
+    <article class="case rv" style="--d:50ms">
+      <span class="idx">05</span>
+      <div class="head">
+        <h3>Huge · Worldwide Intranet</h3>
+        <span class="tag">UX · Global agency · Brooklyn · 2015</span>
+      </div>
+      <p class="sum">A worldwide intranet connecting the agency's global teams — plus a chatbot to reach its content from outside the office. Internal tooling for one of the biggest design companies in the world.</p>
+      <div class="media">
+        <img src="assets/work/135764741/cover.webp" alt="Huge Worldwide Intranet — cover" loading="lazy" decoding="async">
+        <img src="assets/work/135764741/01.webp" alt="Huge Worldwide Intranet — screens" loading="lazy" decoding="async">
+      </div>
+      <a class="open" href="projeto.html?id=135764741">Open the full case ↗</a>
+    </article>
+
+    <!-- DLOCAL -->
+    <article class="case rv" style="--d:50ms">
+      <span class="idx">06</span>
+      <div class="head">
+        <h3>dLocal · CONNECT</h3>
+        <span class="tag">Global payments · Event brand · 2024</span>
+      </div>
+      <p class="sum">A worldwide event by dLocal gathering leading companies and executives — the brand system a global payments company presents itself with. B2B craft at its most visible.</p>
+      <div class="media">
+        <img src="assets/work/209221077/cover.webp" alt="dLocal CONNECT — cover" loading="lazy" decoding="async">
+        <img src="assets/work/209221077/01.webp" alt="dLocal CONNECT — brand system" loading="lazy" decoding="async">
+      </div>
+      <a class="open" href="projeto.html?id=209221077">Open the full case ↗</a>
+    </article>
+
+  </section>
+
+  <!-- CONTACT · seção 07 -->
+  <footer class="foot" data-sec="07">
+    <div class="foot-inner">
+      <p class="cta rv" style="--d:0ms">Building B2B?<br>Let's talk. <a href="mailto:marcos@cerol.co">marcos@cerol.co</a></p>
+    </div>
+    <div class="meta rv" style="--d:80ms">
+      <span>©. Marcos Carvalho — 2026</span>
+      <span>Product Design Lead · AI native · B2B</span>
+      <span><a href="https://www.linkedin.com/in/marcospc">LinkedIn</a> · <a href="https://www.behance.net/marcos_____carvalho">Behance</a> · <a href="index.html">Full portfolio</a></span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* entrance: rules draw, then h1 lines clip-reveal (delays live in CSS) */
+  if(reduced){
+    document.documentElement.classList.add("in");
+  }else{
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        document.documentElement.classList.add("in");
+      });
+    });
+  }
+
+  var secs = [].slice.call(document.querySelectorAll("[data-sec]"));
+
+  /* per-section on-scroll reveals */
+  if(reduced || !("IntersectionObserver" in window)){
+    secs.forEach(function(s){s.classList.add("on")});
+  }else{
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          e.target.classList.add("on");
+          io.unobserve(e.target);
+        }
+      });
+    },{threshold:.08});
+    secs.forEach(function(s){io.observe(s)});
+  }
+
+  /* réguas do grid: somem uma a uma quando a seção 02 chega; voltam ao subir para o hero */
+  var hero = document.querySelector('[data-sec="01"]');
+  if(hero && "IntersectionObserver" in window){
+    var ro = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        document.documentElement.classList.toggle("rules-off", !e.isIntersecting);
+      });
+    },{rootMargin:"0px",threshold:0});
+    ro.observe(hero);
+  }
+})();
+</script>
+</body>
+</html>

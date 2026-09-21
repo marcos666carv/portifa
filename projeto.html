@@ -223,7 +223,9 @@ img{max-width:100%;display:block}
 
 <nav class="nav">
   <a href="index.html" data-back>Marcos Carvalho</a>
-  <a href="index.html#work" class="back" data-back><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg> Work</a>
+  <!-- destination is set in init(): the work split into two catalog pages,
+       and a case belongs to whichever one lists it -->
+  <a href="product.html" class="back" id="backlink" data-back><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg> <span>Work</span></a>
 </nav>
 
 <main id="app"></main>
@@ -310,6 +312,13 @@ function youtubeId(url){
     </div>`;
     document.title = 'Case não encontrado — Marcos Carvalho';
   } else {
+    /* back goes to the catalog this case actually lives in */
+    const back = document.getElementById('backlink');
+    if (back){
+      const craft = !!project.secondary;
+      back.href = craft ? 'craft.html' : 'product.html';
+      back.querySelector('span').textContent = craft ? 'Craft' : 'Product';
+    }
     render(project);
   }
 })();
@@ -553,9 +562,11 @@ function render(p){
   // footer
   const foot = document.createElement('footer');
   foot.className = 'foot';
+  const backHref = p.secondary ? 'craft.html' : 'product.html';
+  const backName = p.secondary ? 'craft' : 'product work';
   foot.innerHTML = `<div class="wrap">
-    <a class="home" href="index.html#work" data-back>Back to work <span class="arrow">→</span></a>
-    <div class="meta">Marcos Carvalho — Experience specialist · AI native Designer</div>
+    <a class="home" href="${backHref}" data-back>Back to ${backName} <span class="arrow">→</span></a>
+    <div class="meta">Marcos Carvalho — Product Design Lead · AI native</div>
   </div>`;
   frag.appendChild(foot);
 

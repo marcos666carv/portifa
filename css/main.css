@@ -50,6 +50,17 @@ body{
   cursor:none;
 }
 a{color:inherit;text-decoration:none}
+/* The page draws its own cursor, so the UA's pointer hand doubles it: a ring
+   and a hand aiming at the same word. body already said cursor:none, but the
+   UA stylesheet re-arms every interactive element, so they have to give it up
+   by name. Only where a real pointer exists — the (hover:none) rule further
+   down hands all of it back on touch, as does the pre-fonts loading state. */
+@media (hover:hover) and (pointer:fine){
+  a,button,summary,label,[role="button"],input,textarea,select{cursor:none}
+  /* the lightbox sits at z-index 400 and the drawn cursor at 100, so inside
+     it the system pointer is the only one the viewer can see */
+  #lightbox,#lightbox button{cursor:pointer}
+}
 b{font-weight:600}
 /* kill the 300ms tap delay and double-tap zoom on interactive elements */
 a,button,.row,.tile{touch-action:manipulation}
@@ -61,7 +72,9 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--fg);outline-offset:
 img{max-width:100%;display:block}
 
 /* ---- loading state: hide content until fonts+loader ready ---- */
-html:not(.fonts-ready) body{cursor:auto}
+html:not(.fonts-ready) body,
+html:not(.fonts-ready) a,
+html:not(.fonts-ready) button{cursor:auto}
 
 /* ---- fixed 3D canvas, lives behind everything, whole page ---- */
 #gl{position:fixed;inset:0;z-index:0;display:block;background:var(--bg);
@@ -125,6 +138,26 @@ html:not(.fonts-ready) body{cursor:auto}
 .nav.nav-hidden{transform:translateY(-120%)}
 .nav .brand{font-weight:700;letter-spacing:.02em}
 .nav .right{font-size:11px;letter-spacing:.08em;color:var(--gray)}
+
+/* ---- nav links (the site went from one page to three) ----
+   The hairline under a link is the same gesture the labels and the proofs
+   use, so navigation reads as part of the system rather than bolted on. */
+.nav .navlinks{display:flex;align-items:center;gap:clamp(15px,2.3vw,32px)}
+.nav .navlinks a{position:relative;padding-bottom:4px}
+.nav .navlinks a::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:currentColor;transform:scaleX(0);transform-origin:left;
+  transition:transform .45s cubic-bezier(.16,.84,.36,1);
+}
+.nav .navlinks a:hover::after,
+.nav .navlinks a[aria-current="page"]::after{transform:scaleX(1)}
+.nav .navlinks a[aria-current="page"]{font-weight:700}
+@media (max-width:520px){
+  .nav .navlinks{gap:14px;font-size:11px}
+  /* two words plus three links do not fit a phone bar, so the wordmark
+     drops to the first name and keeps the links reachable */
+  .nav .brand > span:nth-child(2){display:none}
+}
 
 /* ---- nav wordmark reveal (home only) ----
    The home nav carries nothing but the wordmark, and the hero already spells
@@ -260,92 +293,173 @@ section{position:relative}
   /* self-contained inverted panel, independent of the page theme */
   --bg:#050505; --fg:#f5f4f0; --dim:#3a3a38;
   --line-th:rgba(245,244,240,.16); --gray-th:#8d8d88;
-  width:fit-content;max-width:min(1180px,100%);margin:0;   /* left aligned, shrink to content */
+  width:fit-content;max-width:min(1180px,100%);margin-inline:auto;   /* centred, shrink to content */
   background:var(--bg);color:var(--fg);
   padding:clamp(28px,4vw,60px);
 }
-/* three abreast: these are peers, not a ranked list — side by side they get
-   compared instead of read top to bottom */
+/* Not three abreast. Three equal columns rank these three things equal, and
+   they aren't: Product design is the titular position the hero and the
+   manifesto commit to, so it leads the grid at full width and the other two
+   share the row under it. The pair still reads as peers — compared, not
+   ranked. */
 .caps{
   border-top:1px solid var(--line-th);
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
 }
 .cap{
+  display:flex;flex-direction:column;
   border-bottom:1px solid var(--line-th);
   padding:38px clamp(18px,2.2vw,34px) 44px;
 }
-.cap:first-child{padding-left:0}
-.cap:last-child{padding-right:0}
-.cap + .cap{border-left:1px solid var(--line-th)}
-.cap h3{font-weight:600;font-size:clamp(20px,2vw,29px);line-height:1.05;margin-bottom:16px}
-.cap p{font-weight:200;font-size:clamp(14px,1.05vw,16px);line-height:1.55;color:color-mix(in srgb, var(--fg) 68%, var(--bg));max-width:42ch}
-.cap .proof{margin-top:14px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray)}
+/* the lead owns the full row and a different internal topology: the claim on
+   the left, the evidence dropped to the baseline on the right */
+.cap-lead{
+  grid-column:1 / -1;padding-left:0;padding-right:0;
+  display:grid;align-items:start;
+  grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);
+  column-gap:clamp(32px,5vw,96px);
+  padding-top:clamp(38px,4vw,54px);padding-bottom:clamp(44px,4.6vw,60px);
+}
+.cap-lead .fig,.cap-lead h3,.cap-lead .lead{grid-column:1}
+/* the evidence starts level with the title, not at the block's floor: bottom
+   alignment left a 190px void beside the figure that read as unfinished */
+.cap-lead .say{grid-column:2;grid-row:2 / span 2;align-self:start}
+/* :first-of-type/:last-of-type match on element type, not class — with the
+   lead as the first div they silently skipped the pair's left column and
+   knocked its text 32px out of line with the heading above it */
+.cap-lead + .cap-pair{padding-left:0}
+.cap-pair + .cap-pair{padding-right:0;border-left:1px solid var(--line-th)}
+
+/* Four steps, not two. The old jump was a 26px heading straight into a 14px
+   wall; the .lead line is the rung that was missing, and it carries the one
+   sentence worth reading if nothing else gets read.
+   Both it and the heading are short enough to orphan a word on their own —
+   "I build with AI, not around / it." is the failure balance prevents. */
+.cap h3,.cap .lead{text-wrap:balance}
+.cap h3{font-weight:600;font-size:clamp(21px,2.2vw,31px);line-height:1.04;letter-spacing:-.02em;margin-bottom:13px}
+.cap-lead h3{font-weight:700;font-size:clamp(40px,4.6vw,68px);line-height:.96;letter-spacing:-.032em;margin-bottom:18px}
+.cap .lead{
+  font-weight:500;font-size:clamp(16.5px,1.42vw,19.5px);line-height:1.34;
+  letter-spacing:-.01em;color:var(--fg);max-width:24ch;margin:0;
+}
+.cap-lead .lead{font-size:clamp(21px,2vw,28px);line-height:1.24;letter-spacing:-.018em;max-width:19ch}
+/* .say is the column's lower half: body, then the proof pinned to the floor so
+   the two pair columns land their proof lines on one shared baseline no matter
+   how their paragraphs wrap */
+.cap .say{display:flex;flex-direction:column;flex:1;margin-top:19px}
+.cap-lead .say{margin-top:0}
+.cap p:not(.lead):not(.proof){
+  font-weight:400;font-size:clamp(14.5px,1.08vw,15.5px);line-height:1.62;
+  color:color-mix(in srgb, var(--fg) 66%, var(--bg));max-width:42ch;
+}
+.cap-lead p:not(.lead):not(.proof){font-size:clamp(15px,1.16vw,17px);line-height:1.6;max-width:46ch}
+
+/* the proof line is the point of the column. It gets the site's own signature
+   gesture — the hairline that grows in — instead of being a gray caption. */
+.cap .proof{
+  margin-top:auto;padding-top:26px;
+  /* flex-start, not center: when the line wraps at narrow widths a centred
+     rule drifts to the middle of the block instead of leading the first line */
+  display:flex;align-items:flex-start;gap:13px;
+  font-weight:500;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+  line-height:1.5;color:var(--fg);max-width:none;
+}
+.cap .proof::before{
+  content:"";flex:0 0 26px;height:1px;background:currentColor;
+  margin-top:.72em;   /* optical centre of the first line, at any wrap count */
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .85s cubic-bezier(.16,.84,.36,1) .45s;
+}
+.cap.is-in .proof::before{transform:scaleX(1)}
+.cap-lead .proof{font-size:13px;padding-top:30px}
+.cap-lead .proof::before{flex-basis:44px}
+/* the pair arrives just after the lead has landed */
+.cap-pair{transition-delay:.12s}
+.cap-pair + .cap-pair{transition-delay:.22s}
+.cap-pair .proof::before{transition-delay:.62s}
+.cap-pair + .cap-pair .proof::before{transition-delay:.72s}
 
 /* ---- what-I-do figures ----
    One monoline drawing per column, each one doing the thing its column
    describes rather than decorating it: work dispatched to agents, four
    products reorganised, a stroke laid down that seeds more.
-   Every figure's RESTING state is the finished state, so switching the
-   animations off (reduced motion) leaves a complete drawing, not a blank. */
+
+   Each plays ONCE as its column arrives, then rests on the finished drawing.
+   Three perpetual loops on three unrelated periods (2.7s / 8s / 5.6s) only
+   competed with each other and with the reading. Declaring the animations on
+   .is-in rather than pausing them means the static rules below ARE the resting
+   state — so the pre-reveal frame and reduced motion both show a complete
+   drawing instead of the blank or half-erased stroke they used to. */
 .cap .fig{
   width:clamp(86px,8.6vw,126px);margin-bottom:30px;color:var(--fg);
 }
+.cap-lead .fig{width:clamp(112px,10.6vw,154px);margin-bottom:clamp(30px,3vw,38px)}
 .cap .fig svg{width:100%;height:auto;display:block}
-/* idle until the column is actually on screen */
-.cap .fig svg *{animation-play-state:paused}
-.cap.is-in .fig svg *{animation-play-state:running}
 
 /* AI native — the hub dispatches a packet down each wire and the agent
-   answering it lights up. That is the orchestration, drawn. */
+   answering it lights up. That is the orchestration, drawn. Two passes: one
+   to state it, one to confirm it, then the network sits there powered. */
 .fig .wire{opacity:.3}
-.fig .pulse path{stroke-dasharray:9 240;stroke-dashoffset:-260;animation:figRun 2.7s cubic-bezier(.45,0,.55,1) infinite}
-.fig .pulse path:nth-child(2){animation-delay:.2s}
-.fig .pulse path:nth-child(3){animation-delay:.4s}
+.fig .pulse path{stroke-dasharray:9 240;stroke-dashoffset:-40}
+.fig .node{transform-box:fill-box;transform-origin:center;opacity:.5}
+.fig .hub{transform-box:fill-box;transform-origin:center}
+.cap.is-in .fig .pulse path{animation:figRun 1.45s cubic-bezier(.45,0,.55,1) .18s 2 both}
+.cap.is-in .fig .pulse path:nth-child(2){animation-delay:.32s}
+.cap.is-in .fig .pulse path:nth-child(3){animation-delay:.46s}
 @keyframes figRun{
   0%{stroke-dashoffset:9}
-  46%{stroke-dashoffset:-40}
-  100%{stroke-dashoffset:-40}
+  52%,100%{stroke-dashoffset:-40}
 }
-.fig .node{transform-box:fill-box;transform-origin:center;animation:figPing 2.7s ease-out infinite}
-.fig .node:nth-of-type(2){animation-delay:.2s}
-.fig .node:nth-of-type(3){animation-delay:.4s}
+/* the hub is circle 1, so the three nodes are types 2, 3 and 4 */
+.cap.is-in .fig .node{animation:figPing 1.45s ease-out .18s 2 both}
+.cap.is-in .fig .node:nth-of-type(3){animation-delay:.32s}
+.cap.is-in .fig .node:nth-of-type(4){animation-delay:.46s}
 @keyframes figPing{
-  0%,38%{transform:scale(1);opacity:.5}
-  50%{transform:scale(1.5);opacity:1}
-  72%,100%{transform:scale(1);opacity:.5}
+  0%,40%{transform:scale(1);opacity:.5}
+  54%{transform:scale(1.5);opacity:1}
+  76%,100%{transform:scale(1);opacity:.5}
 }
-.fig .hub{transform-box:fill-box;transform-origin:center;animation:figHub 2.7s ease-in-out infinite}
-@keyframes figHub{0%,100%{transform:scale(1)}42%{transform:scale(1.12)}}
+.cap.is-in .fig .hub{animation:figHub 1.45s ease-in-out .18s 2 both}
+@keyframes figHub{0%,100%{transform:scale(1)}44%{transform:scale(1.12)}}
 
-/* Product design — the same four products, re-composed: grid, row, column.
-   Nothing is added or removed, only reorganised. */
-.fig .blk{animation:none;transition:none}
-.fig .b1{animation:figB1 8s cubic-bezier(.65,0,.35,1) infinite}
-.fig .b2{animation:figB2 8s cubic-bezier(.65,0,.35,1) infinite .05s}
-.fig .b3{animation:figB3 8s cubic-bezier(.65,0,.35,1) infinite .1s}
-.fig .b4{animation:figB4 8s cubic-bezier(.65,0,.35,1) infinite .15s}
+/* Product design — the same four products, re-composed: grid, row, column,
+   and back to grid. Nothing is added or removed, only reorganised, and the
+   figure rests on the arrangement it started from. */
+.fig .b1{transform:translate(22px,22px)}
+.fig .b2{transform:translate(54px,22px)}
+.fig .b3{transform:translate(22px,54px)}
+.fig .b4{transform:translate(54px,54px)}
+.cap.is-in .fig .blk{
+  animation-duration:3.4s;animation-timing-function:cubic-bezier(.65,0,.35,1);
+  animation-delay:.2s;animation-iteration-count:1;animation-fill-mode:both;
+}
+.cap.is-in .fig .b1{animation-name:figB1}
+.cap.is-in .fig .b2{animation-name:figB2;animation-delay:.25s}
+.cap.is-in .fig .b3{animation-name:figB3;animation-delay:.3s}
+.cap.is-in .fig .b4{animation-name:figB4;animation-delay:.35s}
 /* all three arrangements span roughly the same box, so the figure keeps the
    optical weight of its two neighbours through the whole cycle */
-@keyframes figB1{0%,20%{transform:translate(22px,22px)}33%,53%{transform:translate(2px,38px)}66%,86%{transform:translate(38px,2px)}100%{transform:translate(22px,22px)}}
-@keyframes figB2{0%,20%{transform:translate(54px,22px)}33%,53%{transform:translate(26px,38px)}66%,86%{transform:translate(38px,26px)}100%{transform:translate(54px,22px)}}
-@keyframes figB3{0%,20%{transform:translate(22px,54px)}33%,53%{transform:translate(50px,38px)}66%,86%{transform:translate(38px,50px)}100%{transform:translate(22px,54px)}}
-@keyframes figB4{0%,20%{transform:translate(54px,54px)}33%,53%{transform:translate(74px,38px)}66%,86%{transform:translate(38px,74px)}100%{transform:translate(54px,54px)}}
+@keyframes figB1{0%{transform:translate(22px,22px)}24%,40%{transform:translate(2px,38px)}60%,76%{transform:translate(38px,2px)}100%{transform:translate(22px,22px)}}
+@keyframes figB2{0%{transform:translate(54px,22px)}24%,40%{transform:translate(26px,38px)}60%,76%{transform:translate(38px,26px)}100%{transform:translate(54px,22px)}}
+@keyframes figB3{0%{transform:translate(22px,54px)}24%,40%{transform:translate(50px,38px)}60%,76%{transform:translate(38px,50px)}100%{transform:translate(22px,54px)}}
+@keyframes figB4{0%{transform:translate(54px,54px)}24%,40%{transform:translate(74px,38px)}60%,76%{transform:translate(38px,74px)}100%{transform:translate(54px,54px)}}
 
 /* Craft & leadership — a stroke made by hand, and the dots it seeds along
-   the way. pathLength=1 keeps the draw timing independent of the geometry. */
-.fig .draw{stroke-dasharray:1;stroke-dashoffset:0;animation:figDraw 5.6s ease-in-out infinite}
-@keyframes figDraw{
-  0%{stroke-dashoffset:1;opacity:1}
-  40%,84%{stroke-dashoffset:0;opacity:1}
-  96%,100%{stroke-dashoffset:0;opacity:0}
-}
-.fig .seed{transform-box:fill-box;transform-origin:center;animation:figSeed 5.6s cubic-bezier(.16,.84,.36,1) infinite}
-.fig .seed:nth-of-type(2){animation-delay:.14s}
-.fig .seed:nth-of-type(3){animation-delay:.28s}
+   the way. pathLength=1 keeps the draw timing independent of the geometry.
+   It used to end on opacity:0 and idle at dashoffset:1, which is why the
+   column could show nothing but a stray tick; now it ends drawn and stays. */
+.fig .draw{stroke-dasharray:1;stroke-dashoffset:0}
+.fig .seed{transform-box:fill-box;transform-origin:center}
+.cap.is-in .fig .draw{animation:figDraw 1.55s cubic-bezier(.62,0,.3,1) .15s 1 both}
+@keyframes figDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+/* each dot lands as the stroke passes it, not all three at once */
+.cap.is-in .fig .seed{animation:figSeed .55s cubic-bezier(.16,.84,.36,1) both}
+.cap.is-in .fig .seed:nth-of-type(1){animation-delay:.62s}
+.cap.is-in .fig .seed:nth-of-type(2){animation-delay:.98s}
+.cap.is-in .fig .seed:nth-of-type(3){animation-delay:1.34s}
 @keyframes figSeed{
-  0%,24%{transform:scale(0);opacity:0}
-  38%,84%{transform:scale(1);opacity:1}
-  94%,100%{transform:scale(0);opacity:0}
+  from{transform:scale(0);opacity:0}
+  to{transform:scale(1);opacity:1}
 }
 
 /* ---- solvefy teaser ---- */
@@ -381,6 +495,39 @@ section{position:relative}
 .row:hover .t .arrow{opacity:1;transform:translateX(0)}
 .row .m{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--gray-th)}
 .row.sec .t{font-weight:500}
+/* ---- row cover ----
+   The cover rides on the right of every row, between the title and the meta,
+   so the list is legible at a glance instead of only under the cursor. The
+   row switches from baseline to centre alignment because a 4:3 image has no
+   baseline to share with the type. */
+.row.has-cover{
+  /* grid, not flex: the meta sits under the name instead of across the row,
+     so the title and its tags read as one block and the cover holds the
+     right edge on its own. Same shape the phone layout already used. */
+  display:grid;grid-template-columns:1fr clamp(232px,26vw,400px);
+  grid-template-rows:auto auto;
+  column-gap:clamp(20px,3vw,56px);row-gap:clamp(7px,.8vw,13px);
+  padding:clamp(18px,2vw,26px) 0;
+}
+.row.has-cover .t{grid-column:1;grid-row:1;align-self:end;min-width:0}
+.row.has-cover .m{grid-column:1;grid-row:2;align-self:start;text-align:left}
+.row-cover{
+  grid-column:2;grid-row:1 / 3;align-self:center;
+  aspect-ratio:4/3;overflow:hidden;background:#111;display:block;
+}
+.row-cover img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transform:scale(1.03);transition:transform .9s cubic-bezier(.16,.84,.36,1);
+}
+.row.has-cover:hover .row-cover img{transform:scale(1.09)}
+/* indenting the whole row would drag the cover off the right edge, so the
+   left column takes the gesture and the image stays put */
+.row.has-cover:hover{padding-left:0}
+.row.has-cover .t,
+.row.has-cover .m{transition:padding-left .4s cubic-bezier(.22,.61,.36,1)}
+.row.has-cover:hover .t,
+.row.has-cover:hover .m{padding-left:28px}
+
 /* injected by main.js on every load; only the phone layout reveals it
    (display gate lives in CSS so breakpoint crossings never strand it) */
 .row .row-thumb{display:none}
@@ -425,11 +572,209 @@ section{position:relative}
 .about .grid{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:center}
 .about p{font-weight:200;font-size:clamp(19px,2.4vw,34px);line-height:1.3;min-width:0}
 .about .dim{color:var(--dim)}
+/* the lead sentence, restored: splitWords used to flatten the <b> away */
+.about .w.em{font-weight:600}
 .about .portrait{overflow:hidden;background:#111;min-width:0;aspect-ratio:4/5}
 .about .portrait img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1)}
 
+/* ---- catalog pages (product.html / craft.html) ----
+   Each one opens by stating its own scope at the scale the home gives its
+   manifesto, so arriving from the nav never feels like landing mid page. */
+.masthead{padding-top:clamp(132px,21vh,250px);padding-bottom:clamp(56px,9vh,132px)}
+.masthead .lbl{margin-bottom:clamp(26px,4vh,54px)}
+.mast-title{
+  font-weight:700;font-size:clamp(36px,6.8vw,112px);line-height:.96;
+  letter-spacing:-.03em;max-width:17ch;text-wrap:balance;
+}
+.mast-lead{
+  margin-top:clamp(24px,3.4vh,44px);
+  font-weight:200;font-size:clamp(16.5px,1.9vw,26px);line-height:1.34;max-width:46ch;
+  color:color-mix(in srgb, var(--fg) 74%, var(--bg));
+}
+
+
+/* ---- the doors (end of each catalog page) ----
+   Each catalog page ends by handing you the other one. As a line in the list
+   it read as a footnote after seven cases, so it closes the page at masthead
+   scale: the name, one line under it, and four covers of what is behind the
+   door. Theme agnostic — inverted on product.html, light on craft.html. */
+.door{padding-top:clamp(52px,9vh,120px);padding-bottom:clamp(74px,13vh,170px)}
+.door-link{display:block;border-top:1px solid var(--line-th);padding-top:clamp(34px,5vh,64px)}
+.door-title{
+  display:block;font-weight:700;font-size:clamp(42px,8.2vw,136px);line-height:.94;
+  letter-spacing:-.032em;text-wrap:balance;
+}
+.door-title .arrow{
+  display:inline-block;font-weight:400;font-size:.42em;vertical-align:.42em;
+  margin-left:.12em;transition:transform .45s cubic-bezier(.16,.84,.36,1);
+}
+.door-link:hover .door-title .arrow{transform:translate(.16em,-.16em)}
+.door-lead{
+  display:block;margin-top:clamp(22px,3vh,38px);
+  font-weight:200;font-size:clamp(16px,1.8vw,24px);line-height:1.34;max-width:46ch;
+  color:color-mix(in srgb, var(--fg) 72%, var(--bg));
+}
+.door-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(8px,1.1vw,18px);
+  margin-top:clamp(34px,5vh,62px);
+}
+.dcover{display:block;overflow:hidden;background:#111;aspect-ratio:4/3}
+.dcover img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transform:scale(1.03);transition:transform 1s cubic-bezier(.16,.84,.36,1);
+}
+.door-link:hover .dcover img{transform:scale(1.09)}
+@media (max-width:600px){
+  /* four covers at phone width are postage stamps; two read as a pair */
+  .door-strip{grid-template-columns:repeat(2,1fr)}
+}
+
+/* ---- the two doors (home) ----
+   The home carries no work on it, so this pair is the whole handover. Same
+   grammar as the single door at the end of each catalog page, halved: two
+   columns on one hairline, neither ranked above the other. */
+/* tighter at the bottom than the top: the contact's own 14vh sits right
+   under it, and the two together were most of the gap */
+.doors{padding-top:clamp(52px,9vh,120px);padding-bottom:clamp(40px,5vh,68px)}
+.doors-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:clamp(30px,4vw,76px);
+  border-top:1px solid var(--line-th);
+}
+.door2{display:block;min-width:0;padding-top:clamp(28px,4vh,54px)}
+.door2 + .door2{
+  border-left:1px solid var(--line-th);
+  padding-left:clamp(28px,4vw,66px);
+}
+.door2 .door-title{font-size:clamp(28px,4.4vw,64px)}
+.door2 .door-lead{
+  margin-top:clamp(14px,1.8vh,24px);
+  font-size:clamp(15px,1.4vw,19px);max-width:34ch;
+}
+.door2 .door-strip{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  margin-top:clamp(24px,3.4vh,44px);
+}
+@media (max-width:760px){
+  /* stacked: side by side at this width gives each column eight characters
+     of measure and the titles shatter */
+  .doors-grid{grid-template-columns:1fr;gap:0}
+  .door2 + .door2{
+    border-left:0;padding-left:0;
+    border-top:1px solid var(--line-th);margin-top:clamp(32px,5vh,52px);
+  }
+}
+
+/* ---- craft grid ----
+   The product list argues in words; here the image argues, so the cover
+   leads and the caption follows it. Covers keep their own ratio instead of
+   being cropped to a uniform box — cropping a record sleeve to a 4:3 tile
+   throws away the thing being shown. The offset is what stops two columns
+   of mixed ratios from reading as a table. */
+.craftgrid{padding-top:clamp(66px,11vh,150px);padding-bottom:clamp(46px,8vh,110px)}
+.craftgrid .lbl{margin-bottom:clamp(30px,4.6vh,64px)}
+.gwrap{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:clamp(30px,4.4vw,78px) clamp(24px,3.4vw,64px);align-items:start;
+}
+.gcard{display:block;min-width:0}
+.gcard:nth-child(even){margin-top:clamp(34px,7vh,118px)}
+.gcard-img{display:block;overflow:hidden;background:#111}
+.gcard-img img{
+  width:100%;height:auto;display:block;
+  transform:scale(1.02);transition:transform .9s cubic-bezier(.16,.84,.36,1);
+}
+.gcard:hover .gcard-img img{transform:scale(1.06)}
+.gcard-blank{display:block;aspect-ratio:4/3;background:#111}
+.gcard-meta{
+  display:flex;justify-content:space-between;align-items:baseline;gap:14px;
+  flex-wrap:wrap;padding-top:15px;
+}
+.gt{font-weight:500;font-size:clamp(17px,1.8vw,26px);letter-spacing:-.012em}
+.gt .arrow{
+  display:inline-block;opacity:0;transform:translateX(-6px);font-weight:400;
+  transition:opacity .35s ease, transform .35s ease;
+}
+.gcard:hover .gt .arrow{opacity:1;transform:translateX(0)}
+.gm{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--gray-th)}
+@media (max-width:760px){
+  .gwrap{grid-template-columns:1fr;gap:clamp(30px,6vh,54px)}
+  .gcard:nth-child(even){margin-top:0}
+}
+
+/* ---- client logos ----
+   Normalised by ink, not by height. Rendered at a common cap height these
+   nine marks carry between 12k and 54k pixels of ink, so equal heights made
+   Caixa's black italic shout while Remessa's hairline vanished. Each item
+   carries a --k of sqrt(target/ink) at 60% strength: enough to even them out,
+   not so much that Nissan stops being the wide wordmark people recognise.
+
+   The row drifts instead of wrapping — nine marks at this size do not fit a
+   screen, and a row broken across three lines reads as a list that ran out of
+   room rather than a set of peers. It never reacts to the pointer and never
+   stops: it is a fact about the work, not a control. The gap lives inside each item as padding,
+   not as a flex gap, so the track is exactly twice one set wide and the -50%
+   loop lands seamlessly. */
+.clients{padding-top:clamp(44px,7vh,92px);padding-bottom:clamp(50px,8vh,100px)}
+/* The manifesto's 20vh top was calibrated for it arriving straight off the
+   hero. With the marks in between, that air became a hole. */
+.clients + .manifesto{padding-top:clamp(52px,8.5vh,112px)}
+.logos{
+  overflow:hidden;
+  /* the fade says the row continues past the edge without a scrollbar saying it */
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);
+}
+.logos-track{
+  display:flex;align-items:center;width:max-content;
+  padding-left:clamp(20px,3vw,50px);
+  animation:logoDrift var(--logo-dur,52s) linear infinite;
+}
+@keyframes logoDrift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.logo{
+  display:flex;align-items:center;flex:0 0 auto;
+  padding-right:clamp(36px,5vw,84px);
+  /* --base is the common cap height; --k is this mark's optical correction */
+  --base:clamp(22px,2.35vw,35px);
+  height:calc(var(--base) * var(--k,1));
+}
+.logo img{height:100%;width:auto;display:block}
+/* the marks ship with black fills, so a dark theme needs them flipped */
+:root[data-theme="dark"] .logo img{filter:invert(1)}
+@media (prefers-reduced-motion:reduce){
+  /* no drift: the row becomes something you move yourself */
+  .logos-track{animation:none}
+  .logos{overflow-x:auto;scrollbar-width:thin}
+}
+@media (max-width:600px){
+  .logo{--base:clamp(19px,5.4vw,27px);padding-right:clamp(28px,8vw,44px)}
+}
+
+/* ---- brand & art ----
+   Same line list as the product work, one step quieter: this chapter is the
+   second territory, not a rival to the six above it. */
+.brandart{padding-top:13vh;padding-bottom:4vh}
+.brandart .row .t{font-size:clamp(21px,3.1vw,42px)}
+
+/* ---- about: the studio hand off ---- */
+.abt{min-width:0}
+.abt-link{
+  display:inline-flex;align-items:center;gap:12px;margin-top:clamp(24px,3vh,40px);
+  font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--gray-th);
+  border-bottom:1px solid var(--line-th);padding-bottom:8px;
+  transition:color .3s ease, border-color .3s ease;
+}
+.abt-link:hover{color:var(--fg);border-color:var(--fg)}
+.abt-link .arrow{transition:transform .3s ease}
+.abt-link:hover .arrow{transform:translate(3px,-3px)}
+
 /* ---- contact ---- */
 .contact{padding:14vh 32px 70px;border-top:1px solid var(--line-th)}
+/* Home only, by structure: the doors are the last thing before the ask there,
+   and they already close on their own covers — the 14vh the catalog pages
+   need after a long list reads as dead air right under them. product.html
+   and craft.html keep the full breath. */
+.doors + .contact{padding-top:clamp(46px,6vh,82px)}
 .contact .cta{font-weight:700;font-size:clamp(38px,9vw,150px);line-height:.9;letter-spacing:-.02em}
 .contact .cta a{
   border-bottom:2px solid var(--line-th);transition:border-color .3s ease;
@@ -448,7 +793,7 @@ section{position:relative}
   transform:translate(-50%,-50%);transition:width .25s ease,height .25s ease;
 }
 #cursor.big .ring{width:64px;height:64px}
-@media (hover:none){#cursor{display:none}body{cursor:auto}}
+@media (hover:none){#cursor{display:none}body,a,button{cursor:auto}}
 
 /* ---- motion chip (iOS gyroscope permission) ----
    scene.js unhides it only on touch devices whose gyroscope is permission
@@ -476,26 +821,54 @@ section{position:relative}
   clip-path:inset(100% 0 0 0);
 }
 
-/* ---- craft wall (loose Pinterest-style masonry) ---- */
-/* ---- craft sphere: a slowly rotating 3D globe of images (ref: brik.space
-   sphere layout — perspective view, billboarded tiles, face to camera).
-   Tiles are absolutely positioned; js/main.js projects them every frame. ---- */
-.craftwall{position:relative;height:330svh;min-height:560px;padding:0}
-.craftwall .stage{position:sticky;top:0;height:100svh;min-height:560px;overflow:hidden;background:var(--blk,#050505)}
-.craftwall .lbl{position:absolute;top:28px;left:32px;z-index:300;margin:0}
-.wall{position:absolute;inset:0;touch-action:pan-y pinch-zoom;cursor:grab}
-.wall.dragging{cursor:grabbing}
-.tile{
-  position:absolute;left:0;top:0;width:calc(var(--w,14) * 1vmin);
-  margin:0;padding:0;border:0;background:transparent;
-  cursor:pointer;line-height:0;
-  /* no will-change here: 47 promoted layers blow Chrome's compositor
-     budget and tiles silently stop painting — 2D transforms stay cheap */
+/* ---- loose craft: a pinned horizontal grid ----
+   This was a 3D globe you dragged to spin, which meant rotating it to find out
+   what was in there. Now the stage pins and ScrollTrigger scrubs the rows
+   across: you keep scrolling down, the work travels sideways, and the page
+   only moves on once the strip has run out.
+
+   No drag handler any more, and that is also the tap fix — the old one called
+   setPointerCapture, which retargets the click to the container, so the
+   lightbox never learned which tile you hit.
+
+   The rows split the pinned stage between them, so they are as tall as the
+   viewport allows rather than a fixed thumbnail height. Uniform cells on
+   purpose: at this density a ragged mosaic reads as noise, and the lightbox
+   still opens each piece whole. */
+.loose{position:relative;background:var(--bg)}
+.loose-stage{
+  height:100svh;min-height:600px;overflow:hidden;
+  display:flex;flex-direction:column;
+  padding:clamp(76px,11vh,112px) 0 clamp(30px,5vh,58px);
 }
-.tile img{width:100%;height:auto;display:block;transition:filter .3s}
-.tile:hover img{filter:brightness(1.15)}
+.loose-head{flex:0 0 auto;padding:0 32px clamp(16px,2.2vh,28px)}
+.loose-head .lbl{margin:0}
+.loose-head .lbl::before{transform:scaleX(1)}   /* not revealed by scroll here */
+.wall{
+  flex:1 1 auto;min-height:0;width:max-content;
+  display:grid;grid-auto-flow:column;
+  /* two rows, not three: the stage is locked to the viewport, so a third row
+     only makes every piece smaller. Two split the same height into something
+     you can actually look at. */
+  grid-auto-columns:clamp(280px,31vw,500px);
+  grid-template-rows:repeat(2,minmax(0,1fr));
+  gap:clamp(8px,1vw,18px);
+  padding:0 32px;
+  will-change:transform;
+}
+.tile{
+  margin:0;padding:0;border:0;background:#111;overflow:hidden;line-height:0;
+  min-height:0;min-width:0;
+}
+/* the inline aspect-ratio each tile ships with is ignored once both sides are
+   definite, so the cell decides the shape and object-fit does the crop */
+.tile img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:filter .3s, transform .9s cubic-bezier(.16,.84,.36,1);
+}
+.tile:hover img{filter:brightness(1.08);transform:scale(1.05)}
 .tile:focus{outline:0}
-.tile:focus-visible{outline:2px solid var(--wht);outline-offset:3px}
+.tile:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
 
 /* ---- lightbox (tap a tile to open it big) ---- */
 #lightbox{
@@ -524,13 +897,25 @@ section{position:relative}
 
 /* ---- responsive ---- */
 @media (max-width:900px){
-  /* three columns need room to breathe — below that they stack again */
-  .caps{grid-template-columns:1fr}
-  .cap{padding:32px 0}
-  .cap + .cap{border-left:0}
-  .cap h3{font-size:clamp(22px,3.4vw,30px)}
-  .cap p{font-size:16px;max-width:60ch}
-  .cap .fig{width:84px;margin-bottom:20px}
+  /* Structural, not just smaller: the lead gives up its claim|evidence split
+     first, because an evidence column under ~420px can't hold a paragraph.
+     The pair keeps standing side by side — two columns need far less room
+     than the three that used to live here, and stacking them this early threw
+     away the one comparison the section is built to make. */
+  /* the lead spans the row, so it keeps the panel's own left edge. The side
+     padding belongs to .cap-pair alone — on .cap it also matched the lead
+     (same specificity, later in the block) and pushed it 23px out of line. */
+  .cap-lead{display:flex;flex-direction:column;padding:34px 0 40px}
+  .cap-lead .say{margin-top:26px}
+  .cap-pair{padding:32px clamp(14px,2.6vw,26px)}
+  .cap-lead h3{font-size:clamp(38px,5.4vw,50px)}
+  .cap-pair h3{font-size:clamp(22px,3.4vw,28px)}
+  .cap-lead .lead{font-size:clamp(20px,2.5vw,24px);max-width:22ch}
+  .cap-pair .lead{font-size:clamp(16px,2vw,18px)}
+  .cap p:not(.lead):not(.proof){font-size:15.5px;max-width:52ch}
+  .cap-lead p:not(.lead):not(.proof){font-size:16px;max-width:60ch}
+  .cap .fig{width:84px;margin-bottom:22px}
+  .cap-lead .fig{width:104px;margin-bottom:26px}
   .about .grid{grid-template-columns:1fr}
   .nav .right{display:none}
 }
@@ -569,19 +954,28 @@ section{position:relative}
   .manifesto{padding:14vh 20px 0}
   .manifesto p{font-size:clamp(27px,7.4vw,79.2px);max-width:100%}
 
-  /* -- what I do: full-bleed panel with numbered chapters, connected
-     straight to the manifesto's white block (no transparent gap) -- */
+  /* -- what I do: full-bleed panel connected straight to the manifesto's white
+     block (no transparent gap). One column, but the lead keeps its rank
+     through scale — the pair drops a step below it rather than matching. -- */
   .whatido{padding:0 0 32px}
   .whatido .max{width:100%;max-width:none;padding:36px 20px 10px}
-  .caps{counter-reset:cap}
-  .cap{padding:28px 0;counter-increment:cap}
-  .cap h3{font-size:28px;margin-bottom:12px}
-  .cap h3::before{
-    content:counter(cap,decimal-leading-zero);
-    display:block;font-weight:200;font-size:12px;letter-spacing:.26em;
-    color:var(--gray-th);margin-bottom:10px;
+  .caps{grid-template-columns:minmax(0,1fr)}
+  .cap{padding:28px 0}
+  .cap-lead{
+    display:flex;flex-direction:column;
+    padding-top:4px;padding-bottom:34px;
   }
-  .cap p{font-size:16px}
+  .cap-pair{padding-left:0;padding-right:0}
+  .cap-pair + .cap-pair{border-left:0}
+  .cap-lead .fig{width:118px;margin-bottom:26px}
+  .cap-lead h3{font-size:clamp(38px,10.4vw,52px);margin-bottom:14px}
+  .cap-pair h3{font-size:27px}
+  .cap-lead .lead{font-size:21px;max-width:17ch}
+  .cap-pair .lead{font-size:18px;max-width:26ch}
+  .cap .say{margin-top:20px}
+  .cap p:not(.lead):not(.proof),
+  .cap-lead p:not(.lead):not(.proof){font-size:16px;max-width:100%}
+  .cap .proof,.cap-lead .proof{padding-top:22px;font-size:12px}
 
   /* interstitials stay transparent 3D windows (the flybys are back on
      mobile) but at half the desktop travel, tightening What-I-do →
@@ -607,6 +1001,11 @@ section{position:relative}
   .row .t{grid-column:2;grid-row:1;font-size:clamp(20px,5.8vw,26px);gap:10px;align-self:end}
   .row .t .arrow{display:none} /* the thumbnail is the affordance here */
   .row .m{grid-column:2;grid-row:2;align-self:start}
+  /* A row that carries its own cover mirrors the desktop list: text on the
+     left, image on the right. The legacy .row-thumb rules above stay for
+     rows main.js still injects a thumbnail into. */
+  .row.has-cover{grid-template-columns:1fr 152px;column-gap:16px}
+  .row.has-cover .row-cover{width:152px}
   .row:hover{padding-left:0}
   .row:active{opacity:.55;transition:opacity .08s ease}
 
@@ -616,8 +1015,13 @@ section{position:relative}
 
   /* -- craft sphere: shorter travel, no caption — the scroll-scrubbed
      spin is the affordance -- */
-  .craftwall{height:260svh}
-  .craftwall .lbl{display:none}
+  /* two rows on a phone: three would shrink each piece past reading */
+  .loose-stage{padding:clamp(70px,11vh,110px) 0 clamp(28px,5vh,56px)}
+  .loose-head{padding:0 20px 16px}
+  .wall{
+    grid-template-rows:repeat(2,minmax(0,1fr));
+    grid-auto-columns:clamp(190px,56vw,300px);padding:0 20px;
+  }
 
   /* -- about -- */
   .about{padding:12vh 20px}
@@ -641,8 +1045,10 @@ section{position:relative}
 
 @media (prefers-reduced-motion:reduce){
   .rv,.rv-line>*,.craft .imgwrap img,.lbl::before,.nav-mask .brand>span{transition:none !important}
-  /* every figure's resting state is already the finished drawing */
+  /* every figure's resting state is now genuinely the finished drawing, and
+     the proof hairline is already full width without its transition */
   .cap .fig svg *{animation:none !important}
+  .cap .proof::before{transition:none !important;transform:scaleX(1)}
   html,body,#gl{transition:none !important}
   #hero-montage{display:none}
 }

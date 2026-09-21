@@ -18,8 +18,13 @@ gsap.registerPlugin(ScrollTrigger);
 function runLoader() {
   const loader = document.getElementById('loader');
   const wipe = document.getElementById('loader-wipe');
+  if (!loader || !wipe) { document.body.classList.add('is-ready'); return; }
   const pct = loader.querySelector('.pct');
   const mark = loader.querySelector('.wordmark');
+  /* only the home runs the WebGL tunnel. On a page with no <canvas id="gl">
+     nothing ever sets __meshesReady, so waiting on it would park the loader
+     at 99 forever. */
+  const needsMeshes = !!document.getElementById('gl');
   let n = 0;
 
   const step = () => {
@@ -27,9 +32,9 @@ function runLoader() {
     /* hold just short of 100 until the 3D marks are actually built;
        a time-based counter alone can finish before the async SVG
        extrude geometry is ready, flashing an empty canvas */
-    const displayN = (n >= 100 && !window.__meshesReady) ? 99 : Math.floor(n);
+    const displayN = (n >= 100 && needsMeshes && !window.__meshesReady) ? 99 : Math.floor(n);
     pct.textContent = displayN;
-    if (n < 100 || !window.__meshesReady) {
+    if (n < 100 || (needsMeshes && !window.__meshesReady)) {
       setTimeout(step, 90 + Math.random() * 60);
     } else {
       pct.textContent = 100;
@@ -120,14 +125,38 @@ if (!reduce) {
 
 /* ============ WORD SPLIT + SCRUB REVEAL (manifesto, about) ============ */
 function splitWords(el) {
-  const text = el.textContent.trim();
+  /* Walks the source nodes instead of flattening textContent, so emphasis
+     inside the paragraph survives the split. The old version rebuilt from
+     el.textContent, which silently dropped the <b> lead sentence in the
+     About — it had been rendering flat since v1. Words carried by a <b> or
+     <strong> come out as .w.em and keep their weight through the scrub. */
+  const out = document.createDocumentFragment();
+  const pushSpace = () => {
+    const last = out.lastChild;
+    if (!last) return;                                  // no leading space
+    if (last.nodeType === 3 && last.textContent === ' ') return;   // no doubles
+    out.appendChild(document.createTextNode(' '));
+  };
+  (function walk(node, emph) {
+    node.childNodes.forEach(n => {
+      if (n.nodeType === 3) {
+        n.textContent.split(/(\s+)/).forEach(part => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { pushSpace(); return; }
+          const span = document.createElement('span');
+          span.className = emph ? 'w em' : 'w';
+          span.textContent = part;
+          out.appendChild(span);
+        });
+      } else if (n.nodeType === 1) {
+        walk(n, emph || n.tagName === 'B' || n.tagName === 'STRONG');
+      }
+    });
+  })(el, false);
+  /* a trailing space from the source indentation would widen the last line */
+  while (out.lastChild && out.lastChild.nodeType === 3) out.removeChild(out.lastChild);
   el.innerHTML = '';
-  text.split(/\s+/).forEach((word, i, arr) => {
-    const span = document.createElement('span');
-    span.className = 'w';
-    span.textContent = word + (i < arr.length - 1 ? ' ' : '');
-    el.appendChild(span);
-  });
+  el.appendChild(out);
 }
 
 document.querySelectorAll('[data-split]').forEach(el => {
@@ -144,22 +173,30 @@ document.querySelectorAll('[data-split]').forEach(el => {
 /* highlight a few key words heavier once the manifesto is built */
 document.querySelectorAll('.manifesto .w').forEach(w => {
   const clean = w.textContent.trim().replace(/[.,]/g, '').toLowerCase();
-  if (['products', 'ai', '14', 'nps', 'churn'].includes(clean)) w.classList.add('hot');
+  if (['fourteen', 'fintech', 'churn', 'rebrand', 'ai'].includes(clean)) w.classList.add('hot');
 });
 
-/* ============ BLOCK REVEALS (.rv / .rv-line), once ============ */
-gsap.utils.toArray('.rv').forEach(el => {
-  ScrollTrigger.create({
-    trigger: el, start: 'top 88%',
-    onEnter: () => el.classList.add('is-in'),
+/* ============ BLOCK REVEALS (.rv / .rv-line), once ============
+   Re-runnable and idempotent, because the catalog pages render their rows
+   from data/projects.json after this module has already executed. Anything
+   injected later would otherwise sit at opacity 0 forever. */
+function attachReveals(root = document) {
+  root.querySelectorAll('.rv:not([data-rv])').forEach(el => {
+    el.setAttribute('data-rv', '');
+    ScrollTrigger.create({
+      trigger: el, start: 'top 88%',
+      onEnter: () => el.classList.add('is-in'),
+    });
   });
-});
-gsap.utils.toArray('.rv-line').forEach(el => {
-  ScrollTrigger.create({
-    trigger: el, start: 'top 90%',
-    onEnter: () => el.classList.add('is-in'),
+  root.querySelectorAll('.rv-line:not([data-rv])').forEach(el => {
+    el.setAttribute('data-rv', '');
+    ScrollTrigger.create({
+      trigger: el, start: 'top 90%',
+      onEnter: () => el.classList.add('is-in'),
+    });
   });
-});
+}
+attachReveals();
 
 /* ============ CHAPTER LABELS (interstitials) ============ */
 gsap.utils.toArray('.inter').forEach(el => {
@@ -186,10 +223,20 @@ gsap.utils.toArray('.inter').forEach(el => {
     current = t;
     root.dataset.theme = t;
   }
-  gsap.utils.toArray('[data-theme]').forEach(sec => {
+  const themed = gsap.utils.toArray('[data-theme]');
+  themed.forEach((sec, i) => {
     const theme = sec.dataset.theme;
+    /* The last section on a short page (the catalog pages are a third of the
+       home's height) can reach the end of the document before its top ever
+       crosses the centre line, which left the contact footer painted in the
+       previous section's theme. The closing section takes the frame as it
+       enters instead — on a long page that is the same moment, one beat
+       earlier. */
+    const last = i === themed.length - 1;
     ScrollTrigger.create({
-      trigger: sec, start: 'top center', end: 'bottom center',
+      trigger: sec,
+      start: last ? 'top 80%' : 'top center',
+      end: 'bottom center',
       onEnter: () => setTheme(theme),
       onEnterBack: () => setTheme(theme),
     });
@@ -208,6 +255,7 @@ if (craft) {
 /* ============ NAV HIDE ON SCROLL DOWN ============ */
 (function () {
   const nav = document.getElementById('nav');
+  if (!nav) return;
 
   /* The home hero already carries the wordmark, in orbit around the mark, so
      the nav copy would just be the same name twice on the same screen — it
@@ -242,10 +290,14 @@ if (craft) {
   if (!cursor || matchMedia('(hover: none)').matches) return;
   let cx = innerWidth / 2, cy = innerHeight / 2, tx = cx, ty = cy;
   addEventListener('pointermove', e => { tx = e.clientX; ty = e.clientY; });
-  document.querySelectorAll('a, .row, .tile, [data-magnetic]').forEach(el => {
+  window.__bindCursorTargets = (root = document) =>
+    root.querySelectorAll('a:not([data-cur]), .row:not([data-cur]), .tile:not([data-cur]), [data-magnetic]:not([data-cur])').forEach(el => {
+    el.setAttribute('data-cur', '');
     el.addEventListener('pointerenter', () => cursor.classList.add('big'));
     el.addEventListener('pointerleave', () => cursor.classList.remove('big'));
   });
+  window.__bindCursorTargets();
+
   (function raf() {
     cx += (tx - cx) * 0.18;
     cy += (ty - cy) * 0.18;
@@ -261,7 +313,13 @@ if (craft) {
   let tx = 0, ty = 0, cx = 0, cy = 0, cycleTimer = null;
   const stopCycle = () => { if (cycleTimer){ clearInterval(cycleTimer); cycleTimer = null; } };
 
-  document.querySelectorAll('.row[data-thumb]').forEach(row => {
+  /* :not(.has-cover) — a row that already shows its cover does not need a
+     second copy of it chasing the cursor */
+  window.__bindRowThumbs = (root = document) =>
+    root.querySelectorAll('.row[data-thumb]:not(.has-cover):not([data-thumb-bound])').forEach(bindRow);
+
+  function bindRow(row) {
+    row.setAttribute('data-thumb-bound', '');
     row.addEventListener('pointerenter', e => {
       if (cx === 0 && cy === 0) { cx = e.clientX; cy = e.clientY; }
       tx = e.clientX; ty = e.clientY;
@@ -304,7 +362,9 @@ if (craft) {
     });
     row.addEventListener('pointerleave', () => { thumb.classList.remove('on'); stopCycle(); });
     row.addEventListener('pointermove', e => { tx = e.clientX; ty = e.clientY; });
-  });
+  }
+
+  window.__bindRowThumbs();
 
   (function raf() {
     cx += (tx - cx) * 0.14;
@@ -324,7 +384,12 @@ if (craft) {
    slugs) render a CEROL mark directly, no 404 probe. */
 (function () {
   const MARKS = ['sun', 'urchin', 'scribble', 'creature', 'void'];
-  document.querySelectorAll('.proj .row[data-thumb]').forEach((row, i) => {
+  window.__bindMobileThumbs = (root = document) =>
+    root.querySelectorAll('.proj .row[data-thumb]:not(.has-cover):not([data-mthumb])').forEach(build);
+  let seq = 0;
+  function build(row) {
+    const i = seq++;
+    row.setAttribute('data-mthumb', '');
     const slug = row.dataset.thumb;
     const th = document.createElement('span');
     th.className = 'row-thumb';
@@ -347,7 +412,52 @@ if (craft) {
       markFallback();
     }
     row.prepend(th);
-  });
+  }
+  window.__bindMobileThumbs();
+})();
+
+/* ============ CATALOG PAGES: rebind after rows render ============
+   product.html / craft.html build their lists from data/projects.json, which
+   lands after this module ran. They fire work:rendered when the markup is in. */
+addEventListener('work:rendered', (e) => {
+  const root = e.detail?.root || document;
+  attachReveals(root);
+  window.__bindRowThumbs?.(root);
+  window.__bindMobileThumbs?.(root);
+  window.__bindCursorTargets?.(root);
+  window.__bindTransitions?.(root);
+  ScrollTrigger.refresh();
+});
+
+/* ============ CLIENT LOGO DRIFT ============
+   Clones the set once so the -50% keyframe loops seamlessly, and sets the
+   duration from the measured width so the marks always travel at the same
+   speed whatever the viewport does to their size. The clone is hidden from
+   assistive tech — the visible list already carries the names. */
+(function () {
+  const track = document.getElementById('logos-track');
+  if (!track) return;
+  const SPEED = 38;   /* px per second — a drift, not a carousel */
+
+  function build() {
+    track.querySelectorAll('[data-clone]').forEach(n => n.remove());
+    const set = [...track.children];
+    const setWidth = set.reduce((w, el) => w + el.getBoundingClientRect().width, 0);
+    if (!setWidth) return;
+    set.forEach(el => {
+      const c = el.cloneNode(true);
+      c.setAttribute('data-clone', '');
+      c.setAttribute('aria-hidden', 'true');
+      track.appendChild(c);
+    });
+    track.style.setProperty('--logo-dur', (setWidth / SPEED).toFixed(1) + 's');
+  }
+
+  /* the marks are lazy SVGs: measure once they have actually laid out */
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+  else build();
+  addEventListener('load', build);
+  let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(build, 200); });
 })();
 
 /* ============ MAGNETIC BUTTONS ============ */
@@ -367,7 +477,9 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
 /* ============ PAGE TRANSITIONS (cinematic wipe) ============ */
 (function () {
   const overlay = document.getElementById('page-transition');
-  document.querySelectorAll('a[data-transition]').forEach(link => {
+  window.__bindTransitions = (root = document) =>
+    root.querySelectorAll('a[data-transition]:not([data-pt])').forEach(link => {
+    link.setAttribute('data-pt', '');
     link.addEventListener('click', (e) => {
       const href = link.getAttribute('href');
       if (!href || href.startsWith('#') || href.startsWith('http')) return;
@@ -379,6 +491,8 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
       });
     });
   });
+  window.__bindTransitions();
+
   /* only wipe-reveal on arrival if we came from a transitioned link;
      the very first index.html load is already revealed by the loader */
   if (sessionStorage.getItem('pt-arrive')) {
@@ -592,6 +706,58 @@ document.querySelectorAll('[data-magnetic]').forEach(btn => {
 
   setup();
   window.__initCraftSphere = setup;                    // CMS rebuild re-enters here
+})();
+
+/* ============ LOOSE CRAFT: PINNED HORIZONTAL TRAVEL (craft.html) ============
+   The stage pins and the rows scrub sideways with the page scroll, so you
+   reach the next section by continuing to scroll — the travel distance is
+   exactly how far the strip has left to run.
+
+   There is deliberately no drag handler. The previous one called
+   setPointerCapture, which retargets the follow-up click to the container, so
+   the lightbox never learned which tile had been hit and tapping to enlarge
+   did nothing. With the scroll driving it, a click is just a click.
+
+   The 3D globe that used to live here is still in this file above; it finds
+   no #craftwall any more and returns. */
+(function () {
+  const section = document.getElementById('loose');
+  const wall = document.getElementById('wall');
+  const stage = section && section.querySelector('.loose-stage');
+  if (!section || !wall || !stage || !window.ScrollTrigger) return;
+
+  /* The wall is width:max-content, so it never overflows itself — how far it
+     has to travel is its own width minus the window it shows through.
+     Measured on every refresh, because the tiles are lazy and the CMS can
+     rebuild the whole strip after this module has run. */
+  const distance = () => Math.max(0, wall.scrollWidth - stage.clientWidth);
+
+  const st = ScrollTrigger.create({
+    trigger: section,
+    start: 'top top',
+    /* 0.55 of the travel: at 1:1 the strip costs thirteen screens of scroll
+       to cross, which is a toll, not a gesture. The rows move about twice as
+       fast as the wheel and the whole thing is done in roughly seven. */
+    end: () => '+=' + distance() * 0.55,
+    pin: stage,
+    pinSpacing: true,
+    scrub: 0.6,
+    invalidateOnRefresh: true,
+    anticipatePin: 1,
+    onRefresh: self => { self.animation && self.animation.invalidate(); },
+    animation: gsap.fromTo(wall,
+      { x: 0 },
+      { x: () => -distance(), ease: 'none' }
+    ),
+  });
+
+  /* a strip shorter than the viewport has nothing to travel: no pin, no
+     hostage scroll */
+  ScrollTrigger.addEventListener('refreshInit', () => {
+    if (distance() <= 0) st.disable(false); else st.enable(false);
+  });
+
+  addEventListener('load', () => ScrollTrigger.refresh());
 })();
 
 /* ============ HOME CONTENT FROM THE CMS (montage + craft wall) ============

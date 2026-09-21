@@ -13,7 +13,7 @@
 <link rel="preload" as="font" href="fonts/Pacaembu-Regular.otf" type="font/otf" crossorigin>
 <link rel="preload" as="font" href="fonts/Pacaembu-Bold.otf" type="font/otf" crossorigin>
 <link rel="preload" as="font" href="fonts/dTJakob_Rg.otf" type="font/otf" crossorigin>
-<link rel="stylesheet" href="css/main.css?v=38" />
+<link rel="stylesheet" href="css/main.css?v=68" />
 </head>
 <body>
 
@@ -43,7 +43,15 @@
   <!-- starts hidden in the markup so the wordmark never flashes over the hero
        before main.js runs, and so its reveal doesn't play against the loader -->
   <nav class="nav nav-mask nav-hidden" id="nav">
-    <div class="brand"><span>Marcos</span> <span>Carvalho</span></div>
+    <a class="brand" href="index.html"><span>Marcos</span> <span>Carvalho</span></a>
+    <!-- the site is three pages now, so the bar has to carry the way in.
+         nav-mask hides only the wordmark over the hero (the hero already
+         spells the name) — the links stay reachable from the first pixel. -->
+    <div class="navlinks">
+      <a href="product.html">Product</a>
+      <a href="craft.html">Craft</a>
+      <a href="mailto:marcos@cerol.co">Contact</a>
+    </div>
   </nav>
 
   <!-- ============ CONTENT ============ -->
@@ -55,7 +63,7 @@
       <h1 class="hero-name"><span>Marcos</span> <span>Carvalho</span></h1>
       <div class="btm">
         <!-- the spans let mobile break the roles onto their own lines -->
-        <div class="lead"><span>Experience specialist</span><span class="sep"> · </span><span>AI native Designer</span></div>
+        <div class="lead"><span>Product Design Lead</span><span class="sep"> · </span><span>AI native</span></div>
         <div class="side">
           <span>Brazil · Remote worldwide</span>
         </div>
@@ -63,22 +71,83 @@
       <div class="scroll-cue" aria-hidden="true">↓</div>
     </section>
 
-    <!-- S2 · MANIFESTO -->
-    <section class="manifesto solid" id="manifesto" data-theme="light">
-      <div class="max">
-        <p data-split>I design products and build the systems they live in.</p>
-        <p data-split>For 14 years I have turned complex systems into products people use.</p>
-        <p data-split>I led design and growth, lifted NPS, stabilized churn, shipped a 20 year rebrand. Now I design and build with AI. Not around it. With it.</p>
+    <!-- S2 · WORKED WITH — the marks land before the manifesto, not after it:
+         the claim about fourteen years of complex systems arrives already
+         backed rather than asking to be taken on trust.
+
+         The --k on each item is an optical weight, not a guess: rendered at a
+         common height these marks carry between 12k and 54k pixels of ink, so
+         matching their heights made Caixa shout and Remessa whisper. Each k is
+         sqrt(target/ink) at 60% strength — enough to even them out, not so much
+         that Nissan stops being the wide wordmark everyone knows.
+
+         The row drifts rather than wrapping: nine marks at this size do not fit
+         a screen, and a broken row reads as a list that ran out of room.
+         No label over it — a row of client marks under a manifesto explains
+         itself. -->
+    <section class="clients solid" data-theme="light">
+      <div class="logos" role="img" aria-label="Brands worked with: O Boticário, Caixa, Claro, Renault, Nissan, Porto Seguro, Hotmart, dLocal, Remessa Online">
+        <ul class="logos-track" id="logos-track">
+            <li class="logo" style="--k:0.959"><img src="assets/logos/boticario.svg" alt="O Boticário" loading="lazy" decoding="async"></li>
+            <li class="logo" style="--k:0.832"><img src="assets/logos/caixa.svg" alt="Caixa" loading="lazy" decoding="async"></li>
+            <li class="logo" style="--k:1.155"><img src="assets/logos/claro.svg" alt="Claro" loading="lazy" decoding="async"></li>
+            <li class="logo" style="--k:1.112"><img src="assets/logos/renault.svg" alt="Renault" loading="lazy" decoding="async"></li>
+            <li class="logo" style="--k:0.743"><img src="assets/logos/nissan.svg" alt="Nissan" loading="lazy" decoding="async"></li>
+            <li class="logo" style="--k:0.979"><img src="assets/logos/porto.svg" alt="Porto Seguro" loading="lazy" decoding="async"></li>
+            <li class="logo" style="--k:1.105"><img src="assets/logos/hotmart.svg" alt="Hotmart" loading="lazy" decoding="async"></li>
+            <li class="logo" style="--k:0.96"><img src="assets/logos/dlocal.svg" alt="dLocal" loading="lazy" decoding="async"></li>
+            <li class="logo" style="--k:1.165"><img src="assets/logos/remessa.svg" alt="Remessa Online" loading="lazy" decoding="async"></li>
+        </ul>
       </div>
     </section>
 
-    <!-- S3 · WHAT I DO — section is transparent so the 3D tunnel shows through;
-         only the left panel (.whatido .max) has a background -->
+    <!-- S3 · MANIFESTO -->
+    <section class="manifesto solid" id="manifesto" data-theme="light">
+      <div class="max">
+        <p data-split>I design products and build the systems they live in.</p>
+        <p data-split>Fourteen years turning complex systems into products people use. Four products under one design system. A fintech through growth. A SaaS through churn. A 20 year rebrand, shipped.</p>
+        <p data-split>Now I design and build with AI. Not around it. With it.</p>
+      </div>
+    </section>
+
+    <!-- INTERSTICE A · sun · the breath between the claim and the method -->
+    <div class="inter" data-inter="0"></div>
+
+    <!-- S4 · HOW I WORK — section is transparent so the 3D tunnel shows
+         through; only the left panel (.whatido .max) has a background.
+         The work moved to its own pages (product.html, craft.html), so the
+         home is hero, claim and method: these columns are what the page has
+         to say about how the work gets made.
+         Asymmetric on purpose: three equal columns would claim these three
+         things weigh the same. They don't — Product design is the titular
+         position, so it leads at full width with its own topology (voice left,
+         evidence right) and the other two run as a pair beneath.
+         Each column closes on a spec line rather than the number it used to
+         repeat: the numbers live one chapter up now.
+    -->
     <section class="whatido" data-theme="light">
       <div class="max">
-        <div class="lbl rv">What I do</div>
+        <div class="lbl rv">How I work</div>
         <div class="caps">
-          <div class="cap rv">
+
+
+          <div class="cap cap-lead rv">
+            <!-- four products, re-composed: grid, row, column. Nothing added or
+                 removed — only reorganised -->
+            <div class="fig" aria-hidden="true"><svg viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="1.6">
+              <rect class="blk b1" width="20" height="20" rx="2.5"/>
+              <rect class="blk b2" width="20" height="20" rx="2.5"/>
+              <rect class="blk b3" width="20" height="20" rx="2.5"/>
+              <rect class="blk b4" width="20" height="20" rx="2.5"/>
+            </svg></div>
+            <h3>Product design</h3>
+            <p class="lead">End to end, from research to shipped system.</p>
+            <div class="say">
+              <p>Dense products, fintech and ecommerce. Research to shipped system, with the architecture decided before the pixels. At Solvefy that meant four products pulled under one design system and one language.</p>
+              <p class="proof">Information architecture · design systems · high fidelity delivery</p>
+            </div>
+          </div>
+          <div class="cap cap-pair rv">
             <!-- orchestration: the hub dispatches work down each wire and the
                  agent that answers lights up -->
             <div class="fig" aria-hidden="true"><svg viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
@@ -89,20 +158,14 @@
               <circle class="node" cx="76" cy="64" r="4.5"/>
               <circle class="node" cx="20" cy="64" r="4.5"/>
             </svg></div>
-            <h3>AI native</h3><div><p>I build with AI, not around it. Claude Code, MCPs and custom agents in my workflow since July 2025. At Solvefy I shipped AI driven design workflows that shortened delivery cycles for the whole team, and designed and built an internal leads engine end to end. Its first day of use cleared the month's target.</p></div>
+            <h3>AI native</h3>
+            <p class="lead">I build with AI, not around it.</p>
+            <div class="say">
+              <p>AI driven design workflows that shortened delivery for the whole team, then an internal leads engine designed and built end to end. The stack is in my hands daily, not in a deck.</p>
+              <p class="proof">Claude Code · MCPs · custom agents, since July 2025</p>
+            </div>
           </div>
-          <div class="cap rv">
-            <!-- four products, re-composed: grid, row, column. Nothing added or
-                 removed — only reorganised -->
-            <div class="fig" aria-hidden="true"><svg viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="1.6">
-              <rect class="blk b1" width="20" height="20" rx="2.5"/>
-              <rect class="blk b2" width="20" height="20" rx="2.5"/>
-              <rect class="blk b3" width="20" height="20" rx="2.5"/>
-              <rect class="blk b4" width="20" height="20" rx="2.5"/>
-            </svg></div>
-            <h3>Product design</h3><div><p>End to end product, from research and information architecture to systems and high fidelity delivery. Dense systems, fintech and e-commerce. At Solvefy I pulled a four product portfolio under one design system and one language, and NPS climbed. The churn research I introduced there brought back three large clients, roughly 18% of revenue.</p></div>
-          </div>
-          <div class="cap rv">
+          <div class="cap cap-pair rv">
             <!-- a stroke laid down by hand, and the dots it seeds along the way -->
             <div class="fig" aria-hidden="true"><svg viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
               <path class="draw" pathLength="1" d="M12 70C22 34 34 24 44 40s10 26 20 20 14-24 20-38"/>
@@ -110,123 +173,44 @@
               <circle class="seed" cx="52" cy="56" r="3.4"/>
               <circle class="seed" cx="74" cy="35" r="3.4"/>
             </svg></div>
-            <h3>Craft &amp; leadership</h3><div><p>Craft is the delivery, not the decoration. Product Design Lead three times over, Design Director, and most recently design and growth together at Solvefy, leading a team of seven. Founder of CEROL, my own studio, and of Lerdo, the cycling brand I designed from zero to an ADG Brasil award. I hire, mentor and leave a culture behind.</p></div>
+            <h3>Craft &amp; leadership</h3>
+            <p class="lead">Craft is the delivery, not the decoration.</p>
+            <div class="say">
+              <p>Design and growth together at Solvefy, after three runs as Product Design Lead and one as Design Director. Founder of CEROL, my own studio, and of Lerdo, the cycling brand I built from zero. I hire, mentor and leave a culture behind.</p>
+              <p class="proof">Product Design Lead ×3 · Design Director · founder ×2</p>
+            </div>
           </div>
+
+
         </div>
       </div>
     </section>
 
-    <!-- INTERSTICE A · sun -->
-    <div class="inter" data-inter="0"></div>
-
-    <!-- INTERSTICE B · urchin · the cases (Featured Solvefy + Selected work merged into one chapter) -->
-    <div class="inter" data-inter="1"></div>
-
-    <!-- S4 · SELECTED WORK (inverted) — Solvefy leads the list as the featured case -->
-    <section class="invert pad" id="work" data-theme="dark">
+    <!-- S5 · THE TWO DOORS — the home carries no work any more, so this is
+         where it hands you over: you have read the claim, the clients and the
+         method, and this is the door out to the work itself. Side by side and
+         on the same hairline, because neither of the two is the lesser one.
+         The contact follows immediately: a 50vh window onto the 3D tunnel used
+         to sit between them, and with the work gone from this page it read as
+         a screen of nothing rather than a breath. -->
+    <section class="doors solid pad" data-theme="light">
       <div class="max">
-        <div class="lbl rv">Selected work</div>
-        <div class="proj">
-          <a class="row rv" href="projeto.html?id=solvefy" data-transition data-thumb="solvefy" data-cat="Featured case"><span class="t">Solvefy <span class="arrow">↗</span></span><span class="m">Featured case · Product design, AI, growth</span></a>
-          <a class="row rv" href="projeto.html?id=remessa" data-transition data-thumb="remessa" data-cat="Fintech growth"><span class="t">Remessa Online <span class="arrow">↗</span></span><span class="m">Product Design Lead · Fintech growth</span></a>
-          <a class="row rv" href="projeto.html?id=leads2b" data-transition data-thumb="leads2b" data-cat="SaaS B2B"><span class="t">Leads2b <span class="arrow">↗</span></span><span class="m">Product Design Lead · Sales engagement</span></a>
-          <a class="row rv" href="projeto.html?id=136071709" data-transition data-thumb="136071709" data-hover="assets/work/136071709/cover.webp,assets/work/136071709/01.webp" data-cat="Product · Data"><span class="t">Customer Care Panel · Nissan <span class="arrow">↗</span></span><span class="m">Product · Data</span></a>
-          <a class="row rv" href="projeto.html?id=135764741" data-transition data-thumb="135764741" data-hover="assets/work/135764741/cover.webp,assets/work/135764741/01.webp" data-cat="UX · Worldwide intranet"><span class="t">Huge · Worldwide Intranet <span class="arrow">↗</span></span><span class="m">UX · Worldwide intranet</span></a>
-          <a class="row rv" href="projeto.html?id=118534117" data-transition data-thumb="118534117" data-hover="assets/work/118534117/cover.webp,assets/work/118534117/01.webp" data-cat="Game UX · Art direction · NY"><span class="t">Evil Apples <span class="arrow">↗</span></span><span class="m">Game UX · Art direction · NY</span></a>
-          <a class="row rv" href="projeto.html?id=76147897" data-transition data-thumb="76147897" data-hover="assets/work/76147897/cover.webp,assets/work/76147897/01.webp" data-cat="UX · UI · Brand"><span class="t">Bodebrown <span class="arrow">↗</span></span><span class="m">UX · UI · Brand</span></a>
-          <a class="row rv" href="projeto.html?id=209221077" data-transition data-thumb="209221077" data-hover="assets/work/209221077/cover.webp,assets/work/209221077/01.webp" data-cat="Global event · Brand"><span class="t">dlocal · CONNECT <span class="arrow">↗</span></span><span class="m">Global event · Brand</span></a>
-          <a class="row sec rv" href="projeto.html?id=225576979" data-transition data-thumb="225576979" data-hover="assets/work/225576979/cover.webp,assets/work/225576979/01.webp" data-cat="Branding · Visual identity"><span class="t">void · floating spa <span class="arrow">↗</span></span><span class="m">Branding · Visual identity</span></a>
-          <a class="row sec rv" href="projeto.html?id=54196333" data-transition data-thumb="54196333" data-hover="assets/work/54196333/cover.webp,assets/work/54196333/01.webp" data-cat="Branding · Music label"><span class="t">Feel.U <span class="arrow">↗</span></span><span class="m">Branding · Music label</span></a>
-          <a class="row sec rv" href="projeto.html?id=233337759" data-transition data-thumb="233337759" data-hover="assets/work/233337759/cover.webp,assets/work/233337759/01.webp" data-cat="Brand · Editorial"><span class="t">viva la vegan <span class="arrow">↗</span></span><span class="m">Brand · Editorial</span></a>
-          <a class="row sec rv" href="projeto.html?id=250632349" data-transition data-thumb="250632349" data-hover="assets/work/250632349/cover.webp,assets/work/250632349/01.webp" data-cat="Founder · Apparel"><span class="t">Lerdo · pink neon <span class="arrow">↗</span></span><span class="m">Founder · Apparel</span></a>
-          <a class="row sec rv" href="projeto.html?id=135014753" data-transition data-thumb="135014753" data-hover="assets/work/135014753/cover.webp,assets/work/135014753/01.webp" data-cat="Founder · Cycling apparel"><span class="t">Vertigem <span class="arrow">↗</span></span><span class="m">Founder · Cycling apparel</span></a>
-          <a class="row sec rv" href="projeto.html?id=120517563" data-transition data-thumb="120517563" data-hover="assets/work/120517563/cover.webp,assets/work/120517563/01.webp" data-cat="Album cover · Music video"><span class="t">Mononoke · Progresso <span class="arrow">↗</span></span><span class="m">Album cover · Music video</span></a>
-          <a class="row sec rv" href="projeto.html?id=135486111" data-transition data-thumb="135486111" data-hover="assets/work/135486111/cover.webp,assets/work/135486111/01.webp" data-cat="Cover and art"><span class="t">Tristes Trópicos <span class="arrow">↗</span></span><span class="m">Cover and art</span></a>
-          <a class="row sec rv" href="https://www.behance.net/marcos_____carvalho" target="_blank" rel="noopener" data-thumb="void" data-cat="Behance"><span class="t">More on Behance <span class="arrow">↗</span></span><span class="m">Covers · Posters · Apparel</span></a>
+        <div class="doors-grid">
+          <a class="door2 rv" href="product.html" data-transition>
+            <span class="door-title">Product design <span class="arrow">↗</span></span>
+            <span class="door-lead">Research to shipped system, in dense products. Fintech, ecommerce and B2B SaaS.</span>
+            <span class="door-strip" data-catalog="product" data-layout="strip" data-limit="2" aria-hidden="true"></span>
+          </a>
+          <a class="door2 rv" href="craft.html" data-transition>
+            <span class="door-title">Graphic &amp; craft <span class="arrow">↗</span></span>
+            <span class="door-lead">Brand systems, editorial, apparel and record sleeves.</span>
+            <span class="door-strip" data-catalog="craft" data-layout="strip" data-limit="2" aria-hidden="true"></span>
+          </a>
         </div>
       </div>
     </section>
 
-    <!-- S7 · CRAFT statement (background image removed) -->
-    <section class="craft" id="craft" data-theme="light">
-      <div class="txt"><h2 class="rv-line"><span>The same hands that ship product build brands and album covers.</span></h2></div>
-    </section>
-
-    <!-- S7b · CRAFT SPHERE — rotating 3D globe of loose work; drag to spin, click a tile to open it big.
-         The section keeps the old masonry's scroll height (the 3D tunnel's symbol flybys are tuned to
-         total page height) and the stage pins sticky while you travel through it. -->
-    <section class="craftwall" id="craftwall" data-theme="dark">
-      <div class="stage">
-        <div class="lbl">Loose craft — drag to spin · tap to open</div>
-        <div class="wall" id="wall">
-          <button class="tile" data-full="assets/work/225576979/01.webp" data-title="void · floating spa" data-id="225576979"><img src="assets/work/225576979/01.webp" loading="lazy" decoding="async" alt="void · floating spa" style="aspect-ratio:600/338"></button>
-          <button class="tile" data-full="assets/work/233337759/01.webp" data-title="viva la vegan" data-id="233337759"><img src="assets/work/233337759/01.webp" loading="lazy" decoding="async" alt="viva la vegan" style="aspect-ratio:600/338"></button>
-          <button class="tile" data-full="assets/work/250632349/01.webp" data-title="Lerdo · pink neon" data-id="250632349"><img src="assets/work/250632349/01.webp" loading="lazy" decoding="async" alt="Lerdo · pink neon" style="aspect-ratio:600/338"></button>
-          <button class="tile" data-full="assets/work/135014753/01.webp" data-title="Vertigem" data-id="135014753"><img src="assets/work/135014753/01.webp" loading="lazy" decoding="async" alt="Vertigem" style="aspect-ratio:534/267"></button>
-          <button class="tile" data-full="assets/work/120517563/01.webp" data-title="Mononoke · Progresso" data-id="120517563"><img src="assets/work/120517563/01.webp" loading="lazy" decoding="async" alt="Mononoke · Progresso" style="aspect-ratio:600/427"></button>
-          <button class="tile" data-full="assets/work/135486111/01.webp" data-title="Tristes Trópicos" data-id="135486111"><img src="assets/work/135486111/01.webp" loading="lazy" decoding="async" alt="Tristes Trópicos" style="aspect-ratio:600/1092"></button>
-          <button class="tile" data-full="assets/work/54196333/01.webp" data-title="Feel.U" data-id="54196333"><img src="assets/work/54196333/01.webp" loading="lazy" decoding="async" alt="Feel.U" style="aspect-ratio:600/339"></button>
-          <button class="tile" data-full="assets/work/209221077/01.webp" data-title="dlocal · CONNECT" data-id="209221077"><img src="assets/work/209221077/01.webp" loading="lazy" decoding="async" alt="dlocal · CONNECT" style="aspect-ratio:600/338"></button>
-          <button class="tile" data-full="assets/work/76147897/01.webp" data-title="Bodebrown" data-id="76147897"><img src="assets/work/76147897/01.webp" loading="lazy" decoding="async" alt="Bodebrown" style="aspect-ratio:600/1200"></button>
-          <button class="tile" data-full="assets/work/225576979/05.webp" data-title="void · floating spa" data-id="225576979"><img src="assets/work/225576979/05.webp" loading="lazy" decoding="async" alt="void · floating spa" style="aspect-ratio:600/338"></button>
-          <button class="tile" data-full="assets/work/233337759/04.webp" data-title="viva la vegan" data-id="233337759"><img src="assets/work/233337759/04.webp" loading="lazy" decoding="async" alt="viva la vegan" style="aspect-ratio:600/338"></button>
-          <button class="tile" data-full="assets/work/250632349/04.webp" data-title="Lerdo · pink neon" data-id="250632349"><img src="assets/work/250632349/04.webp" loading="lazy" decoding="async" alt="Lerdo · pink neon" style="aspect-ratio:600/338"></button>
-          <button class="tile" data-full="assets/work/135014753/02.webp" data-title="Vertigem" data-id="135014753"><img src="assets/work/135014753/02.webp" loading="lazy" decoding="async" alt="Vertigem" style="aspect-ratio:600/1200"></button>
-          <button class="tile" data-full="assets/work/120517563/07.webp" data-title="Mononoke · Progresso" data-id="120517563"><img src="assets/work/120517563/07.webp" loading="lazy" decoding="async" alt="Mononoke · Progresso" style="aspect-ratio:178/89"></button>
-          <button class="tile" data-full="assets/work/135486111/04.webp" data-title="Tristes Trópicos" data-id="135486111"><img src="assets/work/135486111/04.webp" loading="lazy" decoding="async" alt="Tristes Trópicos" style="aspect-ratio:600/1200"></button>
-          <button class="tile" data-full="assets/work/54196333/06.webp" data-title="Feel.U" data-id="54196333"><img src="assets/work/54196333/06.webp" loading="lazy" decoding="async" alt="Feel.U" style="aspect-ratio:700/395"></button>
-          <button class="tile" data-full="assets/work/209221077/07.webp" data-title="dlocal · CONNECT" data-id="209221077"><img src="assets/work/209221077/07.webp" loading="lazy" decoding="async" alt="dlocal · CONNECT" style="aspect-ratio:600/338"></button>
-          <button class="tile" data-full="assets/work/225576979/10.webp" data-title="void · floating spa" data-id="225576979"><img src="assets/work/225576979/10.webp" loading="lazy" decoding="async" alt="void · floating spa" style="aspect-ratio:600/338"></button>
-          <button class="tile" data-full="assets/work/233337759/07.webp" data-title="viva la vegan" data-id="233337759"><img src="assets/work/233337759/07.webp" loading="lazy" decoding="async" alt="viva la vegan" style="aspect-ratio:600/338"></button>
-          <button class="tile" data-full="assets/work/250632349/08.webp" data-title="Lerdo · pink neon" data-id="250632349"><img src="assets/work/250632349/08.webp" loading="lazy" decoding="async" alt="Lerdo · pink neon" style="aspect-ratio:2000/2500"></button>
-          <button class="tile" data-full="assets/work/135014753/04.webp" data-title="Vertigem" data-id="135014753"><img src="assets/work/135014753/04.webp" loading="lazy" decoding="async" alt="Vertigem" style="aspect-ratio:600/533"></button>
-          <button class="tile" data-full="assets/work/120517563/15.webp" data-title="Mononoke · Progresso" data-id="120517563"><img src="assets/work/120517563/15.webp" loading="lazy" decoding="async" alt="Mononoke · Progresso" style="aspect-ratio:534/267"></button>
-          <button class="tile" data-full="assets/work/135486111/06.webp" data-title="Tristes Trópicos" data-id="135486111"><img src="assets/work/135486111/06.webp" loading="lazy" decoding="async" alt="Tristes Trópicos" style="aspect-ratio:600/667"></button>
-          <button class="tile" data-full="assets/work/54196333/11.webp" data-title="Feel.U" data-id="54196333"><img src="assets/work/54196333/11.webp" loading="lazy" decoding="async" alt="Feel.U" style="aspect-ratio:1646/1646"></button>
-          <button class="tile" data-full="assets/work/209221077/13.webp" data-title="dlocal · CONNECT" data-id="209221077"><img src="assets/work/209221077/13.webp" loading="lazy" decoding="async" alt="dlocal · CONNECT" style="aspect-ratio:600/338"></button>
-          <button class="tile" data-full="assets/work/225576979/14.webp" data-title="void · floating spa" data-id="225576979"><img src="assets/work/225576979/14.webp" loading="lazy" decoding="async" alt="void · floating spa" style="aspect-ratio:600/378"></button>
-          <button class="tile" data-full="assets/work/233337759/10.webp" data-title="viva la vegan" data-id="233337759"><img src="assets/work/233337759/10.webp" loading="lazy" decoding="async" alt="viva la vegan" style="aspect-ratio:600/338"></button>
-          <button class="tile" data-full="assets/work/250632349/12.webp" data-title="Lerdo · pink neon" data-id="250632349"><img src="assets/work/250632349/12.webp" loading="lazy" decoding="async" alt="Lerdo · pink neon" style="aspect-ratio:600/338"></button>
-          <button class="tile" data-full="assets/work/135014753/06.webp" data-title="Vertigem" data-id="135014753"><img src="assets/work/135014753/06.webp" loading="lazy" decoding="async" alt="Vertigem" style="aspect-ratio:600/1065"></button>
-          <button class="tile" data-full="assets/work/120517563/24.webp" data-title="Mononoke · Progresso" data-id="120517563"><img src="assets/work/120517563/24.webp" loading="lazy" decoding="async" alt="Mononoke · Progresso" style="aspect-ratio:178/89"></button>
-          <button class="tile" data-full="assets/work/135486111/08.webp" data-title="Tristes Trópicos" data-id="135486111"><img src="assets/work/135486111/08.webp" loading="lazy" decoding="async" alt="Tristes Trópicos" style="aspect-ratio:600/1197"></button>
-          <button class="tile" data-full="assets/work/54196333/16.webp" data-title="Feel.U" data-id="54196333"><img src="assets/work/54196333/16.webp" loading="lazy" decoding="async" alt="Feel.U" style="aspect-ratio:1400/790"></button>
-          <button class="tile" data-full="assets/work/209221077/18.webp" data-title="dlocal · CONNECT" data-id="209221077"><img src="assets/work/209221077/18.webp" loading="lazy" decoding="async" alt="dlocal · CONNECT" style="aspect-ratio:600/750"></button>
-          <button class="tile" data-full="assets/work/225576979/19.webp" data-title="void · floating spa" data-id="225576979"><img src="assets/work/225576979/19.webp" loading="lazy" decoding="async" alt="void · floating spa" style="aspect-ratio:600/338"></button>
-          <button class="tile" data-full="assets/work/233337759/13.webp" data-title="viva la vegan" data-id="233337759"><img src="assets/work/233337759/13.webp" loading="lazy" decoding="async" alt="viva la vegan" style="aspect-ratio:600/369"></button>
-          <button class="tile" data-full="assets/work/250632349/16.webp" data-title="Lerdo · pink neon" data-id="250632349"><img src="assets/work/250632349/16.webp" loading="lazy" decoding="async" alt="Lerdo · pink neon" style="aspect-ratio:600/338"></button>
-          <button class="tile" data-full="assets/work/135014753/08.webp" data-title="Vertigem" data-id="135014753"><img src="assets/work/135014753/08.webp" loading="lazy" decoding="async" alt="Vertigem" style="aspect-ratio:600/772"></button>
-          <button class="tile" data-full="assets/work/120517563/33.webp" data-title="Mononoke · Progresso" data-id="120517563"><img src="assets/work/120517563/33.webp" loading="lazy" decoding="async" alt="Mononoke · Progresso" style="aspect-ratio:534/267"></button>
-          <button class="tile" data-full="assets/work/54196333/21.webp" data-title="Feel.U" data-id="54196333"><img src="assets/work/54196333/21.webp" loading="lazy" decoding="async" alt="Feel.U" style="aspect-ratio:1080/1350"></button>
-          <button class="tile" data-full="assets/work/209221077/24.webp" data-title="dlocal · CONNECT" data-id="209221077"><img src="assets/work/209221077/24.webp" loading="lazy" decoding="async" alt="dlocal · CONNECT" style="aspect-ratio:600/752"></button>
-          <button class="tile" data-full="assets/work/225576979/24.webp" data-title="void · floating spa" data-id="225576979"><img src="assets/work/225576979/24.webp" loading="lazy" decoding="async" alt="void · floating spa" style="aspect-ratio:600/375"></button>
-          <button class="tile" data-full="assets/work/233337759/16.webp" data-title="viva la vegan" data-id="233337759"><img src="assets/work/233337759/16.webp" loading="lazy" decoding="async" alt="viva la vegan" style="aspect-ratio:600/338"></button>
-          <button class="tile" data-full="assets/work/250632349/20.webp" data-title="Lerdo · pink neon" data-id="250632349"><img src="assets/work/250632349/20.webp" loading="lazy" decoding="async" alt="Lerdo · pink neon" style="aspect-ratio:2000/2500"></button>
-          <button class="tile" data-full="assets/work/120517563/40.webp" data-title="Mononoke · Progresso" data-id="120517563"><img src="assets/work/120517563/40.webp" loading="lazy" decoding="async" alt="Mononoke · Progresso" style="aspect-ratio:178/89"></button>
-          <button class="tile" data-full="assets/work/209221077/29.webp" data-title="dlocal · CONNECT" data-id="209221077"><img src="assets/work/209221077/29.webp" loading="lazy" decoding="async" alt="dlocal · CONNECT" style="aspect-ratio:600/338"></button>
-          <button class="tile" data-full="assets/work/225576979/28.webp" data-title="void · floating spa" data-id="225576979"><img src="assets/work/225576979/28.webp" loading="lazy" decoding="async" alt="void · floating spa" style="aspect-ratio:5304/7952"></button>
-          <button class="tile" data-full="assets/work/225576979/33.webp" data-title="void · floating spa" data-id="225576979"><img src="assets/work/225576979/33.webp" loading="lazy" decoding="async" alt="void · floating spa" style="aspect-ratio:600/338"></button>
-        </div>
-      </div>
-    </section>
-
-    <!-- LIGHTBOX -->
-    <div id="lightbox" aria-hidden="true">
-      <button class="lb-close" aria-label="Close">✕</button>
-      <button class="lb-nav lb-prev" aria-label="Previous">‹</button>
-      <button class="lb-nav lb-next" aria-label="Next">›</button>
-      <figure class="lb-stage"><img id="lb-img" src="" alt=""><figcaption id="lb-cap"></figcaption></figure>
-    </div>
-
-    <!-- S8 · ABOUT -->
-    <section class="about solid pad" data-theme="light">
-      <div class="max grid">
-        <p class="rv" data-split><b>The punk and DIY scene made me a designer years before I understood what design was.</b> Self taught musician since 13. Moved by everything new. Fourteen years later I run CEROL, my own design company, and still build worlds end to end, from the pixel to the P&amp;L.</p>
-        <div class="portrait rv"><img src="assets/photos/portrait.webp" alt="Marcos Carvalho" width="1400" height="1867"></div>
-      </div>
-    </section>
-
-    <!-- S9 · CONTACT -->
+    <!-- S6 · CONTACT -->
     <footer class="contact solid pad" data-theme="light">
       <div class="max">
         <div class="cta rv-line"><span>Let's build<br>something. <a href="mailto:marcos@cerol.co" data-magnetic>marcos@cerol.co</a></span></div>
@@ -263,7 +247,8 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-<script type="module" src="js/scene.js?v=36"></script>
-<script type="module" src="js/main.js?v=36"></script>
+<script type="module" src="js/scene.js?v=68"></script>
+<script type="module" src="js/main.js?v=68"></script>
+<script type="module" src="js/work.js?v=68"></script>
 </body>
 </html>

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Product work — Marcos Carvalho</title>
+<meta name="description" content="Product design cases by Marcos Carvalho: Solvefy, Remessa Online, Leads2b, Nissan, Huge and more. Research to shipped system, in dense products." />
+<meta property="og:title" content="Product work — Marcos Carvalho" />
+<meta property="og:description" content="Research to shipped system, in dense products. Fintech, ecommerce and B2B SaaS." />
+<meta property="og:url" content="https://marcoscarvalho.work/product" />
+<link rel="canonical" href="https://marcoscarvalho.work/product" />
+<link rel="icon" href="assets/cerol/void.svg" />
+<link rel="preload" as="font" href="fonts/Pacaembu-Regular.otf" type="font/otf" crossorigin>
+<link rel="preload" as="font" href="fonts/Pacaembu-Bold.otf" type="font/otf" crossorigin>
+<link rel="preload" as="font" href="fonts/dTJakob_Rg.otf" type="font/otf" crossorigin>
+<link rel="stylesheet" href="css/main.css?v=68" />
+</head>
+<body>
+
+  <!-- ============ LOADER ============
+       No WebGL tunnel on the catalog pages, so the loader no longer waits on
+       __meshesReady (see runLoader in main.js) and clears on its own count. -->
+  <div id="loader">
+    <div class="pct">0</div>
+    <div class="wordmark">MARCOS CARVALHO</div>
+  </div>
+  <div id="loader-wipe"></div>
+
+  <div id="grain"></div>
+
+  <!-- ============ NAV ============ -->
+  <nav class="nav" id="nav">
+    <a class="brand" href="index.html"><span>Marcos</span> <span>Carvalho</span></a>
+    <div class="navlinks">
+      <a href="product.html" aria-current="page">Product</a>
+      <a href="craft.html">Craft</a>
+      <a href="mailto:marcos@cerol.co">Contact</a>
+    </div>
+  </nav>
+
+  <div class="content">
+
+    <!-- P1 · MASTHEAD — the page states its own scope, so the list under it
+         needs no preamble. Dark, continuing the register the home's Evidence
+         chapter set for anything load bearing. -->
+    <header class="masthead invert pad" data-theme="dark">
+      <div class="max">
+        <div class="lbl rv">Product work</div>
+        <h1 class="mast-title rv-line"><span>Research to shipped system.</span></h1>
+        <p class="mast-lead rv">Dense products, fintech and ecommerce. Information architecture decided before the pixels, design systems that survive the second year, and delivery that reaches production.</p>
+      </div>
+    </header>
+
+    <!-- P2 · THE LIST — built from data/projects.json by js/work.js:
+         everything with secondary:false, in the order the CMS holds. -->
+    <section class="invert pad catalog" id="work" data-theme="dark">
+      <div class="max">
+        <div class="proj" data-catalog="product" data-layout="list"></div>
+      </div>
+    </section>
+
+    <!-- P3 · THE CRAFT DOOR — this is the only bridge to the other half of the
+         portfolio. As one more line under seven cases it read as a footnote,
+         so it closes the page at masthead scale: the name, one line under it,
+         and the covers showing what is behind the door before you open it. -->
+    <section class="door invert pad" data-theme="dark">
+      <div class="max">
+        <a class="door-link rv" href="craft.html" data-transition>
+          <span class="door-title">Graphic &amp; craft <span class="arrow">↗</span></span>
+          <span class="door-lead">Brand systems, editorial, apparel and record sleeves. The same hands, a different register.</span>
+          <span class="door-strip" data-catalog="craft" data-layout="strip" data-limit="4" aria-hidden="true"></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- P4 · CONTACT -->
+    <footer class="contact solid pad" data-theme="light">
+      <div class="max">
+        <div class="cta rv-line"><span>Let's build<br>something. <a href="mailto:marcos@cerol.co" data-magnetic>marcos@cerol.co</a></span></div>
+        <div class="meta">
+          <span>©. Marcos Carvalho — 2026</span>
+          <span>Product Design Lead · AI native</span>
+          <span><a href="https://www.linkedin.com/in/marcospc">LinkedIn</a> · <a href="https://www.behance.net/marcos_____carvalho">Behance</a></span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <div id="thumb"></div>
+  <div id="cursor"><div class="ring"></div><div class="dot"></div></div>
+  <div id="page-transition"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script type="module" src="js/main.js?v=68"></script>
+<script type="module" src="js/work.js?v=68"></script>
+</body>
+</html>

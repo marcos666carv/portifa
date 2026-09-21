@@ -12,3 +12,7 @@ https://portmarcos.netlify.app/* https://marcoscarvalho.work/:splat 301!
 # With post-processing off (see netlify.toml), pretty URLs are disabled, so keep
 # the clean /cms entry point working.
 /cms       /cms.html                  200
+
+# The work split into two catalog pages; keep both on clean URLs.
+/product   /product.html              200
+/craft     /craft.html                200
