@@ -633,9 +633,7 @@ section{position:relative}
    The home carries no work on it, so this pair is the whole handover. Same
    grammar as the single door at the end of each catalog page, halved: two
    columns on one hairline, neither ranked above the other. */
-/* tighter at the bottom than the top: the contact's own 14vh sits right
-   under it, and the two together were most of the gap */
-.doors{padding-top:clamp(52px,9vh,120px);padding-bottom:clamp(40px,5vh,68px)}
+.doors{padding-top:clamp(52px,9vh,120px);padding-bottom:clamp(54px,8vh,112px)}
 .doors-grid{
   display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
   gap:clamp(30px,4vw,76px);
@@ -770,11 +768,6 @@ section{position:relative}
 
 /* ---- contact ---- */
 .contact{padding:14vh 32px 70px;border-top:1px solid var(--line-th)}
-/* Home only, by structure: the doors are the last thing before the ask there,
-   and they already close on their own covers — the 14vh the catalog pages
-   need after a long list reads as dead air right under them. product.html
-   and craft.html keep the full breath. */
-.doors + .contact{padding-top:clamp(46px,6vh,82px)}
 .contact .cta{font-weight:700;font-size:clamp(38px,9vw,150px);line-height:.9;letter-spacing:-.02em}
 .contact .cta a{
   border-bottom:2px solid var(--line-th);transition:border-color .3s ease;
