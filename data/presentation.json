@@ -1,0 +1,89 @@
+{
+  "_note": "Decks da página presentation.html. Cada slide é um arquivo em assets/deck/<id>/; um .mp4 roda como vídeo mudo em loop e usa o .webp de mesmo nome como poster. A capa na seleção é sempre o primeiro slide. Este arquivo não é tocado pelo CMS.",
+  "decks": [
+    {
+      "id": "nissan",
+      "title": "Customer Care Panel · Nissan",
+      "meta": "Product · Data",
+      "slides": [
+        "assets/deck/nissan/01.webp",
+        "assets/deck/nissan/02.webp",
+        "assets/deck/nissan/03.webp",
+        "assets/deck/nissan/04.webp",
+        "assets/deck/nissan/05.webp",
+        "assets/deck/nissan/06.webp",
+        "assets/deck/nissan/07.webp",
+        "assets/deck/nissan/08.webp",
+        "assets/deck/nissan/09.webp",
+        "assets/deck/nissan/10.webp",
+        "assets/deck/nissan/11.webp",
+        "assets/deck/nissan/12.webp",
+        "assets/deck/nissan/13.webp",
+        "assets/deck/nissan/14.webp",
+        "assets/deck/nissan/15.webp",
+        "assets/deck/nissan/16.webp",
+        "assets/deck/nissan/17.webp",
+        "assets/deck/nissan/18.webp",
+        "assets/deck/nissan/19.webp",
+        "assets/deck/nissan/20.webp",
+        "assets/deck/nissan/21.webp"
+      ]
+    },
+    {
+      "id": "evil-apples",
+      "title": "Evil Apples",
+      "meta": "Game UX · Art direction · NY",
+      "slides": [
+        "assets/deck/evil-apples/01.webp",
+        "assets/deck/evil-apples/02.webp",
+        "assets/deck/evil-apples/03.webp",
+        "assets/deck/evil-apples/04.webp",
+        "assets/deck/evil-apples/05.webp",
+        "assets/deck/evil-apples/06.webp",
+        "assets/deck/evil-apples/07.webp",
+        "assets/deck/evil-apples/08.webp",
+        "assets/deck/evil-apples/09.webp",
+        "assets/deck/evil-apples/10.webp",
+        "assets/deck/evil-apples/11.webp",
+        "assets/deck/evil-apples/12.webp",
+        "assets/deck/evil-apples/13.webp",
+        "assets/deck/evil-apples/14.webp",
+        "assets/deck/evil-apples/15.webp",
+        "assets/deck/evil-apples/16.webp",
+        "assets/deck/evil-apples/17.webp",
+        "assets/deck/evil-apples/18.webp"
+      ]
+    },
+    {
+      "id": "easy-fleet",
+      "title": "Easy Fleet · Renault",
+      "meta": "Product · Car rental platform",
+      "slides": [
+        "assets/deck/easy-fleet/01.webp",
+        "assets/deck/easy-fleet/02.webp",
+        "assets/deck/easy-fleet/03.webp",
+        "assets/deck/easy-fleet/04.mp4",
+        "assets/deck/easy-fleet/05.mp4",
+        "assets/deck/easy-fleet/06.mp4"
+      ]
+    },
+    {
+      "id": "leads2b",
+      "title": "Leads2b",
+      "meta": "Product Design Lead · Sales engagement",
+      "slides": [
+        "assets/deck/leads2b/01.webp",
+        "assets/deck/leads2b/02.webp",
+        "assets/deck/leads2b/03.webp",
+        "assets/deck/leads2b/04.webp",
+        "assets/deck/leads2b/05.webp",
+        "assets/deck/leads2b/06.webp",
+        "assets/deck/leads2b/07.webp",
+        "assets/deck/leads2b/08.webp",
+        "assets/deck/leads2b/09.webp",
+        "assets/deck/leads2b/10.webp",
+        "assets/deck/leads2b/11.webp"
+      ]
+    }
+  ]
+}

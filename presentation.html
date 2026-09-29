@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Graphic &amp; craft — Marcos Carvalho</title>
-<meta name="description" content="Brand, editorial and album work by Marcos Carvalho: dlocal CONNECT, void, Feel.U, viva la vegan, Lerdo, Vertigem, Mononoke and more." />
-<meta property="og:title" content="Graphic &amp; craft — Marcos Carvalho" />
-<meta property="og:description" content="Brand systems, editorial, apparel and album covers. The same hands that ship product." />
-<meta property="og:url" content="https://marcoscarvalho.work/craft" />
-<link rel="canonical" href="https://marcoscarvalho.work/craft" />
+<title>Selected cases — Marcos Carvalho</title>
+<meta name="description" content="Selected cases by Marcos Carvalho, Product Design Lead: Nissan, Evil Apples, Easy Fleet for Renault and Leads2b, presented one page at a time." />
+<meta property="og:title" content="Selected cases — Marcos Carvalho" />
+<meta property="og:description" content="Fourteen years turning complex systems into products people use. Now designing and building with AI." />
+<meta property="og:url" content="https://marcoscarvalho.work/presentation" />
+<link rel="canonical" href="https://marcoscarvalho.work/presentation" />
 <link rel="icon" href="assets/cerol/void.svg" />
 <link rel="preload" as="font" href="fonts/Pacaembu-Regular.otf" type="font/otf" crossorigin>
 <link rel="preload" as="font" href="fonts/Pacaembu-Bold.otf" type="font/otf" crossorigin>
@@ -17,53 +17,74 @@
 </head>
 <body>
 
+  <!-- ============ LOADER ============ -->
   <div id="loader">
     <div class="pct">0</div>
     <div class="wordmark">MARCOS CARVALHO</div>
   </div>
   <div id="loader-wipe"></div>
 
+  <!-- ============ FIXED 3D + GRAIN ============ -->
+  <canvas id="gl"></canvas>
   <div id="grain"></div>
 
-  <nav class="nav" id="nav">
+  <!-- ============ HERO INTRO MONTAGE (Huge introFastImages) ============ -->
+  <div id="hero-montage" aria-hidden="true">
+    <figure><img src="assets/photos/study.png" alt=""></figure>
+    <figure><img src="assets/photos/hands.png" alt=""></figure>
+    <figure class="sym"><img src="assets/cerol/sun.svg" alt=""></figure>
+    <figure class="sym"><img src="assets/cerol/urchin.svg" alt=""></figure>
+    <figure class="sym"><img src="assets/cerol/scribble.svg" alt=""></figure>
+    <figure class="sym"><img src="assets/cerol/creature.svg" alt=""></figure>
+    <figure class="sym"><img src="assets/cerol/void.svg" alt=""></figure>
+  </div>
+
+  <!-- ============ NAV ============ -->
+  <!-- starts hidden in the markup so the wordmark never flashes over the hero
+       before main.js runs, and so its reveal doesn't play against the loader -->
+  <nav class="nav nav-mask nav-hidden" id="nav">
     <a class="brand" href="index.html"><span>Marcos</span> <span>Carvalho</span></a>
+    <!-- the site is three pages now, so the bar has to carry the way in.
+         nav-mask hides only the wordmark over the hero (the hero already
+         spells the name) — the links stay reachable from the first pixel. -->
     <div class="navlinks">
       <a href="product.html">Product</a>
-      <a href="craft.html" aria-current="page">Craft</a>
+      <a href="craft.html">Craft</a>
       <a href="mailto:marcos@cerol.co">Contact</a>
     </div>
   </nav>
 
+  <!-- ============ CONTENT ============ -->
   <div class="content">
 
-    <!-- C1 · MASTHEAD — light, like every other band on this page. The dark
-         opening was inherited from product.html and made the craft page read
-         as two pages stitched together. -->
-    <header class="masthead solid pad" data-theme="light">
-      <div class="max">
-        <div class="lbl rv">Graphic &amp; craft</div>
-        <h1 class="mast-title rv-line"><span>The same hands that ship product build brands, apparel and album covers.</span></h1>
-        <p class="mast-lead rv">Brand systems, editorial, apparel and record sleeves. Here the image is the argument, so it leads.</p>
+    <!-- P1 · HERO — the same as the home's -->
+    <section class="hero">
+      <!-- the page's h1 lives for structure/SEO; visually hidden at every size -->
+      <h1 class="hero-name"><span>Marcos</span> <span>Carvalho</span></h1>
+      <div class="btm">
+        <!-- the spans let mobile break the roles onto their own lines -->
+        <div class="lead"><span>Product Design Lead</span><span class="sep"> · </span><span>AI native</span></div>
+        <div class="side">
+          <span>Brazil · Remote worldwide</span>
+        </div>
       </div>
-    </header>
+      <div class="scroll-cue" aria-hidden="true">↓</div>
+    </section>
 
-    <!-- C2 · THE GRID — built from data/projects.json by js/work.js: everything
-         with secondary:true. Covers keep their own ratio instead of being
-         cropped to a uniform box; the offset in CSS is what holds the column. -->
-    <section class="craftgrid pad solid" id="craftwork" data-theme="light">
+    <!-- P2 · SELECTED CASES — rendered from data/presentation.json by
+         js/deck.js. Each cover is the first page of its deck; opening one
+         lays the deck over the page, and closing it brings you back here. -->
+    <section class="cases solid pad" id="cases" data-theme="light">
       <div class="max">
-        <div class="lbl rv">Selected</div>
-        <div class="gwrap" data-catalog="craft" data-layout="grid"></div>
+        <div class="lbl rv">Selected cases</div>
+        <div class="cases-grid" data-deck-list></div>
       </div>
     </section>
 
-    <!-- C3 · LOOSE CRAFT — three rows of loose work running sideways. It was a
-         3D globe you dragged to spin, which meant rotating it to find out what
-         was in there; as a grid the same pieces are scannable.
-         The stage pins and GSAP scrubs the rows across as you scroll, so the
-         page only moves on to the next section once the strip has run out.
-         Light, like the rest of this page: it used to flip to dark halfway
-         down for no reason the reader could see. -->
+    <!-- P3 · LOOSE CRAFT — the strip from craft.html, with the same pinned
+         sideways travel: you keep scrolling down and the work runs across.
+         The tiles come from the craft list in projects.json, so what the CMS
+         curates there shows up here too. -->
     <section class="loose solid" id="loose" data-theme="light">
       <div class="loose-stage">
         <div class="loose-head">
@@ -129,23 +150,12 @@
       <figure class="lb-stage"><img id="lb-img" src="" alt=""><figcaption id="lb-cap"></figcaption></figure>
     </div>
 
-    <!-- C4 · THE PRODUCT DOOR — the way back out, given the same weight the
-         craft door gets at the end of product.html: name at masthead scale,
-         one line under it, and four covers showing what is behind it. Light
-         here rather than inverted, because this page is light throughout. -->
-    <section class="door solid pad" data-theme="light">
-      <div class="max">
-        <a class="door-link rv" href="product.html" data-transition>
-          <span class="door-title">Product work <span class="arrow">↗</span></span>
-          <span class="door-lead">Dense products, fintech and ecommerce. Research to shipped system, and the systems that hold after it ships.</span>
-          <span class="door-strip" data-catalog="product" data-layout="strip" data-limit="4" aria-hidden="true"></span>
-        </a>
-      </div>
-    </section>
-
-    <!-- C5 · ABOUT — the same block closes every page. Transparent like the
-         home's, so the markup stays one shape across the three pages; there
-         is no 3D canvas on this one, so it reads the same either way. -->
+    <!-- P4 · ABOUT — the same block closes every page, always the last thing
+         before the ask: you read the work, then who made it, then the ask.
+         No .solid: the band is transparent so the mark crossing the window
+         above it keeps travelling through instead of being sliced off by an
+         opaque edge. The contact below is still solid, and that is where the
+         tunnel ends. -->
     <section class="about pad" data-theme="light">
       <div class="max grid">
         <p class="rv" data-split><b>The punk and DIY scene made me a designer years before I understood what design was.</b> Self taught musician since 13. Moved by everything new. Fourteen years later I run CEROL, my own design company, and still build worlds end to end, from the pixel to the P&amp;L.</p>
@@ -153,8 +163,7 @@
       </div>
     </section>
 
-
-    <!-- C6 · CONTACT -->
+    <!-- P5 · CONTACT -->
     <footer class="contact solid pad" data-theme="light">
       <div class="max">
         <div class="cta rv-line"><span>Let's build<br>something. <a href="mailto:marcos@cerol.co" data-magnetic>marcos@cerol.co</a></span></div>
@@ -168,14 +177,42 @@
 
   </div>
 
+  <!-- ============ THE DECK ============
+       Laid over the page at z-index 90: above the content and the nav, under
+       the drawn cursor (100), which stays visible over the slides. -->
+  <div id="deck" class="deck" role="dialog" aria-modal="true" aria-label="Case presentation" aria-hidden="true" tabindex="-1">
+    <div class="deck-track" id="deck-track"></div>
+    <button class="deck-close" id="deck-close" type="button" aria-label="Close and go back to the cases">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="deck-count" aria-live="polite"><span id="deck-cur">01</span> / <span id="deck-tot">01</span></div>
+  </div>
+
+  <!-- ============ FLOATING UI ============ -->
+  <!-- iOS 13+ gates the gyroscope behind a user-gesture permission request;
+       scene.js reveals this chip only on touch devices that need it -->
+  <button id="motion-cta" class="motion-chip" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+      <rect x="8.2" y="4" width="7.6" height="16" rx="1.6" transform="rotate(10 12 12)"/>
+      <path d="M4 9.4A9.6 9.6 0 0 1 5.8 5.9M20 14.6a9.6 9.6 0 0 1-1.8 3.5"/>
+    </svg>
+    <span>Tilt to explore</span>
+  </button>
   <div id="thumb"></div>
   <div id="cursor"><div class="ring"></div><div class="dot"></div></div>
   <div id="page-transition"></div>
 
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script type="module" src="js/scene.js?v=81"></script>
 <script type="module" src="js/main.js?v=81"></script>
-<script type="module" src="js/work.js?v=81"></script>
+<script type="module" src="js/deck.js?v=81"></script>
 </body>
 </html>

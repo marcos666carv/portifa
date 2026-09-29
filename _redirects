@@ -16,3 +16,4 @@ https://portmarcos.netlify.app/* https://marcoscarvalho.work/:splat 301!
 # The work split into two catalog pages; keep both on clean URLs.
 /product   /product.html              200
 /craft     /craft.html                200
+/presentation /presentation.html        200
