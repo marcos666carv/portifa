@@ -659,6 +659,17 @@ section{position:relative}
   width:100%;height:100%;object-fit:contain;display:block;
   user-select:none;-webkit-user-drag:none;
 }
+/* a board taller than the screen: full width, top aligned, and panned by
+   deck.js through --pan. The page clips it so it never shows through the
+   neighbouring pages mid move. */
+.deck-slide{overflow:hidden}
+.deck-slide.tall{align-items:flex-start}
+.deck-slide.tall img{
+  height:auto;max-width:none;object-fit:initial;
+  transform:translate3d(0,var(--pan,0px),0);
+  transition:transform .62s cubic-bezier(.16,.84,.36,1);
+}
+.deck-slide.pan-now img{transition:none}
 /* the two controls read on any page: a dark disc for the one you press, a
    difference blend for the one you only read */
 .deck-close{
@@ -680,7 +691,7 @@ section{position:relative}
   font-variant-numeric:tabular-nums;pointer-events:none;
 }
 @media (prefers-reduced-motion:reduce){
-  .deck,.deck-slide.anim{transition:none}
+  .deck,.deck-slide.anim,.deck-slide.tall img{transition:none}
 }
 
 /* ---- the doors (end of each catalog page) ----

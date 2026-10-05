@@ -70,6 +70,8 @@ function hydrate(i) {
     if (m.tagName === 'VIDEO') {
       m.poster = m.dataset.poster;
       m.preload = 'auto';
+    } else {
+      m.addEventListener('load', () => classify(k), { once: true });
     }
     m.src = m.dataset.src;
   }
@@ -98,8 +100,91 @@ function settle() {
   });
 }
 
+/* ---------- tall pages ----------
+   Most pages are 16:9 and are shown whole. A board taller than the screen
+   would shrink to a strip with unreadable type if it were shown whole, so it
+   fits the screen's width instead — scaled up at most 1.25x, past which it
+   goes soft — and an advance first pans down through it, then turns the
+   page. Going back pans up, and arriving at a tall page from the one after
+   it starts at its bottom, so walking backwards is one continuous move.
+   Full width matters for more than size: these boards have colour blocks
+   that bleed off their right edge, and a board floating in the middle of the
+   screen would cut them short. */
+const PAN_STEP = 0.82;   // of the screen per step, so each view overlaps the last
+const MAX_UP = 1.25;
+let pan = 0;             // how far into the current tall page, in px
+
+function measure(i) {
+  const img = slides[i] && slides[i].querySelector('img');
+  if (!img || !img.naturalWidth) return null;
+  const vw = track.clientWidth, vh = track.clientHeight;
+  const nw = img.naturalWidth, nh = img.naturalHeight;
+  /* Only a portrait board qualifies, and only where showing it whole would
+     leave it a narrow strip. Without the portrait test, a 16:9 slide on an
+     ultrawide screen would count as tall and start to pan; without the strip
+     test, a board on a phone held upright — where it already fits whole —
+     would too. */
+  if (nh <= nw || Math.min(vw, vh * nw / nh) / vw >= 0.6) return null;
+  const w = Math.min(vw, nw * MAX_UP);
+  const h = w * nh / nw;
+  if (h <= vh + 1) return null;
+  const max = h - vh;
+  /* Equal steps, not a fixed one with whatever is left at the end: a fixed
+     82% left a last step of 50px on the Promotion board, a press that showed
+     nothing new. Round to the nearest whole number of steps, and never let a
+     step get so long that a band of the board goes by unseen. */
+  let n = Math.max(1, Math.round(max / (vh * PAN_STEP)));
+  if (max / n > vh * 0.95) n = Math.ceil(max / (vh * 0.95));
+  return { w, max, step: max / n };
+}
+
+/* the board's own top left corner, so whatever shows around it on a very
+   wide screen is its paper and not a frame */
+function edgeColor(img) {
+  try {
+    const c = document.createElement('canvas');
+    c.width = c.height = 1;
+    const x = c.getContext('2d');
+    x.drawImage(img, 0, 0, 8, 8, 0, 0, 1, 1);
+    const [r, g, b] = x.getImageData(0, 0, 1, 1).data;
+    return `rgb(${r},${g},${b})`;
+  } catch (_) { return ''; }
+}
+
+function setPan(px, instant) {
+  pan = Math.max(0, px);
+  const s = slides[cur];
+  if (!s) return;
+  if (instant) s.classList.add('pan-now');
+  s.style.setProperty('--pan', `${-pan}px`);
+  if (instant) { void s.offsetWidth; s.classList.remove('pan-now'); }
+}
+
+/* whether a page is tall depends on the screen as much as on the image, so
+   this runs when the image arrives and again on every resize */
+function classify(i) {
+  const s = slides[i];
+  const img = s && s.querySelector('img');
+  if (!img) return;
+  const m = measure(i);
+  s.classList.toggle('tall', !!m);
+  if (m) {
+    img.style.width = `${m.w}px`;
+    if (!s.dataset.bg) s.dataset.bg = edgeColor(img);
+    s.style.background = s.dataset.bg;
+  } else {
+    img.style.width = '';
+    s.style.background = '';
+  }
+  if (i === cur) setPan(Math.min(pan, m ? m.max : 0), true);
+}
+
 function go(n) {
   if (!active) return;
+  /* inside a tall page a step forward or back pans before it turns the page */
+  const t = slides[cur] && slides[cur].classList.contains('tall') ? measure(cur) : null;
+  if (t && n === cur + 1 && pan < t.max - 1) { setPan(Math.min(pan + t.step, t.max)); return; }
+  if (t && n === cur - 1 && pan > 1) { setPan(Math.max(pan - t.step, 0)); return; }
   if (n >= slides.length) { requestClose(); return; }  // past the last page: back to the selection
   if (n < 0 || n === cur) return;
   const from = cur;
@@ -116,6 +201,8 @@ function go(n) {
   media(from, false);
   cur = n;
   hydrate(cur);
+  const tn = slides[cur].classList.contains('tall') ? measure(cur) : null;
+  setPan(!fwd && tn ? tn.max : 0, true);
   media(cur, true);
   curEl.textContent = pad(cur + 1);
   history.replaceState(history.state, '', `#${active.id}/${cur + 1}`);
@@ -127,6 +214,7 @@ function open(id, at = 0, push = true) {
   active = d;
   build(d);
   cur = Math.max(0, Math.min(at, d.slides.length - 1));
+  pan = 0;
   settle();
   hydrate(cur);
   curEl.textContent = pad(cur + 1);
@@ -188,6 +276,14 @@ addEventListener('popstate', () => {
   const m = fromHash();
   if (active && (!m || m.id !== active.id)) close();
   else if (!active && m) open(m.id, m.at, false);
+});
+
+addEventListener('resize', () => {
+  if (!active) return;
+  slides.forEach((sl, i) => {
+    const img = sl.querySelector('img');
+    if (img && img.naturalWidth) classify(i);
+  });
 });
 
 /* ---------- input ---------- */
