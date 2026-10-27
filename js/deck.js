@@ -42,7 +42,7 @@ let opener = null;   // the card that opened it, to hand focus back to
 function cardHTML(d) {
   const first = d.slides[0];
   const src = isVid(first) ? posterOf(first) : first;   // the cover is page one
-  return `<a class="dcase rv" href="#${esc(d.id)}" data-deck="${esc(d.id)}">`
+  return `<a class="dcase${d.wide ? ' dcase-wide' : ''} rv" href="#${esc(d.id)}" data-deck="${esc(d.id)}">`
     + `<span class="dcase-img"><img src="${esc(src)}" alt="${esc(d.title)}" loading="lazy" decoding="async"></span>`
     + `<span class="dcase-meta"><span class="dt">${esc(d.title)} <span class="arrow">↗</span></span>`
     + `<span class="dm">${esc(d.meta)}</span></span></a>`;

@@ -1,6 +1,42 @@
 {
-  "_note": "Decks da página presentation.html. Cada slide é um arquivo em assets/deck/<id>/; um .mp4 roda como vídeo mudo em loop e usa o .webp de mesmo nome como poster. A capa na seleção é sempre o primeiro slide. Este arquivo não é tocado pelo CMS.",
+  "_note": "Decks da página presentation.html. Cada slide é um arquivo em assets/deck/<id>/; um .mp4 roda como vídeo mudo em loop e usa o .webp de mesmo nome como poster. A capa na seleção é sempre o primeiro slide; \"wide\": true faz a capa ocupar a linha inteira. Este arquivo não é tocado pelo CMS.",
   "decks": [
+    {
+      "id": "solvefy",
+      "title": "Solvefy",
+      "meta": "Product Design Lead · Martech ecosystem",
+      "wide": true,
+      "slides": [
+        "assets/deck/solvefy/01.webp",
+        "assets/deck/solvefy/02.webp",
+        "assets/deck/solvefy/03.webp",
+        "assets/deck/solvefy/04.webp",
+        "assets/deck/solvefy/05.webp",
+        "assets/deck/solvefy/06.webp",
+        "assets/deck/solvefy/07.webp",
+        "assets/deck/solvefy/08.webp",
+        "assets/deck/solvefy/09.webp",
+        "assets/deck/solvefy/10.webp",
+        "assets/deck/solvefy/11.webp",
+        "assets/deck/solvefy/12.webp",
+        "assets/deck/solvefy/13.webp",
+        "assets/deck/solvefy/14.webp",
+        "assets/deck/solvefy/15.webp",
+        "assets/deck/solvefy/16.webp",
+        "assets/deck/solvefy/17.webp",
+        "assets/deck/solvefy/18.webp",
+        "assets/deck/solvefy/19.webp",
+        "assets/deck/solvefy/20.webp",
+        "assets/deck/solvefy/21.webp",
+        "assets/deck/solvefy/22.webp",
+        "assets/deck/solvefy/23.webp",
+        "assets/deck/solvefy/24.webp",
+        "assets/deck/solvefy/25.webp",
+        "assets/deck/solvefy/26.webp",
+        "assets/deck/solvefy/27.webp",
+        "assets/deck/solvefy/28.webp"
+      ]
+    },
     {
       "id": "nissan",
       "title": "Customer Care Panel · Nissan",
