@@ -42,8 +42,9 @@ let opener = null;   // the card that opened it, to hand focus back to
 
 /* ---------- the selection ---------- */
 function cardHTML(d) {
-  const first = d.slides[0];
-  const src = isVid(first) ? posterOf(first) : first;   // the cover is page one
+  /* the cover is page one; a live deck has no page list, so it names its cover */
+  const first = d.cover || d.slides[0];
+  const src = isVid(first) ? posterOf(first) : first;
   return `<a class="dcase${d.wide ? ' dcase-wide' : ''} rv" href="#${esc(d.id)}" data-deck="${esc(d.id)}">`
     + `<span class="dcase-img"><img src="${esc(src)}" alt="${esc(d.title)}" loading="lazy" decoding="async"></span>`
     + `<span class="dcase-meta"><span class="dt">${esc(d.title)} <span class="arrow">↗</span></span>`
@@ -62,6 +63,37 @@ function build(d) {
   slides = [...track.children];
   totEl.textContent = pad(d.slides.length);
 }
+
+/* ---------- live decks ----------
+   A deck made as its own HTML page (the Solvefy one, in decks/) is not
+   flattened into pictures: as pictures it loses what made it a deck — the
+   before and after switches, the green wash on hover, the entrances, a ground
+   that takes each slide's colour and grid rules that run to the screen edge.
+   It runs whole in an iframe over the page and drives itself (keys, wheel,
+   swipes, its own counter). The page only opens it at the right slide,
+   closes it, and keeps the address in step with the slide it reports. */
+function buildLive(d) {
+  deck.classList.add('live');
+  track.innerHTML = `<iframe class="deck-live" src="${esc(d.live)}#${cur + 1}" title="${esc(d.title)}" allow="fullscreen"></iframe>`;
+  slides = [];
+  const f = track.firstElementChild;
+  /* the keys belong to the deck as soon as it is there */
+  f.addEventListener('load', () => { if (active === d) liveWin()?.focus(); }, { once: true });
+}
+
+function liveWin() {
+  const f = track.querySelector('iframe.deck-live');
+  try { return f && f.contentWindow; } catch (_) { return null; }
+}
+
+addEventListener('message', (e) => {
+  if (e.origin !== location.origin || !active || !active.live) return;
+  const m = e.data || {};
+  if (m.deck === 'slide' && m.n > 0) {
+    cur = m.n - 1;
+    history.replaceState(history.state, '', `#${active.id}/${m.n}`);
+  } else if (m.deck === 'close') requestClose();
+});
 
 /* pages load as they come near, not all at once: the current one, the one
    behind it and the two ahead */
@@ -182,7 +214,7 @@ function classify(i) {
 }
 
 function go(n) {
-  if (!active) return;
+  if (!active || active.live) return;   // a live deck turns its own pages
   /* inside a tall page a step forward or back pans before it turns the page */
   const t = slides[cur] && slides[cur].classList.contains('tall') ? measure(cur) : null;
   if (t && n === cur + 1 && pan < t.max - 1) { setPan(Math.min(pan + t.step, t.max)); return; }
@@ -214,12 +246,19 @@ function open(id, at = 0, push = true) {
   const d = DECKS.find(x => x.id === id);
   if (!d) return;
   active = d;
-  build(d);
-  cur = Math.max(0, Math.min(at, d.slides.length - 1));
-  pan = 0;
-  settle();
-  hydrate(cur);
-  curEl.textContent = pad(cur + 1);
+  if (d.live) {
+    /* the deck clamps an out of range slide itself */
+    cur = Math.max(0, at);
+    buildLive(d);
+  } else {
+    deck.classList.remove('live');
+    build(d);
+    cur = Math.max(0, Math.min(at, d.slides.length - 1));
+    pan = 0;
+    settle();
+    hydrate(cur);
+    curEl.textContent = pad(cur + 1);
+  }
 
   deck.classList.add('open');
   deck.setAttribute('aria-hidden', 'false');
@@ -248,7 +287,7 @@ function close() {
   /* clear once the fade is over — unless a deck was reopened in the meantime */
   setTimeout(() => {
     if (active) return;
-    deck.classList.remove('open');
+    deck.classList.remove('open', 'live');
     track.innerHTML = '';
     slides = [];
   }, 420);
@@ -306,6 +345,15 @@ addEventListener('keydown', (e) => {
   /* Enter or Space on the focused close button is the button's own click */
   if (e.target === btnX && (k === 'Enter' || k === ' ')) return;
   if (k === 'Escape') { e.preventDefault(); requestClose(); }
+  else if (active.live) {
+    /* focus is out here (the close button, or the deck still loading): hand
+       the key to the deck and give it the focus back */
+    const w = liveWin();
+    if (!w || !['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'ArrowLeft', 'ArrowUp', 'PageUp', 'Home', 'End'].includes(k)) return;
+    e.preventDefault();
+    w.focus();
+    w.dispatchEvent(new w.KeyboardEvent('keydown', { key: k }));
+  }
   else if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'].includes(k)) { e.preventDefault(); go(cur + 1); }
   else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(k)) { e.preventDefault(); go(cur - 1); }
   else if (k === 'Home') { e.preventDefault(); go(0); }

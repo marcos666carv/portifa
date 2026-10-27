@@ -695,6 +695,10 @@ section{position:relative}
   font-size:11px;letter-spacing:.16em;color:var(--wht);mix-blend-mode:difference;
   font-variant-numeric:tabular-nums;pointer-events:none;
 }
+/* a live deck (an HTML deck, run whole in an iframe) fills the stage and
+   brings its own counter, so the page's one steps aside */
+.deck-live{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.deck.live .deck-count{display:none}
 @media (prefers-reduced-motion:reduce){
   .deck,.deck-slide.anim,.deck-slide.tall img{transition:none}
 }
