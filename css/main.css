@@ -577,7 +577,9 @@ section{position:relative}
 /* ---- about ---- */
 .about{padding:16vh 32px}
 .about .grid{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:center}
-.about p{font-weight:200;font-size:clamp(19px,2.4vw,34px);line-height:1.3;min-width:0}
+.about p{font-weight:200;font-size:clamp(19px,2.4vw,34px);line-height:1.3;min-width:0;
+  /* no word alone on the last line, in either language ("P&L." was) */
+  text-wrap:pretty}
 .about .dim{color:var(--dim)}
 /* the lead sentence, restored: splitWords used to flatten the <b> away */
 .about .w.em{font-weight:600}

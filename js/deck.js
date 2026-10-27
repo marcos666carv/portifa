@@ -2,7 +2,7 @@
    PRESENTATION — presentation.html
    ============================================================
    A summarised version of the site, built to be presented: the hero, a
-   selection of four cases, and each case as a slide deck that moves one page
+   selection of cases, and each case as a slide deck that moves one page
    per click, wheel gesture, swipe or key. Close returns to the selection.
 
    Decks come from data/presentation.json, which the CMS never touches. The
@@ -23,6 +23,8 @@ const isVid = (u) => /\.(mp4|webm)(\?|$)/i.test(u || '');
 /* a video slide's poster is the .webp of the same name */
 const posterOf = (u) => u.replace(/\.(mp4|webm)(\?.*)?$/i, '.webp');
 const pad = (n) => String(n).padStart(2, '0');
+/* lang.js has already run and set <html lang> for /apresentacao */
+const PT = document.documentElement.lang === 'pt-BR';
 
 const list  = document.querySelector('[data-deck-list]');
 const deck  = document.getElementById('deck');
@@ -51,7 +53,7 @@ function cardHTML(d) {
 /* ---------- the deck ---------- */
 function build(d) {
   track.innerHTML = d.slides.map((s, i) => {
-    const label = `${esc(d.title)}, ${i + 1} of ${d.slides.length}`;
+    const label = `${esc(d.title)}, ${i + 1} ${PT ? 'de' : 'of'} ${d.slides.length}`;
     const media = isVid(s)
       ? `<video data-src="${esc(s)}" data-poster="${esc(posterOf(s))}" muted loop playsinline preload="none" aria-label="${label}"></video>`
       : `<img data-src="${esc(s)}" alt="${label}" decoding="async">`;
@@ -347,7 +349,9 @@ fetch('data/presentation.json', { cache: 'no-cache' })
   .then(r => (r.ok ? r.json() : null))
   .then(data => {
     if (!data || !Array.isArray(data.decks)) return;
-    DECKS = data.decks;
+    /* in Portuguese a deck's "pt" block overrides its fields; a deck
+       without one stays as it is */
+    DECKS = data.decks.map(d => (PT && d.pt ? { ...d, ...d.pt } : d));
     if (list) {
       list.innerHTML = DECKS.map(cardHTML).join('');
       dispatchEvent(new CustomEvent('work:rendered', { detail: { root: list } }));

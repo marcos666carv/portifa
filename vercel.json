@@ -19,6 +19,10 @@
     {
       "source": "/presentation",
       "destination": "/presentation.html"
+    },
+    {
+      "source": "/apresentacao",
+      "destination": "/presentation.html"
     }
   ],
   "headers": [
